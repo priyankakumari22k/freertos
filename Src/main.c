@@ -132,9 +132,9 @@ int main(void)
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    status = xTaskCreate(LED_Thread1, "Task1", 200, "Hello World from Task-1", 10, &task1_handle);
+    status = xTaskCreate(LED_Thread1, "Task1", 200, "Hello World from Task-1", 2, &task1_handle);
 
-    status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Hello World from Task-2", 0, &task2_handle);
+    status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Hello World from Task-2", 2, &task2_handle);
     configASSERT(status == pdPASS);
     configASSERT(status1 == pdPASS);
 
@@ -271,7 +271,6 @@ void LED_Thread1(void *argument)
     {
       BSP_LED_Toggle(LED9);
       printf("Task1\n");
-      //vPrintString( "Task1 ");
       osDelay(500);
     }
 
@@ -319,8 +318,7 @@ void LED_Thread2(void *argument)
     {
       BSP_LED_Toggle(LED10);
      printf("Task2\n");
-      //vPrintString( "Task2" );
-      osDelay(500);
+     osDelay(500);
     }
 
     /* Turn off LED10 */

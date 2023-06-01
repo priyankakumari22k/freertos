@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000036  00000000  00000000  00020080  2**0
                   CONTENTS, READONLY
- 12 .debug_line   00016e19  00000000  00000000  000200b6  2**0
+ 12 .debug_line   00016e13  00000000  00000000  000200b6  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_info   0001b5af  00000000  00000000  00036ecf  2**0
+ 13 .debug_info   0001b5af  00000000  00000000  00036ec9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 0000370d  00000000  00000000  0005247e  2**0
+ 14 .debug_abbrev 0000370d  00000000  00000000  00052478  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00001610  00000000  00000000  00055b90  2**3
+ 15 .debug_aranges 00001610  00000000  00000000  00055b88  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_str    001158ec  00000000  00000000  000571a0  2**0
+ 16 .debug_str    001158ec  00000000  00000000  00057198  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_ranges 00001488  00000000  00000000  0016ca90  2**3
+ 17 .debug_ranges 00001488  00000000  00000000  0016ca88  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_macro  00004d31  00000000  00000000  0016df18  2**0
+ 18 .debug_macro  00004d31  00000000  00000000  0016df10  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  00172c49  2**0
+ 19 .comment      00000053  00000000  00000000  00172c41  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  0000612c  00000000  00000000  00172c9c  2**2
+ 20 .debug_frame  0000612c  00000000  00000000  00172c94  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -229,10 +229,10 @@ int main(void)
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    status = xTaskCreate(LED_Thread1, "Task1", 200, "Hello World from Task-1", 10, &task1_handle);
+    status = xTaskCreate(LED_Thread1, "Task1", 200, "Hello World from Task-1", 2, &task1_handle);
  80002b6:	1d3b      	adds	r3, r7, #4
  80002b8:	9301      	str	r3, [sp, #4]
- 80002ba:	230a      	movs	r3, #10
+ 80002ba:	2302      	movs	r3, #2
  80002bc:	9300      	str	r3, [sp, #0]
  80002be:	4b10      	ldr	r3, [pc, #64]	; (8000300 <main+0x6c>)
  80002c0:	22c8      	movs	r2, #200	; 0xc8
@@ -241,10 +241,10 @@ int main(void)
  80002c6:	f003 fc32 	bl	8003b2e <xTaskCreate>
  80002ca:	60f8      	str	r0, [r7, #12]
 
-    status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Hello World from Task-2", 0, &task2_handle);
+    status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Hello World from Task-2", 2, &task2_handle);
  80002cc:	463b      	mov	r3, r7
  80002ce:	9301      	str	r3, [sp, #4]
- 80002d0:	2300      	movs	r3, #0
+ 80002d0:	2302      	movs	r3, #2
  80002d2:	9300      	str	r3, [sp, #0]
  80002d4:	4b0d      	ldr	r3, [pc, #52]	; (800030c <main+0x78>)
  80002d6:	22c8      	movs	r2, #200	; 0xc8
@@ -484,7 +484,6 @@ void LED_Thread1(void *argument)
       printf("Task1\n");
  8000402:	481c      	ldr	r0, [pc, #112]	; (8000474 <LED_Thread1+0x94>)
  8000404:	f004 fe08 	bl	8005018 <puts>
-      //vPrintString( "Task1 ");
       osDelay(500);
  8000408:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
  800040c:	f002 fa69 	bl	80028e2 <osDelay>
@@ -589,8 +588,7 @@ void LED_Thread2(void *argument)
      printf("Task2\n");
  80004a2:	4811      	ldr	r0, [pc, #68]	; (80004e8 <LED_Thread2+0x64>)
  80004a4:	f004 fdb8 	bl	8005018 <puts>
-      //vPrintString( "Task2" );
-      osDelay(500);
+     osDelay(500);
  80004a8:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
  80004ac:	f002 fa19 	bl	80028e2 <osDelay>
     while (count > osKernelGetTickCount())
