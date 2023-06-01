@@ -82,6 +82,8 @@ void LED_Thread2(void *argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	BaseType_t status , status1;
+	TaskHandle_t task1_handle , task2_handle;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -129,11 +131,14 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of THREAD1 */
-  THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-  //xTaskCreate(pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask)
+  //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
+  status = xTaskCreate(LED_Thread1, "Task1", 200, "Hello World from Task-1", 2, &task1_handle);
 
+  status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Hello World from Task-2", 2, &task2_handle);
+  configASSERT(status == pdPASS);
+  configASSERT(status1 == pdPASS);
   /* creation of THREAD2 */
-  THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
+  //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* USER CODE END RTOS_THREADS */
