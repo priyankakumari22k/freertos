@@ -271,7 +271,7 @@ void LED_Thread1(void *argument)
     {
       BSP_LED_Toggle(LED9);
       printf("Task1\n");
-      //osDelay(500);
+    //  osDelay(500);
     }
 
     /* Turn off LED9 */
@@ -287,7 +287,7 @@ void LED_Thread1(void *argument)
     {
       BSP_LED_Toggle(LED9);
 
-      //osDelay(500);
+      osDelay(500);
     }
 
     /* Resume Thread 2*/
@@ -318,7 +318,7 @@ void LED_Thread2(void *argument)
     {
       BSP_LED_Toggle(LED10);
      printf("Task2\n");
-     osDelay(500);
+     //osDelay(500);
     }
 
     /* Turn off LED10 */
