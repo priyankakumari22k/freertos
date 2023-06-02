@@ -133,7 +133,7 @@ int main(void)
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    status = xTaskCreate(LED_Thread1, "Task1", 200, "Task-1 is running", 5, &task1_handle);
+    status = xTaskCreate(LED_Thread1, "Task1", 200, "Task-1 is running", 2, &task1_handle);
 
     status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Task-2 is running", 2, &task2_handle);
     configASSERT(status == pdPASS);
@@ -261,11 +261,11 @@ void LED_Thread1(void *argument)
 {
   /* USER CODE BEGIN 5 */
   //uint32_t count = 0;
-	UBaseType_t uxPriority;
+	//UBaseType_t uxPriority;
   (void) argument;
 
   /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-   uxPriority = uxTaskPriorityGet( NULL );
+   //uxPriority = uxTaskPriorityGet( NULL );
 
 	  while(1)
     {
@@ -273,8 +273,8 @@ void LED_Thread1(void *argument)
       printf("%s:\n",argument);
 
  /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
-      printf( "About to raise the Task 2 priority\r\n" );
-      vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
+    //  printf( "About to raise the Task 2 priority\r\n" );
+    //  vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
     //  osDelay(500);
     }
 
@@ -292,10 +292,10 @@ void LED_Thread2(void *argument)
 {
   /* USER CODE BEGIN LED_Thread2 */
   //uint32_t count;
-	UBaseType_t uxPriority;
+	//UBaseType_t uxPriority;
   (void) argument;
   /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-  uxPriority = uxTaskPriorityGet( NULL );
+  //uxPriority = uxTaskPriorityGet( NULL );
 
 	  while(1)
     {
@@ -306,8 +306,8 @@ void LED_Thread2(void *argument)
        Passing in NULL as the task handle means "change the priority of the
        calling task". Setting the priority below that of Task 1 will cause
        Task 1 to immediately start running again – pre-empting this task. */
-      printf( "About to lower the Task 2 priority\r\n" );
-      vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
+    //  printf( "About to lower the Task 2 priority\r\n" );
+     // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
      //osDelay(500);
     }
 
