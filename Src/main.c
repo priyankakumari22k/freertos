@@ -296,9 +296,10 @@ void LED_Thread1(void *argument)
 	  while(1)
     {
       BSP_LED_Toggle(LED9);
+      printf("Task1 is running\n");
       printf("Num :%d\n",t->num);
       printf("Name :%s\n",t->name);
-      printf("Age :%d\n",t->age);
+      printf("Age :%d\n\n",t->age);
 
  /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
     //  printf( "About to raise the Task 2 priority\r\n" );
