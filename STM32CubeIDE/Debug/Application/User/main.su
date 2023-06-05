@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 main.c:98:5:main	24	static
 main.c:195:6:SystemClock_Config	104	static
 main.c:246:13:MX_ICACHE_Init	8	static
@@ -6,6 +10,7 @@ main.c:284:6:LED_Thread1	24	static
 main.c:320:6:LED_Thread2	16	static
 main.c:357:6:HAL_TIM_PeriodElapsedCallback	16	static
 main.c:374:6:Error_Handler	4	static
+<<<<<<< HEAD
 =======
 main.c:89:5:main	24	static
 main.c:181:6:SystemClock_Config	104	static
@@ -15,3 +20,6 @@ main.c:304:6:LED_Thread2	16	static
 main.c:338:6:HAL_TIM_PeriodElapsedCallback	16	static
 main.c:355:6:Error_Handler	4	static
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149

@@ -8,6 +8,35 @@ Idx Name          Size      VMA       LMA       File off  Algn
   1 .text         00005a88  08000200  08000200  00010200  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  2 .rodata       000001a0  08005c88  08005c88  00015c88  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08005e28  08005e28  000200c0  2**0
+                  CONTENTS
+  4 .ARM          00000000  08005e28  08005e28  000200c0  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08005e28  08005e28  000200c0  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000008  08005e28  08005e28  00015e28  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000008  08005e30  08005e30  00015e30  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         000000c0  20000000  08005e38  00020000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00003f98  200000c0  08005ef8  000200c0  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000c00  20004058  08005ef8  00024058  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000036  00000000  00000000  000200c0  2**0
+                  CONTENTS, READONLY
+ 12 .debug_line   0001705d  00000000  00000000  000200f6  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_info   0001be55  00000000  00000000  00037153  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_abbrev 00003760  00000000  00000000  00052fa8  2**0
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
   2 .rodata       00000178  08005c88  08005c88  00015c88  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   3 .ARM.extab    00000000  08005e00  08005e00  000200c0  2**0
@@ -33,6 +62,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
  13 .debug_info   0001bc09  00000000  00000000  00037146  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_abbrev 0000374e  00000000  00000000  00052d4f  2**0
+<<<<<<< HEAD
 =======
   2 .rodata       000001a0  08005c88  08005c88  00015c88  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
@@ -60,6 +90,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_abbrev 00003760  00000000  00000000  00052fa8  2**0
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_aranges 00001610  00000000  00000000  000564a0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -72,10 +105,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
  19 .comment      00000053  00000000  00000000  00173a4b  2**0
                   CONTENTS, READONLY
 <<<<<<< HEAD
+<<<<<<< HEAD
  20 .debug_frame  000062d4  00000000  00000000  00173aa0  2**2
 =======
  20 .debug_frame  000062d4  00000000  00000000  00173d40  2**2
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 20 .debug_frame  000062d4  00000000  00000000  00173d40  2**2
+=======
+ 20 .debug_frame  000062d4  00000000  00000000  00173aa0  2**2
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -192,10 +232,17 @@ LoopForever:
  8000278:	20030000 	.word	0x20030000
 	ldr	r3, =_sidata
 <<<<<<< HEAD
+<<<<<<< HEAD
  800027c:	08005e10 	.word	0x08005e10
 =======
  800027c:	08005e38 	.word	0x08005e38
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 800027c:	08005e38 	.word	0x08005e38
+=======
+ 800027c:	08005e10 	.word	0x08005e10
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 	ldr	r0, =_sdata
  8000280:	20000000 	.word	0x20000000
 	ldr	r3, =_edata
@@ -260,11 +307,19 @@ int main(void)
   /* Init scheduler */
   osKernelInitialize();
 <<<<<<< HEAD
+<<<<<<< HEAD
  80002b2:	f002 fa1f 	bl	80026f4 <osKernelInitialize>
 =======
  80002b2:	f002 fa25 	bl	8002700 <osKernelInitialize>
   /* USER CODE END RTOS_QUEUES */
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 80002b2:	f002 fa25 	bl	8002700 <osKernelInitialize>
+  /* USER CODE END RTOS_QUEUES */
+=======
+ 80002b2:	f002 fa1f 	bl	80026f4 <osKernelInitialize>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
   /* USER CODE BEGIN RTOS_MUTEX */
   printf("Main func\n");
@@ -323,6 +378,37 @@ int main(void)
   /* Start scheduler */
   osKernelStart();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 800030a:	f002 fa1d 	bl	8002748 <osKernelStart>
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+	    printf("Main age :%d\n",s1.age);
+ 800030e:	4b06      	ldr	r3, [pc, #24]	; (8000328 <main+0x94>)
+ 8000310:	6b9b      	ldr	r3, [r3, #56]	; 0x38
+ 8000312:	4619      	mov	r1, r3
+ 8000314:	480c      	ldr	r0, [pc, #48]	; (8000348 <main+0xb4>)
+ 8000316:	f004 fccf 	bl	8004cb8 <iprintf>
+	    osDelay(1000);
+ 800031a:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
+ 800031e:	f002 fa39 	bl	8002794 <osDelay>
+	    printf("Main age :%d\n",s1.age);
+ 8000322:	e7f4      	b.n	800030e <main+0x7a>
+ 8000324:	20003fa8 	.word	0x20003fa8
+ 8000328:	20000000 	.word	0x20000000
+ 800032c:	08005c98 	.word	0x08005c98
+ 8000330:	08000415 	.word	0x08000415
+ 8000334:	20003fac 	.word	0x20003fac
+ 8000338:	08005ca0 	.word	0x08005ca0
+ 800033c:	08005cb4 	.word	0x08005cb4
+ 8000340:	0800046d 	.word	0x0800046d
+ 8000344:	08005cbc 	.word	0x08005cbc
+ 8000348:	08005ccc 	.word	0x08005ccc
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000310:	f002 fa14 	bl	800273c <osKernelStart>
   printf("Main Num :%d\n",s1.num);
  8000314:	4b05      	ldr	r3, [pc, #20]	; (800032c <main+0x98>)
@@ -347,6 +433,7 @@ int main(void)
  8000340:	08005cb0 	.word	0x08005cb0
  8000344:	08000461 	.word	0x08000461
  8000348:	08005cb8 	.word	0x08005cb8
+<<<<<<< HEAD
 =======
  800030a:	f002 fa1d 	bl	8002748 <osKernelStart>
   /* Infinite loop */
@@ -376,6 +463,9 @@ int main(void)
  8000344:	08005cbc 	.word	0x08005cbc
  8000348:	08005ccc 	.word	0x08005ccc
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 0800034c <SystemClock_Config>:
 /**
@@ -598,10 +688,21 @@ void LED_Thread1(void *argument)
  8000454:	f002 f99e 	bl	8002794 <osDelay>
       BSP_LED_Toggle(LED9);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8000458:	e7e2      	b.n	8000420 <LED_Thread1+0xc>
+ 800045a:	bf00      	nop
+ 800045c:	08005cdc 	.word	0x08005cdc
+ 8000460:	08005cf0 	.word	0x08005cf0
+ 8000464:	08005cfc 	.word	0x08005cfc
+ 8000468:	08005d08 	.word	0x08005d08
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000452:	e7e5      	b.n	8000420 <LED_Thread1+0xc>
  8000454:	08005cc8 	.word	0x08005cc8
  8000458:	08005cd4 	.word	0x08005cd4
  800045c:	08005ce0 	.word	0x08005ce0
+<<<<<<< HEAD
 =======
  8000458:	e7e2      	b.n	8000420 <LED_Thread1+0xc>
  800045a:	bf00      	nop
@@ -610,6 +711,9 @@ void LED_Thread1(void *argument)
  8000464:	08005cfc 	.word	0x08005cfc
  8000468:	08005d08 	.word	0x08005d08
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 0800046c <LED_Thread2>:
 * @param argument: Not used
@@ -644,12 +748,21 @@ void LED_Thread2(void *argument)
  8000486:	f002 f985 	bl	8002794 <osDelay>
       BSP_LED_Toggle(LED10);
 <<<<<<< HEAD
+<<<<<<< HEAD
  800047e:	e7f3      	b.n	8000468 <LED_Thread2+0x8>
  8000480:	08005cec 	.word	0x08005cec
 =======
  800048a:	e7f3      	b.n	8000474 <LED_Thread2+0x8>
  800048c:	08005d14 	.word	0x08005d14
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 800048a:	e7f3      	b.n	8000474 <LED_Thread2+0x8>
+ 800048c:	08005d14 	.word	0x08005d14
+=======
+ 800047e:	e7f3      	b.n	8000468 <LED_Thread2+0x8>
+ 8000480:	08005cec 	.word	0x08005cec
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08000490 <HAL_TIM_PeriodElapsedCallback>:
   * a global variable "uwTick" used as application time base.
@@ -693,12 +806,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80004b4:	b480      	push	{r7}
+ 80004b6:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  while(1) 
+ 80004b8:	e7fe      	b.n	80004b8 <Error_Handler+0x4>
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80004a8:	b480      	push	{r7}
  80004aa:	af00      	add	r7, sp, #0
    //USER CODE BEGIN Error_Handler_Debug
    //User can add his own implementation to report the HAL error return state
   while(1)
  80004ac:	e7fe      	b.n	80004ac <Error_Handler+0x4>
+<<<<<<< HEAD
 =======
  80004b4:	b480      	push	{r7}
  80004b6:	af00      	add	r7, sp, #0
@@ -707,6 +831,9 @@ void Error_Handler(void)
   while(1) 
  80004b8:	e7fe      	b.n	80004b8 <Error_Handler+0x4>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 	...
 
 080004bc <HAL_MspInit>:
@@ -882,6 +1009,18 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
  80005a2:	2301      	movs	r3, #1
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80005a4:	4618      	mov	r0, r3
+ 80005a6:	3730      	adds	r7, #48	; 0x30
+ 80005a8:	46bd      	mov	sp, r7
+ 80005aa:	bd80      	pop	{r7, pc}
+ 80005ac:	40021000 	.word	0x40021000
+ 80005b0:	431bde83 	.word	0x431bde83
+ 80005b4:	20003fb8 	.word	0x20003fb8
+ 80005b8:	40001000 	.word	0x40001000
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000598:	4618      	mov	r0, r3
  800059a:	3730      	adds	r7, #48	; 0x30
  800059c:	46bd      	mov	sp, r7
@@ -890,6 +1029,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
  80005a4:	431bde83 	.word	0x431bde83
  80005a8:	20003fb0 	.word	0x20003fb0
  80005ac:	40001000 	.word	0x40001000
+<<<<<<< HEAD
 =======
  80005a4:	4618      	mov	r0, r3
  80005a6:	3730      	adds	r7, #48	; 0x30
@@ -900,6 +1040,9 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
  80005b4:	20003fb8 	.word	0x20003fb8
  80005b8:	40001000 	.word	0x40001000
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 080005bc <TIM6_IRQHandler>:
 
@@ -921,6 +1064,17 @@ void TIM6_IRQHandler(void)
   /* USER CODE END TIM6_IRQn 1 */
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80005c6:	bf00      	nop
+ 80005c8:	bd80      	pop	{r7, pc}
+ 80005ca:	bf00      	nop
+ 80005cc:	20003fb8 	.word	0x20003fb8
+
+080005d0 <ITM_SendChar>:
+ /*ITM register addresses*/
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80005ba:	bf00      	nop
  80005bc:	bd80      	pop	{r7, pc}
  80005be:	bf00      	nop
@@ -928,6 +1082,7 @@ void TIM6_IRQHandler(void)
 
 080005c4 <ITM_SendChar>:
 /* ITM register addresses */
+<<<<<<< HEAD
 =======
  80005c6:	bf00      	nop
  80005c8:	bd80      	pop	{r7, pc}
@@ -937,6 +1092,9 @@ void TIM6_IRQHandler(void)
 080005d0 <ITM_SendChar>:
  /*ITM register addresses*/
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 #define ITM_STIMULUS_PORT0   	*((volatile uint32_t*) 0xE0000000 )
 #define ITM_TRACE_EN          	*((volatile uint32_t*) 0xE0000E00 )
 
@@ -989,6 +1147,7 @@ void ITM_SendChar(uint8_t ch)
  800061c:	e0000e00 	.word	0xe0000e00
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 08000614 <_read>:
 	_kill(status, -1);
 	while (1) {}		/* Make sure we hang here */
@@ -997,11 +1156,60 @@ void ITM_SendChar(uint8_t ch)
   _kill(status, -1);
   while (1) {}    /* Make sure we hang here */
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+08000620 <_read>:
+  _kill(status, -1);
+  while (1) {}    /* Make sure we hang here */
+=======
+08000614 <_read>:
+	_kill(status, -1);
+	while (1) {}		/* Make sure we hang here */
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 }
 
 __attribute__((weak)) int _read(int file, char *ptr, int len)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8000620:	b580      	push	{r7, lr}
+ 8000622:	b086      	sub	sp, #24
+ 8000624:	af00      	add	r7, sp, #0
+ 8000626:	60f8      	str	r0, [r7, #12]
+ 8000628:	60b9      	str	r1, [r7, #8]
+ 800062a:	607a      	str	r2, [r7, #4]
+  (void)file;
+  int DataIdx;
+
+  for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 800062c:	2300      	movs	r3, #0
+ 800062e:	617b      	str	r3, [r7, #20]
+ 8000630:	e00a      	b.n	8000648 <_read+0x28>
+  {
+    *ptr++ = __io_getchar();
+ 8000632:	e000      	b.n	8000636 <_read+0x16>
+ 8000634:	bf00      	nop
+ 8000636:	4601      	mov	r1, r0
+ 8000638:	68bb      	ldr	r3, [r7, #8]
+ 800063a:	1c5a      	adds	r2, r3, #1
+ 800063c:	60ba      	str	r2, [r7, #8]
+ 800063e:	b2ca      	uxtb	r2, r1
+ 8000640:	701a      	strb	r2, [r3, #0]
+  for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 8000642:	697b      	ldr	r3, [r7, #20]
+ 8000644:	3301      	adds	r3, #1
+ 8000646:	617b      	str	r3, [r7, #20]
+ 8000648:	697a      	ldr	r2, [r7, #20]
+ 800064a:	687b      	ldr	r3, [r7, #4]
+ 800064c:	429a      	cmp	r2, r3
+ 800064e:	dbf0      	blt.n	8000632 <_read+0x12>
+  }
+
+  return len;
+ 8000650:	687b      	ldr	r3, [r7, #4]
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000614:	b580      	push	{r7, lr}
  8000616:	b086      	sub	sp, #24
  8000618:	af00      	add	r7, sp, #0
@@ -1036,6 +1244,7 @@ __attribute__((weak)) int _read(int file, char *ptr, int len)
 
 return len;
  8000644:	687b      	ldr	r3, [r7, #4]
+<<<<<<< HEAD
 =======
  8000620:	b580      	push	{r7, lr}
  8000622:	b086      	sub	sp, #24
@@ -1079,11 +1288,57 @@ return len;
  8000656:	46bd      	mov	sp, r7
  8000658:	bd80      	pop	{r7, pc}
 
+=======
+>>>>>>> main
+}
+ 8000652:	4618      	mov	r0, r3
+ 8000654:	3718      	adds	r7, #24
+ 8000656:	46bd      	mov	sp, r7
+ 8000658:	bd80      	pop	{r7, pc}
+
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 0800065a <_write>:
 
 __attribute__((weak)) int _write(int file, char *ptr, int len)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 800065a:	b580      	push	{r7, lr}
+ 800065c:	b086      	sub	sp, #24
+ 800065e:	af00      	add	r7, sp, #0
+ 8000660:	60f8      	str	r0, [r7, #12]
+ 8000662:	60b9      	str	r1, [r7, #8]
+ 8000664:	607a      	str	r2, [r7, #4]
+  (void)file;
+  int DataIdx;
+
+  for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 8000666:	2300      	movs	r3, #0
+ 8000668:	617b      	str	r3, [r7, #20]
+ 800066a:	e009      	b.n	8000680 <_write+0x26>
+  {
+    //__io_putchar(*ptr++);
+	  ITM_SendChar(*ptr++);
+ 800066c:	68bb      	ldr	r3, [r7, #8]
+ 800066e:	1c5a      	adds	r2, r3, #1
+ 8000670:	60ba      	str	r2, [r7, #8]
+ 8000672:	781b      	ldrb	r3, [r3, #0]
+ 8000674:	4618      	mov	r0, r3
+ 8000676:	f7ff ffab 	bl	80005d0 <ITM_SendChar>
+  for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 800067a:	697b      	ldr	r3, [r7, #20]
+ 800067c:	3301      	adds	r3, #1
+ 800067e:	617b      	str	r3, [r7, #20]
+ 8000680:	697a      	ldr	r2, [r7, #20]
+ 8000682:	687b      	ldr	r3, [r7, #4]
+ 8000684:	429a      	cmp	r2, r3
+ 8000686:	dbf1      	blt.n	800066c <_write+0x12>
+  }
+  return len;
+ 8000688:	687b      	ldr	r3, [r7, #4]
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  800064e:	b580      	push	{r7, lr}
  8000650:	b086      	sub	sp, #24
  8000652:	af00      	add	r7, sp, #0
@@ -1116,6 +1371,7 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
 	}
 	return len;
  800067c:	687b      	ldr	r3, [r7, #4]
+<<<<<<< HEAD
 =======
  800065a:	b580      	push	{r7, lr}
  800065c:	b086      	sub	sp, #24
@@ -1157,17 +1413,38 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
  800068e:	46bd      	mov	sp, r7
  8000690:	bd80      	pop	{r7, pc}
 
+=======
+>>>>>>> main
+}
+ 800068a:	4618      	mov	r0, r3
+ 800068c:	3718      	adds	r7, #24
+ 800068e:	46bd      	mov	sp, r7
+ 8000690:	bd80      	pop	{r7, pc}
+
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 08000692 <_close>:
 
 int _close(int file)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8000692:	b480      	push	{r7}
+ 8000694:	b083      	sub	sp, #12
+ 8000696:	af00      	add	r7, sp, #0
+ 8000698:	6078      	str	r0, [r7, #4]
+  (void)file;
+  return -1;
+ 800069a:	f04f 33ff 	mov.w	r3, #4294967295
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000686:	b480      	push	{r7}
  8000688:	b083      	sub	sp, #12
  800068a:	af00      	add	r7, sp, #0
  800068c:	6078      	str	r0, [r7, #4]
 	return -1;
  800068e:	f04f 33ff 	mov.w	r3, #4294967295
+<<<<<<< HEAD
 =======
  8000692:	b480      	push	{r7}
  8000694:	b083      	sub	sp, #12
@@ -1177,6 +1454,9 @@ int _close(int file)
   return -1;
  800069a:	f04f 33ff 	mov.w	r3, #4294967295
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 }
  800069e:	4618      	mov	r0, r3
  80006a0:	370c      	adds	r7, #12
@@ -1190,6 +1470,22 @@ int _close(int file)
 int _fstat(int file, struct stat *st)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80006aa:	b480      	push	{r7}
+ 80006ac:	b083      	sub	sp, #12
+ 80006ae:	af00      	add	r7, sp, #0
+ 80006b0:	6078      	str	r0, [r7, #4]
+ 80006b2:	6039      	str	r1, [r7, #0]
+  (void)file;
+  st->st_mode = S_IFCHR;
+ 80006b4:	683b      	ldr	r3, [r7, #0]
+ 80006b6:	f44f 5200 	mov.w	r2, #8192	; 0x2000
+ 80006ba:	605a      	str	r2, [r3, #4]
+  return 0;
+ 80006bc:	2300      	movs	r3, #0
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  800069e:	b480      	push	{r7}
  80006a0:	b083      	sub	sp, #12
  80006a2:	af00      	add	r7, sp, #0
@@ -1201,6 +1497,7 @@ int _fstat(int file, struct stat *st)
  80006ae:	605a      	str	r2, [r3, #4]
 	return 0;
  80006b0:	2300      	movs	r3, #0
+<<<<<<< HEAD
 =======
  80006aa:	b480      	push	{r7}
  80006ac:	b083      	sub	sp, #12
@@ -1215,6 +1512,9 @@ int _fstat(int file, struct stat *st)
   return 0;
  80006bc:	2300      	movs	r3, #0
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 }
  80006be:	4618      	mov	r0, r3
  80006c0:	370c      	adds	r7, #12
@@ -1227,12 +1527,24 @@ int _fstat(int file, struct stat *st)
 int _isatty(int file)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80006ca:	b480      	push	{r7}
+ 80006cc:	b083      	sub	sp, #12
+ 80006ce:	af00      	add	r7, sp, #0
+ 80006d0:	6078      	str	r0, [r7, #4]
+  (void)file;
+  return 1;
+ 80006d2:	2301      	movs	r3, #1
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80006be:	b480      	push	{r7}
  80006c0:	b083      	sub	sp, #12
  80006c2:	af00      	add	r7, sp, #0
  80006c4:	6078      	str	r0, [r7, #4]
 	return 1;
  80006c6:	2301      	movs	r3, #1
+<<<<<<< HEAD
 =======
  80006ca:	b480      	push	{r7}
  80006cc:	b083      	sub	sp, #12
@@ -1242,6 +1554,9 @@ int _isatty(int file)
   return 1;
  80006d2:	2301      	movs	r3, #1
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 }
  80006d4:	4618      	mov	r0, r3
  80006d6:	370c      	adds	r7, #12
@@ -1254,6 +1569,21 @@ int _isatty(int file)
 int _lseek(int file, int ptr, int dir)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80006e0:	b480      	push	{r7}
+ 80006e2:	b085      	sub	sp, #20
+ 80006e4:	af00      	add	r7, sp, #0
+ 80006e6:	60f8      	str	r0, [r7, #12]
+ 80006e8:	60b9      	str	r1, [r7, #8]
+ 80006ea:	607a      	str	r2, [r7, #4]
+  (void)file;
+  (void)ptr;
+  (void)dir;
+  return 0;
+ 80006ec:	2300      	movs	r3, #0
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80006d4:	b480      	push	{r7}
  80006d6:	b085      	sub	sp, #20
  80006d8:	af00      	add	r7, sp, #0
@@ -1262,6 +1592,7 @@ int _lseek(int file, int ptr, int dir)
  80006de:	607a      	str	r2, [r7, #4]
 	return 0;
  80006e0:	2300      	movs	r3, #0
+<<<<<<< HEAD
 =======
  80006e0:	b480      	push	{r7}
  80006e2:	b085      	sub	sp, #20
@@ -1275,6 +1606,9 @@ int _lseek(int file, int ptr, int dir)
   return 0;
  80006ec:	2300      	movs	r3, #0
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 }
  80006ee:	4618      	mov	r0, r3
  80006f0:	3714      	adds	r7, #20
@@ -1356,6 +1690,18 @@ void *_sbrk(ptrdiff_t incr)
  800074e:	68fb      	ldr	r3, [r7, #12]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8000750:	4618      	mov	r0, r3
+ 8000752:	3718      	adds	r7, #24
+ 8000754:	46bd      	mov	sp, r7
+ 8000756:	bd80      	pop	{r7, pc}
+ 8000758:	20030000 	.word	0x20030000
+ 800075c:	00000800 	.word	0x00000800
+ 8000760:	200000dc 	.word	0x200000dc
+ 8000764:	20004058 	.word	0x20004058
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000744:	4618      	mov	r0, r3
  8000746:	3718      	adds	r7, #24
  8000748:	46bd      	mov	sp, r7
@@ -1364,6 +1710,7 @@ void *_sbrk(ptrdiff_t incr)
  8000750:	00000800 	.word	0x00000800
  8000754:	200000dc 	.word	0x200000dc
  8000758:	20004050 	.word	0x20004050
+<<<<<<< HEAD
 =======
  8000750:	4618      	mov	r0, r3
  8000752:	3718      	adds	r7, #24
@@ -1374,6 +1721,9 @@ void *_sbrk(ptrdiff_t incr)
  8000760:	200000dc 	.word	0x200000dc
  8000764:	20004058 	.word	0x20004058
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08000768 <BSP_LED_Init>:
   *     @arg  LED9
@@ -1751,6 +2101,20 @@ void SystemCoreClockUpdate(void)
  80009b6:	6013      	str	r3, [r2, #0]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80009b8:	bf00      	nop
+ 80009ba:	371c      	adds	r7, #28
+ 80009bc:	46bd      	mov	sp, r7
+ 80009be:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80009c2:	4770      	bx	lr
+ 80009c4:	40021000 	.word	0x40021000
+ 80009c8:	08005d4c 	.word	0x08005d4c
+ 80009cc:	20000048 	.word	0x20000048
+ 80009d0:	00f42400 	.word	0x00f42400
+ 80009d4:	08005d34 	.word	0x08005d34
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80009ac:	bf00      	nop
  80009ae:	371c      	adds	r7, #28
  80009b0:	46bd      	mov	sp, r7
@@ -1761,6 +2125,7 @@ void SystemCoreClockUpdate(void)
  80009c0:	20000048 	.word	0x20000048
  80009c4:	00f42400 	.word	0x00f42400
  80009c8:	08005d0c 	.word	0x08005d0c
+<<<<<<< HEAD
 =======
  80009b8:	bf00      	nop
  80009ba:	371c      	adds	r7, #28
@@ -1773,6 +2138,9 @@ void SystemCoreClockUpdate(void)
  80009d0:	00f42400 	.word	0x00f42400
  80009d4:	08005d34 	.word	0x08005d34
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 080009d8 <HAL_Init>:
   *         each 1ms in the SysTick_Handler() interrupt handler.
@@ -1846,6 +2214,17 @@ __weak void HAL_IncTick(void)
  8000a1e:	6013      	str	r3, [r2, #0]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8000a20:	bf00      	nop
+ 8000a22:	46bd      	mov	sp, r7
+ 8000a24:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000a28:	4770      	bx	lr
+ 8000a2a:	bf00      	nop
+ 8000a2c:	20000050 	.word	0x20000050
+ 8000a30:	20004004 	.word	0x20004004
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000a14:	bf00      	nop
  8000a16:	46bd      	mov	sp, r7
  8000a18:	f85d 7b04 	ldr.w	r7, [sp], #4
@@ -1853,6 +2232,7 @@ __weak void HAL_IncTick(void)
  8000a1e:	bf00      	nop
  8000a20:	20000050 	.word	0x20000050
  8000a24:	20003ffc 	.word	0x20003ffc
+<<<<<<< HEAD
 =======
  8000a20:	bf00      	nop
  8000a22:	46bd      	mov	sp, r7
@@ -1862,6 +2242,9 @@ __weak void HAL_IncTick(void)
  8000a2c:	20000050 	.word	0x20000050
  8000a30:	20004004 	.word	0x20004004
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08000a34 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other
@@ -1877,12 +2260,23 @@ __weak uint32_t HAL_GetTick(void)
  8000a3a:	681b      	ldr	r3, [r3, #0]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8000a3c:	4618      	mov	r0, r3
+ 8000a3e:	46bd      	mov	sp, r7
+ 8000a40:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000a44:	4770      	bx	lr
+ 8000a46:	bf00      	nop
+ 8000a48:	20004004 	.word	0x20004004
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8000a30:	4618      	mov	r0, r3
  8000a32:	46bd      	mov	sp, r7
  8000a34:	f85d 7b04 	ldr.w	r7, [sp], #4
  8000a38:	4770      	bx	lr
  8000a3a:	bf00      	nop
  8000a3c:	20003ffc 	.word	0x20003ffc
+<<<<<<< HEAD
 =======
  8000a3c:	4618      	mov	r0, r3
  8000a3e:	46bd      	mov	sp, r7
@@ -1891,6 +2285,9 @@ __weak uint32_t HAL_GetTick(void)
  8000a46:	bf00      	nop
  8000a48:	20004004 	.word	0x20004004
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08000a4c <__NVIC_SetPriorityGrouping>:
            In case of a conflict between priority grouping and available
@@ -5409,6 +5806,19 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8001e64:	69bb      	ldr	r3, [r7, #24]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8001e66:	4618      	mov	r0, r3
+ 8001e68:	3724      	adds	r7, #36	; 0x24
+ 8001e6a:	46bd      	mov	sp, r7
+ 8001e6c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8001e70:	4770      	bx	lr
+ 8001e72:	bf00      	nop
+ 8001e74:	40021000 	.word	0x40021000
+ 8001e78:	08005d4c 	.word	0x08005d4c
+ 8001e7c:	00f42400 	.word	0x00f42400
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8001e5a:	4618      	mov	r0, r3
  8001e5c:	3724      	adds	r7, #36	; 0x24
  8001e5e:	46bd      	mov	sp, r7
@@ -5418,6 +5828,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8001e68:	40021000 	.word	0x40021000
  8001e6c:	08005d24 	.word	0x08005d24
  8001e70:	00f42400 	.word	0x00f42400
+<<<<<<< HEAD
 =======
  8001e66:	4618      	mov	r0, r3
  8001e68:	3724      	adds	r7, #36	; 0x24
@@ -5429,6 +5840,9 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8001e78:	08005d4c 	.word	0x08005d4c
  8001e7c:	00f42400 	.word	0x00f42400
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08001e80 <HAL_RCC_GetHCLKFreq>:
   * @note   Each time HCLK changes, this function must be called to update the
@@ -5451,16 +5865,28 @@ uint32_t HAL_RCC_GetHCLKFreq(void)
  8001e98:	fa22 f303 	lsr.w	r3, r2, r3
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8001e9c:	4618      	mov	r0, r3
+ 8001e9e:	bd80      	pop	{r7, pc}
+ 8001ea0:	40021000 	.word	0x40021000
+ 8001ea4:	08005d34 	.word	0x08005d34
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8001e90:	4618      	mov	r0, r3
  8001e92:	bd80      	pop	{r7, pc}
  8001e94:	40021000 	.word	0x40021000
  8001e98:	08005d0c 	.word	0x08005d0c
+<<<<<<< HEAD
 =======
  8001e9c:	4618      	mov	r0, r3
  8001e9e:	bd80      	pop	{r7, pc}
  8001ea0:	40021000 	.word	0x40021000
  8001ea4:	08005d34 	.word	0x08005d34
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08001ea8 <HAL_RCC_GetPCLK1Freq>:
   * @note   Each time PCLK1 changes, this function must be called to update the
@@ -5484,16 +5910,28 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8001ec0:	fa22 f303 	lsr.w	r3, r2, r3
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8001ec4:	4618      	mov	r0, r3
+ 8001ec6:	bd80      	pop	{r7, pc}
+ 8001ec8:	40021000 	.word	0x40021000
+ 8001ecc:	08005d44 	.word	0x08005d44
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8001eb8:	4618      	mov	r0, r3
  8001eba:	bd80      	pop	{r7, pc}
  8001ebc:	40021000 	.word	0x40021000
  8001ec0:	08005d1c 	.word	0x08005d1c
+<<<<<<< HEAD
 =======
  8001ec4:	4618      	mov	r0, r3
  8001ec6:	bd80      	pop	{r7, pc}
  8001ec8:	40021000 	.word	0x40021000
  8001ecc:	08005d44 	.word	0x08005d44
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08001ed0 <HAL_RCC_GetClockConfig>:
   *         will be configured.
@@ -5862,6 +6300,18 @@ static uint32_t RCC_GetSysClockFreqFromPLLSource(void)
  80020ba:	683b      	ldr	r3, [r7, #0]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 80020bc:	4618      	mov	r0, r3
+ 80020be:	371c      	adds	r7, #28
+ 80020c0:	46bd      	mov	sp, r7
+ 80020c2:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80020c6:	4770      	bx	lr
+ 80020c8:	40021000 	.word	0x40021000
+ 80020cc:	00f42400 	.word	0x00f42400
+ 80020d0:	08005d4c 	.word	0x08005d4c
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80020b0:	4618      	mov	r0, r3
  80020b2:	371c      	adds	r7, #28
  80020b4:	46bd      	mov	sp, r7
@@ -5870,6 +6320,7 @@ static uint32_t RCC_GetSysClockFreqFromPLLSource(void)
  80020bc:	40021000 	.word	0x40021000
  80020c0:	00f42400 	.word	0x00f42400
  80020c4:	08005d24 	.word	0x08005d24
+<<<<<<< HEAD
 =======
  80020bc:	4618      	mov	r0, r3
  80020be:	371c      	adds	r7, #28
@@ -5880,6 +6331,9 @@ static uint32_t RCC_GetSysClockFreqFromPLLSource(void)
  80020cc:	00f42400 	.word	0x00f42400
  80020d0:	08005d4c 	.word	0x08005d4c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 080020d4 <HAL_TIM_Base_Init>:
   *         Ex: call @ref HAL_TIM_Base_DeInit() before HAL_TIM_Base_Init()
@@ -11523,10 +11977,17 @@ BaseType_t xReturn;
  8003d50:	46bd      	mov	sp, r7
  8003d52:	bd80      	pop	{r7, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8003d54:	08005cf4 	.word	0x08005cf4
 =======
  8003d54:	08005d1c 	.word	0x08005d1c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8003d54:	08005d1c 	.word	0x08005d1c
+=======
+ 8003d54:	08005cf4 	.word	0x08005cf4
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8003d58:	080042f1 	.word	0x080042f1
  8003d5c:	20003e6c 	.word	0x20003e6c
  8003d60:	20003e68 	.word	0x20003e68
@@ -13317,10 +13778,17 @@ BaseType_t xReturn = pdFAIL;
  800468a:	bf00      	nop
  800468c:	20003ea4 	.word	0x20003ea4
 <<<<<<< HEAD
+<<<<<<< HEAD
  8004690:	08005cfc 	.word	0x08005cfc
 =======
  8004690:	08005d24 	.word	0x08005d24
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8004690:	08005d24 	.word	0x08005d24
+=======
+ 8004690:	08005cfc 	.word	0x08005cfc
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8004694:	080047b1 	.word	0x080047b1
  8004698:	20003ea8 	.word	0x20003ea8
 
@@ -14372,10 +14840,17 @@ static void prvCheckForValidListAndQueue( void )
  8004c2c:	20003f50 	.word	0x20003f50
  8004c30:	20003eb0 	.word	0x20003eb0
 <<<<<<< HEAD
+<<<<<<< HEAD
  8004c34:	08005d04 	.word	0x08005d04
 =======
  8004c34:	08005d2c 	.word	0x08005d2c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8004c34:	08005d2c 	.word	0x08005d2c
+=======
+ 8004c34:	08005d04 	.word	0x08005d04
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08004c38 <__errno>:
  8004c38:	4b01      	ldr	r3, [pc, #4]	; (8004c40 <__errno+0x8>)
@@ -14411,16 +14886,28 @@ static void prvCheckForValidListAndQueue( void )
  8004c78:	4798      	blx	r3
  8004c7a:	e7f2      	b.n	8004c62 <__libc_init_array+0x1e>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8004c7c:	08005e28 	.word	0x08005e28
+ 8004c80:	08005e28 	.word	0x08005e28
+ 8004c84:	08005e28 	.word	0x08005e28
+ 8004c88:	08005e2c 	.word	0x08005e2c
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8004c7c:	08005e00 	.word	0x08005e00
  8004c80:	08005e00 	.word	0x08005e00
  8004c84:	08005e00 	.word	0x08005e00
  8004c88:	08005e04 	.word	0x08005e04
+<<<<<<< HEAD
 =======
  8004c7c:	08005e28 	.word	0x08005e28
  8004c80:	08005e28 	.word	0x08005e28
  8004c84:	08005e28 	.word	0x08005e28
  8004c88:	08005e2c 	.word	0x08005e2c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08004c8c <memcpy>:
  8004c8c:	440a      	add	r2, r1
@@ -14564,6 +15051,7 @@ static void prvCheckForValidListAndQueue( void )
  8004db4:	701d      	strb	r5, [r3, #0]
  8004db6:	e7db      	b.n	8004d70 <_puts_r+0x88>
 <<<<<<< HEAD
+<<<<<<< HEAD
  8004db8:	08005d88 	.word	0x08005d88
  8004dbc:	08005da8 	.word	0x08005da8
  8004dc0:	08005d68 	.word	0x08005d68
@@ -14572,6 +15060,16 @@ static void prvCheckForValidListAndQueue( void )
  8004dbc:	08005dd0 	.word	0x08005dd0
  8004dc0:	08005d90 	.word	0x08005d90
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8004db8:	08005db0 	.word	0x08005db0
+ 8004dbc:	08005dd0 	.word	0x08005dd0
+ 8004dc0:	08005d90 	.word	0x08005d90
+=======
+ 8004db8:	08005d88 	.word	0x08005d88
+ 8004dbc:	08005da8 	.word	0x08005da8
+ 8004dc0:	08005d68 	.word	0x08005d68
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08004dc4 <puts>:
  8004dc4:	4b02      	ldr	r3, [pc, #8]	; (8004dd0 <puts+0xc>)
@@ -14654,6 +15152,7 @@ static void prvCheckForValidListAndQueue( void )
  8004e68:	e7ea      	b.n	8004e40 <__swbuf_r+0x6c>
  8004e6a:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8004e6c:	08005d88 	.word	0x08005d88
  8004e70:	08005da8 	.word	0x08005da8
  8004e74:	08005d68 	.word	0x08005d68
@@ -14662,6 +15161,16 @@ static void prvCheckForValidListAndQueue( void )
  8004e70:	08005dd0 	.word	0x08005dd0
  8004e74:	08005d90 	.word	0x08005d90
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8004e6c:	08005db0 	.word	0x08005db0
+ 8004e70:	08005dd0 	.word	0x08005dd0
+ 8004e74:	08005d90 	.word	0x08005d90
+=======
+ 8004e6c:	08005d88 	.word	0x08005d88
+ 8004e70:	08005da8 	.word	0x08005da8
+ 8004e74:	08005d68 	.word	0x08005d68
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08004e78 <__swsetup_r>:
  8004e78:	4b32      	ldr	r3, [pc, #200]	; (8004f44 <__swsetup_r+0xcc>)
@@ -14754,6 +15263,7 @@ static void prvCheckForValidListAndQueue( void )
  8004f42:	bf00      	nop
  8004f44:	20000058 	.word	0x20000058
 <<<<<<< HEAD
+<<<<<<< HEAD
  8004f48:	08005d88 	.word	0x08005d88
  8004f4c:	08005da8 	.word	0x08005da8
  8004f50:	08005d68 	.word	0x08005d68
@@ -14762,6 +15272,16 @@ static void prvCheckForValidListAndQueue( void )
  8004f4c:	08005dd0 	.word	0x08005dd0
  8004f50:	08005d90 	.word	0x08005d90
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8004f48:	08005db0 	.word	0x08005db0
+ 8004f4c:	08005dd0 	.word	0x08005dd0
+ 8004f50:	08005d90 	.word	0x08005d90
+=======
+ 8004f48:	08005d88 	.word	0x08005d88
+ 8004f4c:	08005da8 	.word	0x08005da8
+ 8004f50:	08005d68 	.word	0x08005d68
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08004f54 <__sflush_r>:
  8004f54:	898a      	ldrh	r2, [r1, #12]
@@ -14936,6 +15456,7 @@ static void prvCheckForValidListAndQueue( void )
  80050c4:	68ec      	ldreq	r4, [r5, #12]
  80050c6:	e7da      	b.n	800507e <_fflush_r+0x22>
 <<<<<<< HEAD
+<<<<<<< HEAD
  80050c8:	08005d88 	.word	0x08005d88
  80050cc:	08005da8 	.word	0x08005da8
  80050d0:	08005d68 	.word	0x08005d68
@@ -14944,6 +15465,16 @@ static void prvCheckForValidListAndQueue( void )
  80050cc:	08005dd0 	.word	0x08005dd0
  80050d0:	08005d90 	.word	0x08005d90
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 80050c8:	08005db0 	.word	0x08005db0
+ 80050cc:	08005dd0 	.word	0x08005dd0
+ 80050d0:	08005d90 	.word	0x08005d90
+=======
+ 80050c8:	08005d88 	.word	0x08005d88
+ 80050cc:	08005da8 	.word	0x08005da8
+ 80050d0:	08005d68 	.word	0x08005d68
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 080050d4 <std>:
  80050d4:	2300      	movs	r3, #0
@@ -15006,40 +15537,68 @@ static void prvCheckForValidListAndQueue( void )
  8005156:	f000 b8b3 	b.w	80052c0 <__retarget_lock_acquire_recursive>
  800515a:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  800515c:	20004048 	.word	0x20004048
 =======
  800515c:	20004050 	.word	0x20004050
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 800515c:	20004050 	.word	0x20004050
+=======
+ 800515c:	20004048 	.word	0x20004048
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005160 <__sfp_lock_release>:
  8005160:	4801      	ldr	r0, [pc, #4]	; (8005168 <__sfp_lock_release+0x8>)
  8005162:	f000 b8ae 	b.w	80052c2 <__retarget_lock_release_recursive>
  8005166:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005168:	20004048 	.word	0x20004048
 =======
  8005168:	20004050 	.word	0x20004050
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005168:	20004050 	.word	0x20004050
+=======
+ 8005168:	20004048 	.word	0x20004048
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 0800516c <__sinit_lock_acquire>:
  800516c:	4801      	ldr	r0, [pc, #4]	; (8005174 <__sinit_lock_acquire+0x8>)
  800516e:	f000 b8a7 	b.w	80052c0 <__retarget_lock_acquire_recursive>
  8005172:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005174:	20004043 	.word	0x20004043
 =======
  8005174:	2000404b 	.word	0x2000404b
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005174:	2000404b 	.word	0x2000404b
+=======
+ 8005174:	20004043 	.word	0x20004043
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005178 <__sinit_lock_release>:
  8005178:	4801      	ldr	r0, [pc, #4]	; (8005180 <__sinit_lock_release+0x8>)
  800517a:	f000 b8a2 	b.w	80052c2 <__retarget_lock_release_recursive>
  800517e:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005180:	20004043 	.word	0x20004043
 =======
  8005180:	2000404b 	.word	0x2000404b
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005180:	2000404b 	.word	0x2000404b
+=======
+ 8005180:	20004043 	.word	0x20004043
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005184 <__sinit>:
  8005184:	b510      	push	{r4, lr}
@@ -15085,10 +15644,17 @@ static void prvCheckForValidListAndQueue( void )
  80051e8:	e7d2      	b.n	8005190 <__sinit+0xc>
  80051ea:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  80051ec:	08005d64 	.word	0x08005d64
 =======
  80051ec:	08005d8c 	.word	0x08005d8c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 80051ec:	08005d8c 	.word	0x08005d8c
+=======
+ 80051ec:	08005d64 	.word	0x08005d64
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  80051f0:	0800511d 	.word	0x0800511d
 
 080051f4 <__sfp>:
@@ -15144,10 +15710,17 @@ static void prvCheckForValidListAndQueue( void )
  8005274:	e7ee      	b.n	8005254 <__sfp+0x60>
  8005276:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005278:	08005d64 	.word	0x08005d64
 =======
  8005278:	08005d8c 	.word	0x08005d8c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005278:	08005d8c 	.word	0x08005d8c
+=======
+ 8005278:	08005d64 	.word	0x08005d64
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  800527c:	ffff0001 	.word	0xffff0001
 
 08005280 <_fwalk_reent>:
@@ -15713,6 +16286,18 @@ static void prvCheckForValidListAndQueue( void )
  8005770:	e7e4      	b.n	800573c <_vfiprintf_r+0x208>
  8005772:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ 8005774:	08005db0 	.word	0x08005db0
+ 8005778:	08005dd0 	.word	0x08005dd0
+ 800577c:	08005d90 	.word	0x08005d90
+ 8005780:	08005df0 	.word	0x08005df0
+ 8005784:	08005dfa 	.word	0x08005dfa
+ 8005788:	00000000 	.word	0x00000000
+ 800578c:	0800550f 	.word	0x0800550f
+ 8005790:	08005df6 	.word	0x08005df6
+=======
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005774:	08005d88 	.word	0x08005d88
  8005778:	08005da8 	.word	0x08005da8
  800577c:	08005d68 	.word	0x08005d68
@@ -15721,6 +16306,7 @@ static void prvCheckForValidListAndQueue( void )
  8005788:	00000000 	.word	0x00000000
  800578c:	0800550f 	.word	0x0800550f
  8005790:	08005dce 	.word	0x08005dce
+<<<<<<< HEAD
 =======
  8005774:	08005db0 	.word	0x08005db0
  8005778:	08005dd0 	.word	0x08005dd0
@@ -15731,6 +16317,9 @@ static void prvCheckForValidListAndQueue( void )
  800578c:	0800550f 	.word	0x0800550f
  8005790:	08005df6 	.word	0x08005df6
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005794 <_printf_common>:
  8005794:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -16066,12 +16655,21 @@ static void prvCheckForValidListAndQueue( void )
  8005ab4:	e7f5      	b.n	8005aa2 <_printf_i+0x22e>
  8005ab6:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005ab8:	08005dd9 	.word	0x08005dd9
  8005abc:	08005dea 	.word	0x08005dea
 =======
  8005ab8:	08005e01 	.word	0x08005e01
  8005abc:	08005e12 	.word	0x08005e12
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005ab8:	08005e01 	.word	0x08005e01
+ 8005abc:	08005e12 	.word	0x08005e12
+=======
+ 8005ab8:	08005dd9 	.word	0x08005dd9
+ 8005abc:	08005dea 	.word	0x08005dea
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005ac0 <_sbrk_r>:
  8005ac0:	b538      	push	{r3, r4, r5, lr}
@@ -16081,10 +16679,17 @@ static void prvCheckForValidListAndQueue( void )
  8005ac8:	4608      	mov	r0, r1
  8005aca:	602b      	str	r3, [r5, #0]
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005acc:	f7fa fe10 	bl	80006f0 <_sbrk>
 =======
  8005acc:	f7fa fe16 	bl	80006fc <_sbrk>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005acc:	f7fa fe16 	bl	80006fc <_sbrk>
+=======
+ 8005acc:	f7fa fe10 	bl	80006f0 <_sbrk>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005ad0:	1c43      	adds	r3, r0, #1
  8005ad2:	d102      	bne.n	8005ada <_sbrk_r+0x1a>
  8005ad4:	682b      	ldr	r3, [r5, #0]
@@ -16092,10 +16697,17 @@ static void prvCheckForValidListAndQueue( void )
  8005ad8:	6023      	str	r3, [r4, #0]
  8005ada:	bd38      	pop	{r3, r4, r5, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005adc:	2000404c 	.word	0x2000404c
 =======
  8005adc:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005adc:	20004054 	.word	0x20004054
+=======
+ 8005adc:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005ae0 <__sread>:
  8005ae0:	b510      	push	{r4, lr}
@@ -16167,10 +16779,17 @@ static void prvCheckForValidListAndQueue( void )
  8005b74:	602a      	str	r2, [r5, #0]
  8005b76:	461a      	mov	r2, r3
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005b78:	f7fa fd69 	bl	800064e <_write>
 =======
  8005b78:	f7fa fd6f 	bl	800065a <_write>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005b78:	f7fa fd6f 	bl	800065a <_write>
+=======
+ 8005b78:	f7fa fd69 	bl	800064e <_write>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005b7c:	1c43      	adds	r3, r0, #1
  8005b7e:	d102      	bne.n	8005b86 <_write_r+0x1e>
  8005b80:	682b      	ldr	r3, [r5, #0]
@@ -16178,10 +16797,17 @@ static void prvCheckForValidListAndQueue( void )
  8005b84:	6023      	str	r3, [r4, #0]
  8005b86:	bd38      	pop	{r3, r4, r5, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005b88:	2000404c 	.word	0x2000404c
 =======
  8005b88:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005b88:	20004054 	.word	0x20004054
+=======
+ 8005b88:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005b8c <_close_r>:
  8005b8c:	b538      	push	{r3, r4, r5, lr}
@@ -16191,10 +16817,17 @@ static void prvCheckForValidListAndQueue( void )
  8005b94:	4608      	mov	r0, r1
  8005b96:	602b      	str	r3, [r5, #0]
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005b98:	f7fa fd75 	bl	8000686 <_close>
 =======
  8005b98:	f7fa fd7b 	bl	8000692 <_close>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005b98:	f7fa fd7b 	bl	8000692 <_close>
+=======
+ 8005b98:	f7fa fd75 	bl	8000686 <_close>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005b9c:	1c43      	adds	r3, r0, #1
  8005b9e:	d102      	bne.n	8005ba6 <_close_r+0x1a>
  8005ba0:	682b      	ldr	r3, [r5, #0]
@@ -16202,10 +16835,17 @@ static void prvCheckForValidListAndQueue( void )
  8005ba4:	6023      	str	r3, [r4, #0]
  8005ba6:	bd38      	pop	{r3, r4, r5, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005ba8:	2000404c 	.word	0x2000404c
 =======
  8005ba8:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005ba8:	20004054 	.word	0x20004054
+=======
+ 8005ba8:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005bac <_fstat_r>:
  8005bac:	b538      	push	{r3, r4, r5, lr}
@@ -16216,10 +16856,17 @@ static void prvCheckForValidListAndQueue( void )
  8005bb6:	4611      	mov	r1, r2
  8005bb8:	602b      	str	r3, [r5, #0]
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005bba:	f7fa fd70 	bl	800069e <_fstat>
 =======
  8005bba:	f7fa fd76 	bl	80006aa <_fstat>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005bba:	f7fa fd76 	bl	80006aa <_fstat>
+=======
+ 8005bba:	f7fa fd70 	bl	800069e <_fstat>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005bbe:	1c43      	adds	r3, r0, #1
  8005bc0:	d102      	bne.n	8005bc8 <_fstat_r+0x1c>
  8005bc2:	682b      	ldr	r3, [r5, #0]
@@ -16228,10 +16875,17 @@ static void prvCheckForValidListAndQueue( void )
  8005bc8:	bd38      	pop	{r3, r4, r5, pc}
  8005bca:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005bcc:	2000404c 	.word	0x2000404c
 =======
  8005bcc:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005bcc:	20004054 	.word	0x20004054
+=======
+ 8005bcc:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005bd0 <_isatty_r>:
  8005bd0:	b538      	push	{r3, r4, r5, lr}
@@ -16241,10 +16895,17 @@ static void prvCheckForValidListAndQueue( void )
  8005bd8:	4608      	mov	r0, r1
  8005bda:	602b      	str	r3, [r5, #0]
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005bdc:	f7fa fd6f 	bl	80006be <_isatty>
 =======
  8005bdc:	f7fa fd75 	bl	80006ca <_isatty>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005bdc:	f7fa fd75 	bl	80006ca <_isatty>
+=======
+ 8005bdc:	f7fa fd6f 	bl	80006be <_isatty>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005be0:	1c43      	adds	r3, r0, #1
  8005be2:	d102      	bne.n	8005bea <_isatty_r+0x1a>
  8005be4:	682b      	ldr	r3, [r5, #0]
@@ -16252,10 +16913,17 @@ static void prvCheckForValidListAndQueue( void )
  8005be8:	6023      	str	r3, [r4, #0]
  8005bea:	bd38      	pop	{r3, r4, r5, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005bec:	2000404c 	.word	0x2000404c
 =======
  8005bec:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005bec:	20004054 	.word	0x20004054
+=======
+ 8005bec:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005bf0 <_lseek_r>:
  8005bf0:	b538      	push	{r3, r4, r5, lr}
@@ -16267,10 +16935,17 @@ static void prvCheckForValidListAndQueue( void )
  8005bfc:	602a      	str	r2, [r5, #0]
  8005bfe:	461a      	mov	r2, r3
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005c00:	f7fa fd68 	bl	80006d4 <_lseek>
 =======
  8005c00:	f7fa fd6e 	bl	80006e0 <_lseek>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005c00:	f7fa fd6e 	bl	80006e0 <_lseek>
+=======
+ 8005c00:	f7fa fd68 	bl	80006d4 <_lseek>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005c04:	1c43      	adds	r3, r0, #1
  8005c06:	d102      	bne.n	8005c0e <_lseek_r+0x1e>
  8005c08:	682b      	ldr	r3, [r5, #0]
@@ -16278,10 +16953,17 @@ static void prvCheckForValidListAndQueue( void )
  8005c0c:	6023      	str	r3, [r4, #0]
  8005c0e:	bd38      	pop	{r3, r4, r5, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005c10:	2000404c 	.word	0x2000404c
 =======
  8005c10:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005c10:	20004054 	.word	0x20004054
+=======
+ 8005c10:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005c14 <memchr>:
  8005c14:	b2c9      	uxtb	r1, r1
@@ -16304,20 +16986,34 @@ static void prvCheckForValidListAndQueue( void )
  8005c32:	f7ff bb45 	b.w	80052c0 <__retarget_lock_acquire_recursive>
  8005c36:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005c38:	20004044 	.word	0x20004044
 =======
  8005c38:	2000404c 	.word	0x2000404c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005c38:	2000404c 	.word	0x2000404c
+=======
+ 8005c38:	20004044 	.word	0x20004044
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005c3c <__malloc_unlock>:
  8005c3c:	4801      	ldr	r0, [pc, #4]	; (8005c44 <__malloc_unlock+0x8>)
  8005c3e:	f7ff bb40 	b.w	80052c2 <__retarget_lock_release_recursive>
  8005c42:	bf00      	nop
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005c44:	20004044 	.word	0x20004044
 =======
  8005c44:	2000404c 	.word	0x2000404c
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005c44:	2000404c 	.word	0x2000404c
+=======
+ 8005c44:	20004044 	.word	0x20004044
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005c48 <_read_r>:
  8005c48:	b538      	push	{r3, r4, r5, lr}
@@ -16329,10 +17025,17 @@ static void prvCheckForValidListAndQueue( void )
  8005c54:	602a      	str	r2, [r5, #0]
  8005c56:	461a      	mov	r2, r3
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005c58:	f7fa fcdc 	bl	8000614 <_read>
 =======
  8005c58:	f7fa fce2 	bl	8000620 <_read>
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005c58:	f7fa fce2 	bl	8000620 <_read>
+=======
+ 8005c58:	f7fa fcdc 	bl	8000614 <_read>
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
  8005c5c:	1c43      	adds	r3, r0, #1
  8005c5e:	d102      	bne.n	8005c66 <_read_r+0x1e>
  8005c60:	682b      	ldr	r3, [r5, #0]
@@ -16340,10 +17043,17 @@ static void prvCheckForValidListAndQueue( void )
  8005c64:	6023      	str	r3, [r4, #0]
  8005c66:	bd38      	pop	{r3, r4, r5, pc}
 <<<<<<< HEAD
+<<<<<<< HEAD
  8005c68:	2000404c 	.word	0x2000404c
 =======
  8005c68:	20004054 	.word	0x20004054
 >>>>>>> af0db35 (sample file for just for pull request)
+=======
+ 8005c68:	20004054 	.word	0x20004054
+=======
+ 8005c68:	2000404c 	.word	0x2000404c
+>>>>>>> main
+>>>>>>> 905dc0181def0b72f1239634df872d0dc52e2149
 
 08005c6c <_init>:
  8005c6c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
