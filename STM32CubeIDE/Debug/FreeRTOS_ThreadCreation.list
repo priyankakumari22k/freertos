@@ -7,6 +7,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00005a88  08000200  08000200  00010200  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
+<<<<<<< HEAD
   2 .rodata       000001a0  08005c88  08005c88  00015c88  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   3 .ARM.extab    00000000  08005e28  08005e28  000200c0  2**0
@@ -32,18 +33,49 @@ Idx Name          Size      VMA       LMA       File off  Algn
  13 .debug_info   0001be55  00000000  00000000  00037153  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_abbrev 00003760  00000000  00000000  00052fa8  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00001610  00000000  00000000  00056708  2**3
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_str    00115919  00000000  00000000  00057d18  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_ranges 00001488  00000000  00000000  0016d638  2**3
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_macro  0000522b  00000000  00000000  0016eac0  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  00173ceb  2**0
+=======
+  2 .rodata       00000178  08005c88  08005c88  00015c88  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08005e00  08005e00  000200c0  2**0
+                  CONTENTS
+  4 .ARM          00000000  08005e00  08005e00  000200c0  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08005e00  08005e00  000200c0  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000008  08005e00  08005e00  00015e00  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000008  08005e08  08005e08  00015e08  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         000000c0  20000000  08005e10  00020000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00003f90  200000c0  08005ed0  000200c0  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000c00  20004050  08005ed0  00024050  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000036  00000000  00000000  000200c0  2**0
                   CONTENTS, READONLY
+ 12 .debug_line   00017050  00000000  00000000  000200f6  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_info   0001bc09  00000000  00000000  00037146  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_abbrev 0000374e  00000000  00000000  00052d4f  2**0
+>>>>>>> main
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_aranges 00001610  00000000  00000000  000564a0  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_str    001158e2  00000000  00000000  00057ab0  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_ranges 00001488  00000000  00000000  0016d398  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_macro  0000522b  00000000  00000000  0016e820  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000053  00000000  00000000  00173a4b  2**0
+                  CONTENTS, READONLY
+<<<<<<< HEAD
  20 .debug_frame  000062d4  00000000  00000000  00173d40  2**2
+=======
+ 20 .debug_frame  000062d4  00000000  00000000  00173aa0  2**2
+>>>>>>> main
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -159,7 +191,11 @@ LoopForever:
   ldr   sp, =_estack    /* set stack pointer */
  8000278:	20030000 	.word	0x20030000
 	ldr	r3, =_sidata
+<<<<<<< HEAD
  800027c:	08005e38 	.word	0x08005e38
+=======
+ 800027c:	08005e10 	.word	0x08005e10
+>>>>>>> main
 	ldr	r0, =_sdata
  8000280:	20000000 	.word	0x20000000
 	ldr	r3, =_edata
@@ -167,7 +203,7 @@ LoopForever:
 	ldr	r2, =_sbss
  8000288:	200000c0 	.word	0x200000c0
 	ldr	r3, = _ebss
- 800028c:	20004058 	.word	0x20004058
+ 800028c:	20004050 	.word	0x20004050
 
 08000290 <ADC1_2_IRQHandler>:
  * @retval : None
@@ -180,10 +216,10 @@ Infinite_Loop:
 	...
 
 08000294 <main>:
-/**
-  * @brief  The application entry point.
   * @retval int
   */
+//static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
+
 int main(void)
 {
  8000294:	b580      	push	{r7, lr}
@@ -218,65 +254,75 @@ int main(void)
   MX_ICACHE_Init();
  80002ae:	f000 f89e 	bl	80003ee <MX_ICACHE_Init>
   /* USER CODE BEGIN 2 */
- 
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
+<<<<<<< HEAD
  80002b2:	f002 fa25 	bl	8002700 <osKernelInitialize>
   /* USER CODE END RTOS_QUEUES */
+=======
+ 80002b2:	f002 fa1f 	bl	80026f4 <osKernelInitialize>
+>>>>>>> main
 
+  /* USER CODE BEGIN RTOS_MUTEX */
+  printf("Main func\n");
+ 80002b6:	481b      	ldr	r0, [pc, #108]	; (8000324 <main+0x90>)
+ 80002b8:	f004 fd84 	bl	8004dc4 <puts>
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    status = xTaskCreate(LED_Thread1, "Task1", 512, &s1, 2, &task1_handle);
- 80002b6:	4b1b      	ldr	r3, [pc, #108]	; (8000324 <main+0x90>)
- 80002b8:	9301      	str	r3, [sp, #4]
- 80002ba:	2302      	movs	r3, #2
- 80002bc:	9300      	str	r3, [sp, #0]
- 80002be:	4b1a      	ldr	r3, [pc, #104]	; (8000328 <main+0x94>)
- 80002c0:	f44f 7200 	mov.w	r2, #512	; 0x200
- 80002c4:	4919      	ldr	r1, [pc, #100]	; (800032c <main+0x98>)
- 80002c6:	481a      	ldr	r0, [pc, #104]	; (8000330 <main+0x9c>)
- 80002c8:	f003 fb9f 	bl	8003a0a <xTaskCreate>
- 80002cc:	6078      	str	r0, [r7, #4]
 
-    status1 = xTaskCreate(LED_Thread2, "Task2", 512, "Task-2 is running", 2, &task2_handle);
- 80002ce:	4b19      	ldr	r3, [pc, #100]	; (8000334 <main+0xa0>)
- 80002d0:	9301      	str	r3, [sp, #4]
- 80002d2:	2302      	movs	r3, #2
- 80002d4:	9300      	str	r3, [sp, #0]
- 80002d6:	4b18      	ldr	r3, [pc, #96]	; (8000338 <main+0xa4>)
- 80002d8:	f44f 7200 	mov.w	r2, #512	; 0x200
- 80002dc:	4917      	ldr	r1, [pc, #92]	; (800033c <main+0xa8>)
- 80002de:	4818      	ldr	r0, [pc, #96]	; (8000340 <main+0xac>)
- 80002e0:	f003 fb93 	bl	8003a0a <xTaskCreate>
- 80002e4:	6038      	str	r0, [r7, #0]
+
+    status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
+ 80002bc:	4b1a      	ldr	r3, [pc, #104]	; (8000328 <main+0x94>)
+ 80002be:	9301      	str	r3, [sp, #4]
+ 80002c0:	2302      	movs	r3, #2
+ 80002c2:	9300      	str	r3, [sp, #0]
+ 80002c4:	4b19      	ldr	r3, [pc, #100]	; (800032c <main+0x98>)
+ 80002c6:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
+ 80002ca:	4919      	ldr	r1, [pc, #100]	; (8000330 <main+0x9c>)
+ 80002cc:	4819      	ldr	r0, [pc, #100]	; (8000334 <main+0xa0>)
+ 80002ce:	f003 fb9c 	bl	8003a0a <xTaskCreate>
+ 80002d2:	6078      	str	r0, [r7, #4]
+    status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
+ 80002d4:	4b18      	ldr	r3, [pc, #96]	; (8000338 <main+0xa4>)
+ 80002d6:	9301      	str	r3, [sp, #4]
+ 80002d8:	2302      	movs	r3, #2
+ 80002da:	9300      	str	r3, [sp, #0]
+ 80002dc:	4b17      	ldr	r3, [pc, #92]	; (800033c <main+0xa8>)
+ 80002de:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
+ 80002e2:	4917      	ldr	r1, [pc, #92]	; (8000340 <main+0xac>)
+ 80002e4:	4817      	ldr	r0, [pc, #92]	; (8000344 <main+0xb0>)
+ 80002e6:	f003 fb90 	bl	8003a0a <xTaskCreate>
+ 80002ea:	6038      	str	r0, [r7, #0]
     configASSERT(status == pdPASS);
- 80002e6:	687b      	ldr	r3, [r7, #4]
- 80002e8:	2b01      	cmp	r3, #1
- 80002ea:	d002      	beq.n	80002f2 <main+0x5e>
- 80002ec:	f002 feb4 	bl	8003058 <ulSetInterruptMask>
- 80002f0:	e7fe      	b.n	80002f0 <main+0x5c>
+ 80002ec:	687b      	ldr	r3, [r7, #4]
+ 80002ee:	2b01      	cmp	r3, #1
+ 80002f0:	d002      	beq.n	80002f8 <main+0x64>
+ 80002f2:	f002 feb1 	bl	8003058 <ulSetInterruptMask>
+ 80002f6:	e7fe      	b.n	80002f6 <main+0x62>
     configASSERT(status1 == pdPASS);
- 80002f2:	683b      	ldr	r3, [r7, #0]
- 80002f4:	2b01      	cmp	r3, #1
- 80002f6:	d002      	beq.n	80002fe <main+0x6a>
- 80002f8:	f002 feae 	bl	8003058 <ulSetInterruptMask>
- 80002fc:	e7fe      	b.n	80002fc <main+0x68>
+ 80002f8:	683b      	ldr	r3, [r7, #0]
+ 80002fa:	2b01      	cmp	r3, #1
+ 80002fc:	d002      	beq.n	8000304 <main+0x70>
+ 80002fe:	f002 feab 	bl	8003058 <ulSetInterruptMask>
+ 8000302:	e7fe      	b.n	8000302 <main+0x6e>
 
     printf("Main Num :%d\n",s1.num);
- 80002fe:	4b0a      	ldr	r3, [pc, #40]	; (8000328 <main+0x94>)
- 8000300:	681b      	ldr	r3, [r3, #0]
- 8000302:	4619      	mov	r1, r3
- 8000304:	480f      	ldr	r0, [pc, #60]	; (8000344 <main+0xb0>)
- 8000306:	f004 fcd7 	bl	8004cb8 <iprintf>
+ 8000304:	4b09      	ldr	r3, [pc, #36]	; (800032c <main+0x98>)
+ 8000306:	681b      	ldr	r3, [r3, #0]
+ 8000308:	4619      	mov	r1, r3
+ 800030a:	480f      	ldr	r0, [pc, #60]	; (8000348 <main+0xb4>)
+ 800030c:	f004 fcd4 	bl	8004cb8 <iprintf>
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
   osKernelStart();
+<<<<<<< HEAD
  800030a:	f002 fa1d 	bl	8002748 <osKernelStart>
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -304,6 +350,32 @@ int main(void)
  8000340:	0800046d 	.word	0x0800046d
  8000344:	08005cbc 	.word	0x08005cbc
  8000348:	08005ccc 	.word	0x08005ccc
+=======
+ 8000310:	f002 fa14 	bl	800273c <osKernelStart>
+  printf("Main Num :%d\n",s1.num);
+ 8000314:	4b05      	ldr	r3, [pc, #20]	; (800032c <main+0x98>)
+ 8000316:	681b      	ldr	r3, [r3, #0]
+ 8000318:	4619      	mov	r1, r3
+ 800031a:	480b      	ldr	r0, [pc, #44]	; (8000348 <main+0xb4>)
+ 800031c:	f004 fccc 	bl	8004cb8 <iprintf>
+
+  /* We should never get here as control is now taken by the scheduler */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+ 8000320:	e7fe      	b.n	8000320 <main+0x8c>
+ 8000322:	bf00      	nop
+ 8000324:	08005c88 	.word	0x08005c88
+ 8000328:	20003fa8 	.word	0x20003fa8
+ 800032c:	20000000 	.word	0x20000000
+ 8000330:	08005c94 	.word	0x08005c94
+ 8000334:	08000415 	.word	0x08000415
+ 8000338:	20003fac 	.word	0x20003fac
+ 800033c:	08005c9c 	.word	0x08005c9c
+ 8000340:	08005cb0 	.word	0x08005cb0
+ 8000344:	08000461 	.word	0x08000461
+ 8000348:	08005cb8 	.word	0x08005cb8
+>>>>>>> main
 
 0800034c <SystemClock_Config>:
 /**
@@ -470,16 +542,18 @@ static void MX_ICACHE_Init(void)
  8000412:	bd80      	pop	{r7, pc}
 
 08000414 <LED_Thread1>:
-  * @param  argument: Not used 
+  * @param  argument: Not used
   * @retval None
   */
 /* USER CODE END Header_LED_Thread1 */
 void LED_Thread1(void *argument)
-{  struct student *t;
+{
  8000414:	b580      	push	{r7, lr}
  8000416:	b084      	sub	sp, #16
  8000418:	af00      	add	r7, sp, #0
  800041a:	6078      	str	r0, [r7, #4]
+  /* USER CODE BEGIN 5 */
+   struct student *t;
   /* USER CODE BEGIN 5 */
   //uint32_t count = 0;
 	//UBaseType_t uxPriority;
@@ -523,12 +597,19 @@ void LED_Thread1(void *argument)
  8000450:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
  8000454:	f002 f99e 	bl	8002794 <osDelay>
       BSP_LED_Toggle(LED9);
+<<<<<<< HEAD
  8000458:	e7e2      	b.n	8000420 <LED_Thread1+0xc>
  800045a:	bf00      	nop
  800045c:	08005cdc 	.word	0x08005cdc
  8000460:	08005cf0 	.word	0x08005cf0
  8000464:	08005cfc 	.word	0x08005cfc
  8000468:	08005d08 	.word	0x08005d08
+=======
+ 8000452:	e7e5      	b.n	8000420 <LED_Thread1+0xc>
+ 8000454:	08005cc8 	.word	0x08005cc8
+ 8000458:	08005cd4 	.word	0x08005cd4
+ 800045c:	08005ce0 	.word	0x08005ce0
+>>>>>>> main
 
 0800046c <LED_Thread2>:
 * @param argument: Not used
@@ -562,8 +643,13 @@ void LED_Thread2(void *argument)
  8000482:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
  8000486:	f002 f985 	bl	8002794 <osDelay>
       BSP_LED_Toggle(LED10);
+<<<<<<< HEAD
  800048a:	e7f3      	b.n	8000474 <LED_Thread2+0x8>
  800048c:	08005d14 	.word	0x08005d14
+=======
+ 800047e:	e7f3      	b.n	8000468 <LED_Thread2+0x8>
+ 8000480:	08005cec 	.word	0x08005cec
+>>>>>>> main
 
 08000490 <HAL_TIM_PeriodElapsedCallback>:
   * a global variable "uwTick" used as application time base.
@@ -606,12 +692,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   */
 void Error_Handler(void)
 {
+<<<<<<< HEAD
  80004b4:	b480      	push	{r7}
  80004b6:	af00      	add	r7, sp, #0
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   while(1) 
  80004b8:	e7fe      	b.n	80004b8 <Error_Handler+0x4>
+=======
+ 80004a8:	b480      	push	{r7}
+ 80004aa:	af00      	add	r7, sp, #0
+   //USER CODE BEGIN Error_Handler_Debug
+   //User can add his own implementation to report the HAL error return state
+  while(1)
+ 80004ac:	e7fe      	b.n	80004ac <Error_Handler+0x4>
+>>>>>>> main
 	...
 
 080004bc <HAL_MspInit>:
@@ -786,6 +881,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   return HAL_ERROR;
  80005a2:	2301      	movs	r3, #1
 }
+<<<<<<< HEAD
  80005a4:	4618      	mov	r0, r3
  80005a6:	3730      	adds	r7, #48	; 0x30
  80005a8:	46bd      	mov	sp, r7
@@ -794,6 +890,16 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
  80005b0:	431bde83 	.word	0x431bde83
  80005b4:	20003fb8 	.word	0x20003fb8
  80005b8:	40001000 	.word	0x40001000
+=======
+ 8000598:	4618      	mov	r0, r3
+ 800059a:	3730      	adds	r7, #48	; 0x30
+ 800059c:	46bd      	mov	sp, r7
+ 800059e:	bd80      	pop	{r7, pc}
+ 80005a0:	40021000 	.word	0x40021000
+ 80005a4:	431bde83 	.word	0x431bde83
+ 80005a8:	20003fb0 	.word	0x20003fb0
+ 80005ac:	40001000 	.word	0x40001000
+>>>>>>> main
 
 080005bc <TIM6_IRQHandler>:
 
@@ -814,6 +920,7 @@ void TIM6_IRQHandler(void)
 
   /* USER CODE END TIM6_IRQn 1 */
 }
+<<<<<<< HEAD
  80005c6:	bf00      	nop
  80005c8:	bd80      	pop	{r7, pc}
  80005ca:	bf00      	nop
@@ -821,6 +928,15 @@ void TIM6_IRQHandler(void)
 
 080005d0 <ITM_SendChar>:
  /*ITM register addresses*/
+=======
+ 80005ba:	bf00      	nop
+ 80005bc:	bd80      	pop	{r7, pc}
+ 80005be:	bf00      	nop
+ 80005c0:	20003fb0 	.word	0x20003fb0
+
+080005c4 <ITM_SendChar>:
+/* ITM register addresses */
+>>>>>>> main
 #define ITM_STIMULUS_PORT0   	*((volatile uint32_t*) 0xE0000000 )
 #define ITM_TRACE_EN          	*((volatile uint32_t*) 0xE0000E00 )
 
@@ -872,13 +988,20 @@ void ITM_SendChar(uint8_t ch)
  8000618:	e000edfc 	.word	0xe000edfc
  800061c:	e0000e00 	.word	0xe0000e00
 
+<<<<<<< HEAD
 08000620 <_read>:
   _kill(status, -1);
   while (1) {}    /* Make sure we hang here */
+=======
+08000614 <_read>:
+	_kill(status, -1);
+	while (1) {}		/* Make sure we hang here */
+>>>>>>> main
 }
 
 __attribute__((weak)) int _read(int file, char *ptr, int len)
 {
+<<<<<<< HEAD
  8000620:	b580      	push	{r7, lr}
  8000622:	b086      	sub	sp, #24
  8000624:	af00      	add	r7, sp, #0
@@ -914,6 +1037,42 @@ __attribute__((weak)) int _read(int file, char *ptr, int len)
 
   return len;
  8000650:	687b      	ldr	r3, [r7, #4]
+=======
+ 8000614:	b580      	push	{r7, lr}
+ 8000616:	b086      	sub	sp, #24
+ 8000618:	af00      	add	r7, sp, #0
+ 800061a:	60f8      	str	r0, [r7, #12]
+ 800061c:	60b9      	str	r1, [r7, #8]
+ 800061e:	607a      	str	r2, [r7, #4]
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 8000620:	2300      	movs	r3, #0
+ 8000622:	617b      	str	r3, [r7, #20]
+ 8000624:	e00a      	b.n	800063c <_read+0x28>
+	{
+		*ptr++ = __io_getchar();
+ 8000626:	e000      	b.n	800062a <_read+0x16>
+ 8000628:	bf00      	nop
+ 800062a:	4601      	mov	r1, r0
+ 800062c:	68bb      	ldr	r3, [r7, #8]
+ 800062e:	1c5a      	adds	r2, r3, #1
+ 8000630:	60ba      	str	r2, [r7, #8]
+ 8000632:	b2ca      	uxtb	r2, r1
+ 8000634:	701a      	strb	r2, [r3, #0]
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 8000636:	697b      	ldr	r3, [r7, #20]
+ 8000638:	3301      	adds	r3, #1
+ 800063a:	617b      	str	r3, [r7, #20]
+ 800063c:	697a      	ldr	r2, [r7, #20]
+ 800063e:	687b      	ldr	r3, [r7, #4]
+ 8000640:	429a      	cmp	r2, r3
+ 8000642:	dbf0      	blt.n	8000626 <_read+0x12>
+	}
+
+return len;
+ 8000644:	687b      	ldr	r3, [r7, #4]
+>>>>>>> main
 }
  8000652:	4618      	mov	r0, r3
  8000654:	3718      	adds	r7, #24
@@ -924,6 +1083,7 @@ __attribute__((weak)) int _read(int file, char *ptr, int len)
 
 __attribute__((weak)) int _write(int file, char *ptr, int len)
 {
+<<<<<<< HEAD
  800065a:	b580      	push	{r7, lr}
  800065c:	b086      	sub	sp, #24
  800065e:	af00      	add	r7, sp, #0
@@ -957,6 +1117,40 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
   }
   return len;
  8000688:	687b      	ldr	r3, [r7, #4]
+=======
+ 800064e:	b580      	push	{r7, lr}
+ 8000650:	b086      	sub	sp, #24
+ 8000652:	af00      	add	r7, sp, #0
+ 8000654:	60f8      	str	r0, [r7, #12]
+ 8000656:	60b9      	str	r1, [r7, #8]
+ 8000658:	607a      	str	r2, [r7, #4]
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 800065a:	2300      	movs	r3, #0
+ 800065c:	617b      	str	r3, [r7, #20]
+ 800065e:	e009      	b.n	8000674 <_write+0x26>
+	{
+		//__io_putchar(*ptr++);
+		ITM_SendChar(*ptr++);
+ 8000660:	68bb      	ldr	r3, [r7, #8]
+ 8000662:	1c5a      	adds	r2, r3, #1
+ 8000664:	60ba      	str	r2, [r7, #8]
+ 8000666:	781b      	ldrb	r3, [r3, #0]
+ 8000668:	4618      	mov	r0, r3
+ 800066a:	f7ff ffab 	bl	80005c4 <ITM_SendChar>
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 800066e:	697b      	ldr	r3, [r7, #20]
+ 8000670:	3301      	adds	r3, #1
+ 8000672:	617b      	str	r3, [r7, #20]
+ 8000674:	697a      	ldr	r2, [r7, #20]
+ 8000676:	687b      	ldr	r3, [r7, #4]
+ 8000678:	429a      	cmp	r2, r3
+ 800067a:	dbf1      	blt.n	8000660 <_write+0x12>
+	}
+	return len;
+ 800067c:	687b      	ldr	r3, [r7, #4]
+>>>>>>> main
 }
  800068a:	4618      	mov	r0, r3
  800068c:	3718      	adds	r7, #24
@@ -967,6 +1161,7 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
 
 int _close(int file)
 {
+<<<<<<< HEAD
  8000692:	b480      	push	{r7}
  8000694:	b083      	sub	sp, #12
  8000696:	af00      	add	r7, sp, #0
@@ -974,6 +1169,14 @@ int _close(int file)
   (void)file;
   return -1;
  800069a:	f04f 33ff 	mov.w	r3, #4294967295
+=======
+ 8000686:	b480      	push	{r7}
+ 8000688:	b083      	sub	sp, #12
+ 800068a:	af00      	add	r7, sp, #0
+ 800068c:	6078      	str	r0, [r7, #4]
+	return -1;
+ 800068e:	f04f 33ff 	mov.w	r3, #4294967295
+>>>>>>> main
 }
  800069e:	4618      	mov	r0, r3
  80006a0:	370c      	adds	r7, #12
@@ -986,6 +1189,7 @@ int _close(int file)
 
 int _fstat(int file, struct stat *st)
 {
+<<<<<<< HEAD
  80006aa:	b480      	push	{r7}
  80006ac:	b083      	sub	sp, #12
  80006ae:	af00      	add	r7, sp, #0
@@ -998,6 +1202,19 @@ int _fstat(int file, struct stat *st)
  80006ba:	605a      	str	r2, [r3, #4]
   return 0;
  80006bc:	2300      	movs	r3, #0
+=======
+ 800069e:	b480      	push	{r7}
+ 80006a0:	b083      	sub	sp, #12
+ 80006a2:	af00      	add	r7, sp, #0
+ 80006a4:	6078      	str	r0, [r7, #4]
+ 80006a6:	6039      	str	r1, [r7, #0]
+	st->st_mode = S_IFCHR;
+ 80006a8:	683b      	ldr	r3, [r7, #0]
+ 80006aa:	f44f 5200 	mov.w	r2, #8192	; 0x2000
+ 80006ae:	605a      	str	r2, [r3, #4]
+	return 0;
+ 80006b0:	2300      	movs	r3, #0
+>>>>>>> main
 }
  80006be:	4618      	mov	r0, r3
  80006c0:	370c      	adds	r7, #12
@@ -1009,6 +1226,7 @@ int _fstat(int file, struct stat *st)
 
 int _isatty(int file)
 {
+<<<<<<< HEAD
  80006ca:	b480      	push	{r7}
  80006cc:	b083      	sub	sp, #12
  80006ce:	af00      	add	r7, sp, #0
@@ -1016,6 +1234,14 @@ int _isatty(int file)
   (void)file;
   return 1;
  80006d2:	2301      	movs	r3, #1
+=======
+ 80006be:	b480      	push	{r7}
+ 80006c0:	b083      	sub	sp, #12
+ 80006c2:	af00      	add	r7, sp, #0
+ 80006c4:	6078      	str	r0, [r7, #4]
+	return 1;
+ 80006c6:	2301      	movs	r3, #1
+>>>>>>> main
 }
  80006d4:	4618      	mov	r0, r3
  80006d6:	370c      	adds	r7, #12
@@ -1027,6 +1253,7 @@ int _isatty(int file)
 
 int _lseek(int file, int ptr, int dir)
 {
+<<<<<<< HEAD
  80006e0:	b480      	push	{r7}
  80006e2:	b085      	sub	sp, #20
  80006e4:	af00      	add	r7, sp, #0
@@ -1038,6 +1265,16 @@ int _lseek(int file, int ptr, int dir)
   (void)dir;
   return 0;
  80006ec:	2300      	movs	r3, #0
+=======
+ 80006d4:	b480      	push	{r7}
+ 80006d6:	b085      	sub	sp, #20
+ 80006d8:	af00      	add	r7, sp, #0
+ 80006da:	60f8      	str	r0, [r7, #12]
+ 80006dc:	60b9      	str	r1, [r7, #8]
+ 80006de:	607a      	str	r2, [r7, #4]
+	return 0;
+ 80006e0:	2300      	movs	r3, #0
+>>>>>>> main
 }
  80006ee:	4618      	mov	r0, r3
  80006f0:	3714      	adds	r7, #20
@@ -1118,6 +1355,7 @@ void *_sbrk(ptrdiff_t incr)
   return (void *)prev_heap_end;
  800074e:	68fb      	ldr	r3, [r7, #12]
 }
+<<<<<<< HEAD
  8000750:	4618      	mov	r0, r3
  8000752:	3718      	adds	r7, #24
  8000754:	46bd      	mov	sp, r7
@@ -1126,6 +1364,16 @@ void *_sbrk(ptrdiff_t incr)
  800075c:	00000800 	.word	0x00000800
  8000760:	200000dc 	.word	0x200000dc
  8000764:	20004058 	.word	0x20004058
+=======
+ 8000744:	4618      	mov	r0, r3
+ 8000746:	3718      	adds	r7, #24
+ 8000748:	46bd      	mov	sp, r7
+ 800074a:	bd80      	pop	{r7, pc}
+ 800074c:	20030000 	.word	0x20030000
+ 8000750:	00000800 	.word	0x00000800
+ 8000754:	200000dc 	.word	0x200000dc
+ 8000758:	20004050 	.word	0x20004050
+>>>>>>> main
 
 08000768 <BSP_LED_Init>:
   *     @arg  LED9
@@ -1502,6 +1750,7 @@ void SystemCoreClockUpdate(void)
  80009b4:	4a05      	ldr	r2, [pc, #20]	; (80009cc <SystemCoreClockUpdate+0x14c>)
  80009b6:	6013      	str	r3, [r2, #0]
 }
+<<<<<<< HEAD
  80009b8:	bf00      	nop
  80009ba:	371c      	adds	r7, #28
  80009bc:	46bd      	mov	sp, r7
@@ -1512,6 +1761,18 @@ void SystemCoreClockUpdate(void)
  80009cc:	20000048 	.word	0x20000048
  80009d0:	00f42400 	.word	0x00f42400
  80009d4:	08005d34 	.word	0x08005d34
+=======
+ 80009ac:	bf00      	nop
+ 80009ae:	371c      	adds	r7, #28
+ 80009b0:	46bd      	mov	sp, r7
+ 80009b2:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80009b6:	4770      	bx	lr
+ 80009b8:	40021000 	.word	0x40021000
+ 80009bc:	08005d24 	.word	0x08005d24
+ 80009c0:	20000048 	.word	0x20000048
+ 80009c4:	00f42400 	.word	0x00f42400
+ 80009c8:	08005d0c 	.word	0x08005d0c
+>>>>>>> main
 
 080009d8 <HAL_Init>:
   *         each 1ms in the SysTick_Handler() interrupt handler.
@@ -1584,6 +1845,7 @@ __weak void HAL_IncTick(void)
  8000a1c:	4a04      	ldr	r2, [pc, #16]	; (8000a30 <HAL_IncTick+0x24>)
  8000a1e:	6013      	str	r3, [r2, #0]
 }
+<<<<<<< HEAD
  8000a20:	bf00      	nop
  8000a22:	46bd      	mov	sp, r7
  8000a24:	f85d 7b04 	ldr.w	r7, [sp], #4
@@ -1591,6 +1853,15 @@ __weak void HAL_IncTick(void)
  8000a2a:	bf00      	nop
  8000a2c:	20000050 	.word	0x20000050
  8000a30:	20004004 	.word	0x20004004
+=======
+ 8000a14:	bf00      	nop
+ 8000a16:	46bd      	mov	sp, r7
+ 8000a18:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000a1c:	4770      	bx	lr
+ 8000a1e:	bf00      	nop
+ 8000a20:	20000050 	.word	0x20000050
+ 8000a24:	20003ffc 	.word	0x20003ffc
+>>>>>>> main
 
 08000a34 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other
@@ -1605,12 +1876,21 @@ __weak uint32_t HAL_GetTick(void)
  8000a38:	4b03      	ldr	r3, [pc, #12]	; (8000a48 <HAL_GetTick+0x14>)
  8000a3a:	681b      	ldr	r3, [r3, #0]
 }
+<<<<<<< HEAD
  8000a3c:	4618      	mov	r0, r3
  8000a3e:	46bd      	mov	sp, r7
  8000a40:	f85d 7b04 	ldr.w	r7, [sp], #4
  8000a44:	4770      	bx	lr
  8000a46:	bf00      	nop
  8000a48:	20004004 	.word	0x20004004
+=======
+ 8000a30:	4618      	mov	r0, r3
+ 8000a32:	46bd      	mov	sp, r7
+ 8000a34:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000a38:	4770      	bx	lr
+ 8000a3a:	bf00      	nop
+ 8000a3c:	20003ffc 	.word	0x20003ffc
+>>>>>>> main
 
 08000a4c <__NVIC_SetPriorityGrouping>:
            In case of a conflict between priority grouping and available
@@ -5128,6 +5408,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
   return sysclockfreq;
  8001e64:	69bb      	ldr	r3, [r7, #24]
 }
+<<<<<<< HEAD
  8001e66:	4618      	mov	r0, r3
  8001e68:	3724      	adds	r7, #36	; 0x24
  8001e6a:	46bd      	mov	sp, r7
@@ -5137,6 +5418,17 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8001e74:	40021000 	.word	0x40021000
  8001e78:	08005d4c 	.word	0x08005d4c
  8001e7c:	00f42400 	.word	0x00f42400
+=======
+ 8001e5a:	4618      	mov	r0, r3
+ 8001e5c:	3724      	adds	r7, #36	; 0x24
+ 8001e5e:	46bd      	mov	sp, r7
+ 8001e60:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8001e64:	4770      	bx	lr
+ 8001e66:	bf00      	nop
+ 8001e68:	40021000 	.word	0x40021000
+ 8001e6c:	08005d24 	.word	0x08005d24
+ 8001e70:	00f42400 	.word	0x00f42400
+>>>>>>> main
 
 08001e80 <HAL_RCC_GetHCLKFreq>:
   * @note   Each time HCLK changes, this function must be called to update the
@@ -5158,10 +5450,17 @@ uint32_t HAL_RCC_GetHCLKFreq(void)
  8001e96:	5ccb      	ldrb	r3, [r1, r3]
  8001e98:	fa22 f303 	lsr.w	r3, r2, r3
 }
+<<<<<<< HEAD
  8001e9c:	4618      	mov	r0, r3
  8001e9e:	bd80      	pop	{r7, pc}
  8001ea0:	40021000 	.word	0x40021000
  8001ea4:	08005d34 	.word	0x08005d34
+=======
+ 8001e90:	4618      	mov	r0, r3
+ 8001e92:	bd80      	pop	{r7, pc}
+ 8001e94:	40021000 	.word	0x40021000
+ 8001e98:	08005d0c 	.word	0x08005d0c
+>>>>>>> main
 
 08001ea8 <HAL_RCC_GetPCLK1Freq>:
   * @note   Each time PCLK1 changes, this function must be called to update the
@@ -5184,10 +5483,17 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8001ebe:	5ccb      	ldrb	r3, [r1, r3]
  8001ec0:	fa22 f303 	lsr.w	r3, r2, r3
 }
+<<<<<<< HEAD
  8001ec4:	4618      	mov	r0, r3
  8001ec6:	bd80      	pop	{r7, pc}
  8001ec8:	40021000 	.word	0x40021000
  8001ecc:	08005d44 	.word	0x08005d44
+=======
+ 8001eb8:	4618      	mov	r0, r3
+ 8001eba:	bd80      	pop	{r7, pc}
+ 8001ebc:	40021000 	.word	0x40021000
+ 8001ec0:	08005d1c 	.word	0x08005d1c
+>>>>>>> main
 
 08001ed0 <HAL_RCC_GetClockConfig>:
   *         will be configured.
@@ -5555,6 +5861,7 @@ static uint32_t RCC_GetSysClockFreqFromPLLSource(void)
   return sysclockfreq;
  80020ba:	683b      	ldr	r3, [r7, #0]
 }
+<<<<<<< HEAD
  80020bc:	4618      	mov	r0, r3
  80020be:	371c      	adds	r7, #28
  80020c0:	46bd      	mov	sp, r7
@@ -5563,6 +5870,16 @@ static uint32_t RCC_GetSysClockFreqFromPLLSource(void)
  80020c8:	40021000 	.word	0x40021000
  80020cc:	00f42400 	.word	0x00f42400
  80020d0:	08005d4c 	.word	0x08005d4c
+=======
+ 80020b0:	4618      	mov	r0, r3
+ 80020b2:	371c      	adds	r7, #28
+ 80020b4:	46bd      	mov	sp, r7
+ 80020b6:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80020ba:	4770      	bx	lr
+ 80020bc:	40021000 	.word	0x40021000
+ 80020c0:	00f42400 	.word	0x00f42400
+ 80020c4:	08005d24 	.word	0x08005d24
+>>>>>>> main
 
 080020d4 <HAL_TIM_Base_Init>:
   *         Ex: call @ref HAL_TIM_Base_DeInit() before HAL_TIM_Base_Init()
@@ -10296,7 +10613,7 @@ BaseType_t xReturn;
  800390c:	f85d 7b04 	ldr.w	r7, [sp], #4
  8003910:	4770      	bx	lr
  8003912:	bf00      	nop
- 8003914:	20004008 	.word	0x20004008
+ 8003914:	20004000 	.word	0x20004000
 
 08003918 <vQueueWaitForMessageRestricted>:
 /*-----------------------------------------------------------*/
@@ -11205,7 +11522,11 @@ BaseType_t xReturn;
  8003d4e:	3710      	adds	r7, #16
  8003d50:	46bd      	mov	sp, r7
  8003d52:	bd80      	pop	{r7, pc}
+<<<<<<< HEAD
  8003d54:	08005d1c 	.word	0x08005d1c
+=======
+ 8003d54:	08005cf4 	.word	0x08005cf4
+>>>>>>> main
  8003d58:	080042f1 	.word	0x080042f1
  8003d5c:	20003e6c 	.word	0x20003e6c
  8003d60:	20003e68 	.word	0x20003e68
@@ -12995,7 +13316,11 @@ BaseType_t xReturn = pdFAIL;
  8004688:	bd80      	pop	{r7, pc}
  800468a:	bf00      	nop
  800468c:	20003ea4 	.word	0x20003ea4
+<<<<<<< HEAD
  8004690:	08005d24 	.word	0x08005d24
+=======
+ 8004690:	08005cfc 	.word	0x08005cfc
+>>>>>>> main
  8004694:	080047b1 	.word	0x080047b1
  8004698:	20003ea8 	.word	0x20003ea8
 
@@ -14046,7 +14371,11 @@ static void prvCheckForValidListAndQueue( void )
  8004c28:	20003ea0 	.word	0x20003ea0
  8004c2c:	20003f50 	.word	0x20003f50
  8004c30:	20003eb0 	.word	0x20003eb0
+<<<<<<< HEAD
  8004c34:	08005d2c 	.word	0x08005d2c
+=======
+ 8004c34:	08005d04 	.word	0x08005d04
+>>>>>>> main
 
 08004c38 <__errno>:
  8004c38:	4b01      	ldr	r3, [pc, #4]	; (8004c40 <__errno+0x8>)
@@ -14081,10 +14410,17 @@ static void prvCheckForValidListAndQueue( void )
  8004c76:	3601      	adds	r6, #1
  8004c78:	4798      	blx	r3
  8004c7a:	e7f2      	b.n	8004c62 <__libc_init_array+0x1e>
+<<<<<<< HEAD
  8004c7c:	08005e28 	.word	0x08005e28
  8004c80:	08005e28 	.word	0x08005e28
  8004c84:	08005e28 	.word	0x08005e28
  8004c88:	08005e2c 	.word	0x08005e2c
+=======
+ 8004c7c:	08005e00 	.word	0x08005e00
+ 8004c80:	08005e00 	.word	0x08005e00
+ 8004c84:	08005e00 	.word	0x08005e00
+ 8004c88:	08005e04 	.word	0x08005e04
+>>>>>>> main
 
 08004c8c <memcpy>:
  8004c8c:	440a      	add	r2, r1
@@ -14227,9 +14563,15 @@ static void prvCheckForValidListAndQueue( void )
  8004db2:	6022      	str	r2, [r4, #0]
  8004db4:	701d      	strb	r5, [r3, #0]
  8004db6:	e7db      	b.n	8004d70 <_puts_r+0x88>
+<<<<<<< HEAD
  8004db8:	08005db0 	.word	0x08005db0
  8004dbc:	08005dd0 	.word	0x08005dd0
  8004dc0:	08005d90 	.word	0x08005d90
+=======
+ 8004db8:	08005d88 	.word	0x08005d88
+ 8004dbc:	08005da8 	.word	0x08005da8
+ 8004dc0:	08005d68 	.word	0x08005d68
+>>>>>>> main
 
 08004dc4 <puts>:
  8004dc4:	4b02      	ldr	r3, [pc, #8]	; (8004dd0 <puts+0xc>)
@@ -14311,9 +14653,15 @@ static void prvCheckForValidListAndQueue( void )
  8004e64:	f04f 37ff 	mov.w	r7, #4294967295
  8004e68:	e7ea      	b.n	8004e40 <__swbuf_r+0x6c>
  8004e6a:	bf00      	nop
+<<<<<<< HEAD
  8004e6c:	08005db0 	.word	0x08005db0
  8004e70:	08005dd0 	.word	0x08005dd0
  8004e74:	08005d90 	.word	0x08005d90
+=======
+ 8004e6c:	08005d88 	.word	0x08005d88
+ 8004e70:	08005da8 	.word	0x08005da8
+ 8004e74:	08005d68 	.word	0x08005d68
+>>>>>>> main
 
 08004e78 <__swsetup_r>:
  8004e78:	4b32      	ldr	r3, [pc, #200]	; (8004f44 <__swsetup_r+0xcc>)
@@ -14405,9 +14753,15 @@ static void prvCheckForValidListAndQueue( void )
  8004f40:	e7f7      	b.n	8004f32 <__swsetup_r+0xba>
  8004f42:	bf00      	nop
  8004f44:	20000058 	.word	0x20000058
+<<<<<<< HEAD
  8004f48:	08005db0 	.word	0x08005db0
  8004f4c:	08005dd0 	.word	0x08005dd0
  8004f50:	08005d90 	.word	0x08005d90
+=======
+ 8004f48:	08005d88 	.word	0x08005d88
+ 8004f4c:	08005da8 	.word	0x08005da8
+ 8004f50:	08005d68 	.word	0x08005d68
+>>>>>>> main
 
 08004f54 <__sflush_r>:
  8004f54:	898a      	ldrh	r2, [r1, #12]
@@ -14581,9 +14935,15 @@ static void prvCheckForValidListAndQueue( void )
  80050c2:	bf08      	it	eq
  80050c4:	68ec      	ldreq	r4, [r5, #12]
  80050c6:	e7da      	b.n	800507e <_fflush_r+0x22>
+<<<<<<< HEAD
  80050c8:	08005db0 	.word	0x08005db0
  80050cc:	08005dd0 	.word	0x08005dd0
  80050d0:	08005d90 	.word	0x08005d90
+=======
+ 80050c8:	08005d88 	.word	0x08005d88
+ 80050cc:	08005da8 	.word	0x08005da8
+ 80050d0:	08005d68 	.word	0x08005d68
+>>>>>>> main
 
 080050d4 <std>:
  80050d4:	2300      	movs	r3, #0
@@ -14645,25 +15005,41 @@ static void prvCheckForValidListAndQueue( void )
  8005154:	4801      	ldr	r0, [pc, #4]	; (800515c <__sfp_lock_acquire+0x8>)
  8005156:	f000 b8b3 	b.w	80052c0 <__retarget_lock_acquire_recursive>
  800515a:	bf00      	nop
+<<<<<<< HEAD
  800515c:	20004050 	.word	0x20004050
+=======
+ 800515c:	20004048 	.word	0x20004048
+>>>>>>> main
 
 08005160 <__sfp_lock_release>:
  8005160:	4801      	ldr	r0, [pc, #4]	; (8005168 <__sfp_lock_release+0x8>)
  8005162:	f000 b8ae 	b.w	80052c2 <__retarget_lock_release_recursive>
  8005166:	bf00      	nop
+<<<<<<< HEAD
  8005168:	20004050 	.word	0x20004050
+=======
+ 8005168:	20004048 	.word	0x20004048
+>>>>>>> main
 
 0800516c <__sinit_lock_acquire>:
  800516c:	4801      	ldr	r0, [pc, #4]	; (8005174 <__sinit_lock_acquire+0x8>)
  800516e:	f000 b8a7 	b.w	80052c0 <__retarget_lock_acquire_recursive>
  8005172:	bf00      	nop
+<<<<<<< HEAD
  8005174:	2000404b 	.word	0x2000404b
+=======
+ 8005174:	20004043 	.word	0x20004043
+>>>>>>> main
 
 08005178 <__sinit_lock_release>:
  8005178:	4801      	ldr	r0, [pc, #4]	; (8005180 <__sinit_lock_release+0x8>)
  800517a:	f000 b8a2 	b.w	80052c2 <__retarget_lock_release_recursive>
  800517e:	bf00      	nop
+<<<<<<< HEAD
  8005180:	2000404b 	.word	0x2000404b
+=======
+ 8005180:	20004043 	.word	0x20004043
+>>>>>>> main
 
 08005184 <__sinit>:
  8005184:	b510      	push	{r4, lr}
@@ -14708,7 +15084,11 @@ static void prvCheckForValidListAndQueue( void )
  80051e6:	61a3      	str	r3, [r4, #24]
  80051e8:	e7d2      	b.n	8005190 <__sinit+0xc>
  80051ea:	bf00      	nop
+<<<<<<< HEAD
  80051ec:	08005d8c 	.word	0x08005d8c
+=======
+ 80051ec:	08005d64 	.word	0x08005d64
+>>>>>>> main
  80051f0:	0800511d 	.word	0x0800511d
 
 080051f4 <__sfp>:
@@ -14763,7 +15143,11 @@ static void prvCheckForValidListAndQueue( void )
  8005272:	603b      	str	r3, [r7, #0]
  8005274:	e7ee      	b.n	8005254 <__sfp+0x60>
  8005276:	bf00      	nop
+<<<<<<< HEAD
  8005278:	08005d8c 	.word	0x08005d8c
+=======
+ 8005278:	08005d64 	.word	0x08005d64
+>>>>>>> main
  800527c:	ffff0001 	.word	0xffff0001
 
 08005280 <_fwalk_reent>:
@@ -15328,6 +15712,7 @@ static void prvCheckForValidListAndQueue( void )
  800576c:	f000 f882 	bl	8005874 <_printf_i>
  8005770:	e7e4      	b.n	800573c <_vfiprintf_r+0x208>
  8005772:	bf00      	nop
+<<<<<<< HEAD
  8005774:	08005db0 	.word	0x08005db0
  8005778:	08005dd0 	.word	0x08005dd0
  800577c:	08005d90 	.word	0x08005d90
@@ -15336,6 +15721,16 @@ static void prvCheckForValidListAndQueue( void )
  8005788:	00000000 	.word	0x00000000
  800578c:	0800550f 	.word	0x0800550f
  8005790:	08005df6 	.word	0x08005df6
+=======
+ 8005774:	08005d88 	.word	0x08005d88
+ 8005778:	08005da8 	.word	0x08005da8
+ 800577c:	08005d68 	.word	0x08005d68
+ 8005780:	08005dc8 	.word	0x08005dc8
+ 8005784:	08005dd2 	.word	0x08005dd2
+ 8005788:	00000000 	.word	0x00000000
+ 800578c:	0800550f 	.word	0x0800550f
+ 8005790:	08005dce 	.word	0x08005dce
+>>>>>>> main
 
 08005794 <_printf_common>:
  8005794:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -15670,8 +16065,13 @@ static void prvCheckForValidListAndQueue( void )
  8005ab0:	f104 0619 	add.w	r6, r4, #25
  8005ab4:	e7f5      	b.n	8005aa2 <_printf_i+0x22e>
  8005ab6:	bf00      	nop
+<<<<<<< HEAD
  8005ab8:	08005e01 	.word	0x08005e01
  8005abc:	08005e12 	.word	0x08005e12
+=======
+ 8005ab8:	08005dd9 	.word	0x08005dd9
+ 8005abc:	08005dea 	.word	0x08005dea
+>>>>>>> main
 
 08005ac0 <_sbrk_r>:
  8005ac0:	b538      	push	{r3, r4, r5, lr}
@@ -15680,14 +16080,22 @@ static void prvCheckForValidListAndQueue( void )
  8005ac6:	4604      	mov	r4, r0
  8005ac8:	4608      	mov	r0, r1
  8005aca:	602b      	str	r3, [r5, #0]
+<<<<<<< HEAD
  8005acc:	f7fa fe16 	bl	80006fc <_sbrk>
+=======
+ 8005acc:	f7fa fe10 	bl	80006f0 <_sbrk>
+>>>>>>> main
  8005ad0:	1c43      	adds	r3, r0, #1
  8005ad2:	d102      	bne.n	8005ada <_sbrk_r+0x1a>
  8005ad4:	682b      	ldr	r3, [r5, #0]
  8005ad6:	b103      	cbz	r3, 8005ada <_sbrk_r+0x1a>
  8005ad8:	6023      	str	r3, [r4, #0]
  8005ada:	bd38      	pop	{r3, r4, r5, pc}
+<<<<<<< HEAD
  8005adc:	20004054 	.word	0x20004054
+=======
+ 8005adc:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005ae0 <__sread>:
  8005ae0:	b510      	push	{r4, lr}
@@ -15758,14 +16166,22 @@ static void prvCheckForValidListAndQueue( void )
  8005b72:	2200      	movs	r2, #0
  8005b74:	602a      	str	r2, [r5, #0]
  8005b76:	461a      	mov	r2, r3
+<<<<<<< HEAD
  8005b78:	f7fa fd6f 	bl	800065a <_write>
+=======
+ 8005b78:	f7fa fd69 	bl	800064e <_write>
+>>>>>>> main
  8005b7c:	1c43      	adds	r3, r0, #1
  8005b7e:	d102      	bne.n	8005b86 <_write_r+0x1e>
  8005b80:	682b      	ldr	r3, [r5, #0]
  8005b82:	b103      	cbz	r3, 8005b86 <_write_r+0x1e>
  8005b84:	6023      	str	r3, [r4, #0]
  8005b86:	bd38      	pop	{r3, r4, r5, pc}
+<<<<<<< HEAD
  8005b88:	20004054 	.word	0x20004054
+=======
+ 8005b88:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005b8c <_close_r>:
  8005b8c:	b538      	push	{r3, r4, r5, lr}
@@ -15774,14 +16190,22 @@ static void prvCheckForValidListAndQueue( void )
  8005b92:	4604      	mov	r4, r0
  8005b94:	4608      	mov	r0, r1
  8005b96:	602b      	str	r3, [r5, #0]
+<<<<<<< HEAD
  8005b98:	f7fa fd7b 	bl	8000692 <_close>
+=======
+ 8005b98:	f7fa fd75 	bl	8000686 <_close>
+>>>>>>> main
  8005b9c:	1c43      	adds	r3, r0, #1
  8005b9e:	d102      	bne.n	8005ba6 <_close_r+0x1a>
  8005ba0:	682b      	ldr	r3, [r5, #0]
  8005ba2:	b103      	cbz	r3, 8005ba6 <_close_r+0x1a>
  8005ba4:	6023      	str	r3, [r4, #0]
  8005ba6:	bd38      	pop	{r3, r4, r5, pc}
+<<<<<<< HEAD
  8005ba8:	20004054 	.word	0x20004054
+=======
+ 8005ba8:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005bac <_fstat_r>:
  8005bac:	b538      	push	{r3, r4, r5, lr}
@@ -15791,7 +16215,11 @@ static void prvCheckForValidListAndQueue( void )
  8005bb4:	4608      	mov	r0, r1
  8005bb6:	4611      	mov	r1, r2
  8005bb8:	602b      	str	r3, [r5, #0]
+<<<<<<< HEAD
  8005bba:	f7fa fd76 	bl	80006aa <_fstat>
+=======
+ 8005bba:	f7fa fd70 	bl	800069e <_fstat>
+>>>>>>> main
  8005bbe:	1c43      	adds	r3, r0, #1
  8005bc0:	d102      	bne.n	8005bc8 <_fstat_r+0x1c>
  8005bc2:	682b      	ldr	r3, [r5, #0]
@@ -15799,7 +16227,11 @@ static void prvCheckForValidListAndQueue( void )
  8005bc6:	6023      	str	r3, [r4, #0]
  8005bc8:	bd38      	pop	{r3, r4, r5, pc}
  8005bca:	bf00      	nop
+<<<<<<< HEAD
  8005bcc:	20004054 	.word	0x20004054
+=======
+ 8005bcc:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005bd0 <_isatty_r>:
  8005bd0:	b538      	push	{r3, r4, r5, lr}
@@ -15808,14 +16240,22 @@ static void prvCheckForValidListAndQueue( void )
  8005bd6:	4604      	mov	r4, r0
  8005bd8:	4608      	mov	r0, r1
  8005bda:	602b      	str	r3, [r5, #0]
+<<<<<<< HEAD
  8005bdc:	f7fa fd75 	bl	80006ca <_isatty>
+=======
+ 8005bdc:	f7fa fd6f 	bl	80006be <_isatty>
+>>>>>>> main
  8005be0:	1c43      	adds	r3, r0, #1
  8005be2:	d102      	bne.n	8005bea <_isatty_r+0x1a>
  8005be4:	682b      	ldr	r3, [r5, #0]
  8005be6:	b103      	cbz	r3, 8005bea <_isatty_r+0x1a>
  8005be8:	6023      	str	r3, [r4, #0]
  8005bea:	bd38      	pop	{r3, r4, r5, pc}
+<<<<<<< HEAD
  8005bec:	20004054 	.word	0x20004054
+=======
+ 8005bec:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005bf0 <_lseek_r>:
  8005bf0:	b538      	push	{r3, r4, r5, lr}
@@ -15826,14 +16266,22 @@ static void prvCheckForValidListAndQueue( void )
  8005bfa:	2200      	movs	r2, #0
  8005bfc:	602a      	str	r2, [r5, #0]
  8005bfe:	461a      	mov	r2, r3
+<<<<<<< HEAD
  8005c00:	f7fa fd6e 	bl	80006e0 <_lseek>
+=======
+ 8005c00:	f7fa fd68 	bl	80006d4 <_lseek>
+>>>>>>> main
  8005c04:	1c43      	adds	r3, r0, #1
  8005c06:	d102      	bne.n	8005c0e <_lseek_r+0x1e>
  8005c08:	682b      	ldr	r3, [r5, #0]
  8005c0a:	b103      	cbz	r3, 8005c0e <_lseek_r+0x1e>
  8005c0c:	6023      	str	r3, [r4, #0]
  8005c0e:	bd38      	pop	{r3, r4, r5, pc}
+<<<<<<< HEAD
  8005c10:	20004054 	.word	0x20004054
+=======
+ 8005c10:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005c14 <memchr>:
  8005c14:	b2c9      	uxtb	r1, r1
@@ -15855,13 +16303,21 @@ static void prvCheckForValidListAndQueue( void )
  8005c30:	4801      	ldr	r0, [pc, #4]	; (8005c38 <__malloc_lock+0x8>)
  8005c32:	f7ff bb45 	b.w	80052c0 <__retarget_lock_acquire_recursive>
  8005c36:	bf00      	nop
+<<<<<<< HEAD
  8005c38:	2000404c 	.word	0x2000404c
+=======
+ 8005c38:	20004044 	.word	0x20004044
+>>>>>>> main
 
 08005c3c <__malloc_unlock>:
  8005c3c:	4801      	ldr	r0, [pc, #4]	; (8005c44 <__malloc_unlock+0x8>)
  8005c3e:	f7ff bb40 	b.w	80052c2 <__retarget_lock_release_recursive>
  8005c42:	bf00      	nop
+<<<<<<< HEAD
  8005c44:	2000404c 	.word	0x2000404c
+=======
+ 8005c44:	20004044 	.word	0x20004044
+>>>>>>> main
 
 08005c48 <_read_r>:
  8005c48:	b538      	push	{r3, r4, r5, lr}
@@ -15872,14 +16328,22 @@ static void prvCheckForValidListAndQueue( void )
  8005c52:	2200      	movs	r2, #0
  8005c54:	602a      	str	r2, [r5, #0]
  8005c56:	461a      	mov	r2, r3
+<<<<<<< HEAD
  8005c58:	f7fa fce2 	bl	8000620 <_read>
+=======
+ 8005c58:	f7fa fcdc 	bl	8000614 <_read>
+>>>>>>> main
  8005c5c:	1c43      	adds	r3, r0, #1
  8005c5e:	d102      	bne.n	8005c66 <_read_r+0x1e>
  8005c60:	682b      	ldr	r3, [r5, #0]
  8005c62:	b103      	cbz	r3, 8005c66 <_read_r+0x1e>
  8005c64:	6023      	str	r3, [r4, #0]
  8005c66:	bd38      	pop	{r3, r4, r5, pc}
+<<<<<<< HEAD
  8005c68:	20004054 	.word	0x20004054
+=======
+ 8005c68:	2000404c 	.word	0x2000404c
+>>>>>>> main
 
 08005c6c <_init>:
  8005c6c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}

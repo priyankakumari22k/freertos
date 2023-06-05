@@ -88,10 +88,8 @@ __lock___malloc_recursive_mutex
                     0x1               c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-lock.o)
 task2_handle        0x4               ./Application/User/main.o
 htim6               0x4c              ./Application/User/stm32l5xx_hal_timebase_tim.o
-THREAD1Handle       0x4               ./Application/User/main.o
 __lock___at_quick_exit_mutex
                     0x1               c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-lock.o)
-THREAD2Handle       0x4               ./Application/User/main.o
 __lock___dd_hash_mutex
                     0x1               c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-lock.o)
 __lock___tz_mutex   0x1               c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-lock.o)
@@ -313,10 +311,6 @@ Discarded input sections
  .text          0x0000000000000000        0x0 ./Application/User/main.o
  .data          0x0000000000000000        0x0 ./Application/User/main.o
  .bss           0x0000000000000000        0x0 ./Application/User/main.o
- .rodata.THREAD1_attributes
-                0x0000000000000000       0x24 ./Application/User/main.o
- .rodata.THREAD2_attributes
-                0x0000000000000000       0x24 ./Application/User/main.o
  .bss.OsStatus  0x0000000000000000        0x4 ./Application/User/main.o
  .debug_macro   0x0000000000000000      0xaae ./Application/User/main.o
  .debug_macro   0x0000000000000000      0x190 ./Application/User/main.o
@@ -5832,6 +5826,7 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
 .iplt           0x0000000008005c88        0x0
  .iplt          0x0000000008005c88        0x0 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard/crtbegin.o
 
+<<<<<<< HEAD
 .rodata         0x0000000008005c88      0x1a0
                 0x0000000008005c88                . = ALIGN (0x8)
  *(.rodata)
@@ -5914,11 +5909,95 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000008005e38                _sidata = LOADADDR (.data)
 
 .data           0x0000000020000000       0xc0 load address 0x0000000008005e38
+=======
+.rodata         0x0000000008005c88      0x178
+                0x0000000008005c88                . = ALIGN (0x8)
+ *(.rodata)
+ .rodata        0x0000000008005c88       0x69 ./Application/User/main.o
+ *fill*         0x0000000008005cf1        0x3 
+ .rodata        0x0000000008005cf4        0x5 ./Middlewares/FreeRTOS/tasks.o
+ *fill*         0x0000000008005cf9        0x3 
+ .rodata        0x0000000008005cfc        0xd ./Middlewares/FreeRTOS/timers.o
+ *(.rodata*)
+ *fill*         0x0000000008005d09        0x3 
+ .rodata.AHBPrescTable
+                0x0000000008005d0c       0x10 ./Drivers/CMSIS/system_stm32l5xx.o
+                0x0000000008005d0c                AHBPrescTable
+ .rodata.APBPrescTable
+                0x0000000008005d1c        0x8 ./Drivers/CMSIS/system_stm32l5xx.o
+                0x0000000008005d1c                APBPrescTable
+ .rodata.MSIRangeTable
+                0x0000000008005d24       0x40 ./Drivers/CMSIS/system_stm32l5xx.o
+                0x0000000008005d24                MSIRangeTable
+ .rodata._global_impure_ptr
+                0x0000000008005d64        0x4 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-impure.o)
+                0x0000000008005d64                _global_impure_ptr
+ .rodata.__sf_fake_stderr
+                0x0000000008005d68       0x20 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-findfp.o)
+                0x0000000008005d68                __sf_fake_stderr
+ .rodata.__sf_fake_stdin
+                0x0000000008005d88       0x20 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-findfp.o)
+                0x0000000008005d88                __sf_fake_stdin
+ .rodata.__sf_fake_stdout
+                0x0000000008005da8       0x20 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-findfp.o)
+                0x0000000008005da8                __sf_fake_stdout
+ .rodata._vfprintf_r.str1.1
+                0x0000000008005dc8       0x11 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-nano-vfprintf.o)
+ .rodata._printf_i.str1.1
+                0x0000000008005dd9       0x22 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                0x0000000008005e00                . = ALIGN (0x8)
+ *fill*         0x0000000008005dfb        0x5 
+
+.rel.dyn        0x0000000008005e00        0x0
+ .rel.iplt      0x0000000008005e00        0x0 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard/crtbegin.o
+
+.ARM.extab      0x0000000008005e00        0x0
+                0x0000000008005e00                . = ALIGN (0x8)
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x0000000008005e00                . = ALIGN (0x8)
+
+.ARM            0x0000000008005e00        0x0
+                0x0000000008005e00                . = ALIGN (0x8)
+                0x0000000008005e00                __exidx_start = .
+ *(.ARM.exidx*)
+                0x0000000008005e00                __exidx_end = .
+                0x0000000008005e00                . = ALIGN (0x8)
+
+.preinit_array  0x0000000008005e00        0x0
+                0x0000000008005e00                . = ALIGN (0x8)
+                0x0000000008005e00                PROVIDE (__preinit_array_start = .)
+ *(.preinit_array*)
+                0x0000000008005e00                PROVIDE (__preinit_array_end = .)
+                0x0000000008005e00                . = ALIGN (0x8)
+
+.init_array     0x0000000008005e00        0x8
+                0x0000000008005e00                . = ALIGN (0x8)
+                0x0000000008005e00                PROVIDE (__init_array_start = .)
+ *(SORT_BY_NAME(.init_array.*))
+ *(.init_array*)
+ .init_array    0x0000000008005e00        0x4 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard/crtbegin.o
+                0x0000000008005e04                PROVIDE (__init_array_end = .)
+                0x0000000008005e08                . = ALIGN (0x8)
+ *fill*         0x0000000008005e04        0x4 
+
+.fini_array     0x0000000008005e08        0x8
+                0x0000000008005e08                . = ALIGN (0x8)
+                [!provide]                        PROVIDE (__fini_array_start = .)
+ *(SORT_BY_NAME(.fini_array.*))
+ *(.fini_array*)
+ .fini_array    0x0000000008005e08        0x4 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard/crtbegin.o
+                [!provide]                        PROVIDE (__fini_array_end = .)
+                0x0000000008005e10                . = ALIGN (0x8)
+ *fill*         0x0000000008005e0c        0x4 
+                0x0000000008005e10                _sidata = LOADADDR (.data)
+
+.data           0x0000000020000000       0xc0 load address 0x0000000008005e10
+>>>>>>> main
                 0x0000000020000000                . = ALIGN (0x8)
                 0x0000000020000000                _sdata = .
  *(.data)
  *(.data*)
- .data.s1.11162
+ .data.s1.11158
                 0x0000000020000000       0x3c ./Application/User/main.o
  .data.LED_PIN  0x000000002000003c        0x4 ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
  .data.LED_PORT
@@ -5944,11 +6023,19 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  *fill*         0x00000000200000bc        0x4 
                 0x00000000200000c0                _edata = .
 
+<<<<<<< HEAD
 .igot.plt       0x00000000200000c0        0x0 load address 0x0000000008005ef8
  .igot.plt      0x00000000200000c0        0x0 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard/crtbegin.o
                 0x00000000200000c0                . = ALIGN (0x8)
 
 .bss            0x00000000200000c0     0x3f98 load address 0x0000000008005ef8
+=======
+.igot.plt       0x00000000200000c0        0x0 load address 0x0000000008005ed0
+ .igot.plt      0x00000000200000c0        0x0 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard/crtbegin.o
+                0x00000000200000c0                . = ALIGN (0x8)
+
+.bss            0x00000000200000c0     0x3f90 load address 0x0000000008005ed0
+>>>>>>> main
                 0x00000000200000c0                _sbss = .
                 0x00000000200000c0                __bss_start__ = _sbss
  *(.bss)
@@ -6047,44 +6134,47 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000020003fa4        0x4 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-nano-mallocr.o)
                 0x0000000020003fa4                __malloc_sbrk_start
  *(COMMON)
- COMMON         0x0000000020003fa8       0x10 ./Application/User/main.o
+ COMMON         0x0000000020003fa8        0x8 ./Application/User/main.o
                 0x0000000020003fa8                task1_handle
                 0x0000000020003fac                task2_handle
-                0x0000000020003fb0                THREAD1Handle
-                0x0000000020003fb4                THREAD2Handle
- COMMON         0x0000000020003fb8       0x4c ./Application/User/stm32l5xx_hal_timebase_tim.o
-                0x0000000020003fb8                htim6
- COMMON         0x0000000020004004        0x4 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
-                0x0000000020004004                uwTick
- COMMON         0x0000000020004008       0x40 ./Middlewares/FreeRTOS/queue.o
-                0x0000000020004008                xQueueRegistry
- COMMON         0x0000000020004048        0x9 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-lock.o)
-                0x0000000020004048                __lock___atexit_recursive_mutex
-                0x0000000020004049                __lock___arc4random_mutex
-                0x000000002000404a                __lock___env_recursive_mutex
-                0x000000002000404b                __lock___sinit_recursive_mutex
-                0x000000002000404c                __lock___malloc_recursive_mutex
-                0x000000002000404d                __lock___at_quick_exit_mutex
-                0x000000002000404e                __lock___dd_hash_mutex
-                0x000000002000404f                __lock___tz_mutex
-                0x0000000020004050                __lock___sfp_recursive_mutex
- *fill*         0x0000000020004051        0x3 
- COMMON         0x0000000020004054        0x4 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-reent.o)
-                0x0000000020004054                errno
-                0x0000000020004058                . = ALIGN (0x8)
-                0x0000000020004058                _ebss = .
-                0x0000000020004058                __bss_end__ = _ebss
+ COMMON         0x0000000020003fb0       0x4c ./Application/User/stm32l5xx_hal_timebase_tim.o
+                0x0000000020003fb0                htim6
+ COMMON         0x0000000020003ffc        0x4 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
+                0x0000000020003ffc                uwTick
+ COMMON         0x0000000020004000       0x40 ./Middlewares/FreeRTOS/queue.o
+                0x0000000020004000                xQueueRegistry
+ COMMON         0x0000000020004040        0x9 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-lock.o)
+                0x0000000020004040                __lock___atexit_recursive_mutex
+                0x0000000020004041                __lock___arc4random_mutex
+                0x0000000020004042                __lock___env_recursive_mutex
+                0x0000000020004043                __lock___sinit_recursive_mutex
+                0x0000000020004044                __lock___malloc_recursive_mutex
+                0x0000000020004045                __lock___at_quick_exit_mutex
+                0x0000000020004046                __lock___dd_hash_mutex
+                0x0000000020004047                __lock___tz_mutex
+                0x0000000020004048                __lock___sfp_recursive_mutex
+ *fill*         0x0000000020004049        0x3 
+ COMMON         0x000000002000404c        0x4 c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libc_nano.a(lib_a-reent.o)
+                0x000000002000404c                errno
+                0x0000000020004050                . = ALIGN (0x8)
+                0x0000000020004050                _ebss = .
+                0x0000000020004050                __bss_end__ = _ebss
 
 ._user_heap_stack
+<<<<<<< HEAD
                 0x0000000020004058      0xc00 load address 0x0000000008005ef8
                 0x0000000020004058                . = ALIGN (0x8)
+=======
+                0x0000000020004050      0xc00 load address 0x0000000008005ed0
+                0x0000000020004050                . = ALIGN (0x8)
+>>>>>>> main
                 [!provide]                        PROVIDE (end = .)
-                0x0000000020004058                PROVIDE (_end = .)
-                0x0000000020004458                . = (. + _Min_Heap_Size)
- *fill*         0x0000000020004058      0x400 
-                0x0000000020004c58                . = (. + _Min_Stack_Size)
- *fill*         0x0000000020004458      0x800 
-                0x0000000020004c58                . = ALIGN (0x8)
+                0x0000000020004050                PROVIDE (_end = .)
+                0x0000000020004450                . = (. + _Min_Heap_Size)
+ *fill*         0x0000000020004050      0x400 
+                0x0000000020004c50                . = (. + _Min_Stack_Size)
+ *fill*         0x0000000020004450      0x800 
+                0x0000000020004c50                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -6214,6 +6304,7 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
 LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v8-m.main+fp/hard\libm.a
 LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.9-2020-q2-update.win32_2.0.0.202105311346/tools/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v8-m.main+fp/hard\libgcc.a
 
+<<<<<<< HEAD
 .debug_line     0x0000000000000000    0x1705d
  .debug_line    0x0000000000000000       0x8d ./Application/Startup/startup_stm32l562qeixq.o
  .debug_line    0x000000000000008d      0xd19 ./Application/User/main.o
@@ -6240,60 +6331,88 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_line    0x000000000001348a     0x1481 ./Middlewares/FreeRTOS/queue.o
  .debug_line    0x000000000001490b     0x1a9c ./Middlewares/FreeRTOS/tasks.o
  .debug_line    0x00000000000163a7      0xcb6 ./Middlewares/FreeRTOS/timers.o
+=======
+.debug_line     0x0000000000000000    0x17050
+ .debug_line    0x0000000000000000       0x8d ./Application/Startup/startup_stm32l562qeixq.o
+ .debug_line    0x000000000000008d      0xd0c ./Application/User/main.o
+ .debug_line    0x0000000000000d99      0x841 ./Application/User/stm32l5xx_hal_msp.o
+ .debug_line    0x00000000000015da      0x813 ./Application/User/stm32l5xx_hal_timebase_tim.o
+ .debug_line    0x0000000000001ded      0x84b ./Application/User/stm32l5xx_it.o
+ .debug_line    0x0000000000002638      0x83f ./Application/User/syscalls.o
+ .debug_line    0x0000000000002e77      0x500 ./Application/User/sysmem.o
+ .debug_line    0x0000000000003377      0x9b8 ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
+ .debug_line    0x0000000000003d2f      0x84c ./Drivers/CMSIS/system_stm32l5xx.o
+ .debug_line    0x000000000000457b      0xb81 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
+ .debug_line    0x00000000000050fc      0xd79 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
+ .debug_line    0x0000000000005e75      0xbc6 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
+ .debug_line    0x0000000000006a3b      0xa61 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
+ .debug_line    0x000000000000749c      0xf29 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
+ .debug_line    0x00000000000083c5     0x12c0 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
+ .debug_line    0x0000000000009685     0x3dc1 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
+ .debug_line    0x000000000000d446     0x1d6d ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
+ .debug_line    0x000000000000f1b3     0x2445 ./Middlewares/FreeRTOS/cmsis_os2.o
+ .debug_line    0x00000000000115f8      0x964 ./Middlewares/FreeRTOS/heap_4.o
+ .debug_line    0x0000000000011f5c      0x772 ./Middlewares/FreeRTOS/list.o
+ .debug_line    0x00000000000126ce      0x792 ./Middlewares/FreeRTOS/port.o
+ .debug_line    0x0000000000012e60      0x61d ./Middlewares/FreeRTOS/portasm.o
+ .debug_line    0x000000000001347d     0x1481 ./Middlewares/FreeRTOS/queue.o
+ .debug_line    0x00000000000148fe     0x1a9c ./Middlewares/FreeRTOS/tasks.o
+ .debug_line    0x000000000001639a      0xcb6 ./Middlewares/FreeRTOS/timers.o
+>>>>>>> main
 
-.debug_info     0x0000000000000000    0x1be55
+.debug_info     0x0000000000000000    0x1bc09
  .debug_info    0x0000000000000000       0x22 ./Application/Startup/startup_stm32l562qeixq.o
- .debug_info    0x0000000000000022     0x17dd ./Application/User/main.o
- .debug_info    0x00000000000017ff      0x86d ./Application/User/stm32l5xx_hal_msp.o
- .debug_info    0x000000000000206c     0x1068 ./Application/User/stm32l5xx_hal_timebase_tim.o
- .debug_info    0x00000000000030d4      0x975 ./Application/User/stm32l5xx_it.o
- .debug_info    0x0000000000003a49      0xfed ./Application/User/syscalls.o
- .debug_info    0x0000000000004a36      0xa25 ./Application/User/sysmem.o
- .debug_info    0x000000000000545b      0xf27 ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
- .debug_info    0x0000000000006382      0x925 ./Drivers/CMSIS/system_stm32l5xx.o
- .debug_info    0x0000000000006ca7      0xe38 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
- .debug_info    0x0000000000007adf     0x1313 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
- .debug_info    0x0000000000008df2      0x80f ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
- .debug_info    0x0000000000009601      0x6cf ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
- .debug_info    0x0000000000009cd0      0xf86 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
- .debug_info    0x000000000000ac56     0x114a ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
- .debug_info    0x000000000000bda0     0x2f38 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
- .debug_info    0x000000000000ecd8     0x1a5b ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
- .debug_info    0x0000000000010733     0x3f7e ./Middlewares/FreeRTOS/cmsis_os2.o
- .debug_info    0x00000000000146b1      0xce4 ./Middlewares/FreeRTOS/heap_4.o
- .debug_info    0x0000000000015395      0xb82 ./Middlewares/FreeRTOS/list.o
- .debug_info    0x0000000000015f17      0x2da ./Middlewares/FreeRTOS/port.o
- .debug_info    0x00000000000161f1      0x165 ./Middlewares/FreeRTOS/portasm.o
- .debug_info    0x0000000000016356     0x1d3e ./Middlewares/FreeRTOS/queue.o
- .debug_info    0x0000000000018094     0x23ff ./Middlewares/FreeRTOS/tasks.o
- .debug_info    0x000000000001a493     0x19c2 ./Middlewares/FreeRTOS/timers.o
+ .debug_info    0x0000000000000022     0x1591 ./Application/User/main.o
+ .debug_info    0x00000000000015b3      0x86d ./Application/User/stm32l5xx_hal_msp.o
+ .debug_info    0x0000000000001e20     0x1068 ./Application/User/stm32l5xx_hal_timebase_tim.o
+ .debug_info    0x0000000000002e88      0x975 ./Application/User/stm32l5xx_it.o
+ .debug_info    0x00000000000037fd      0xfed ./Application/User/syscalls.o
+ .debug_info    0x00000000000047ea      0xa25 ./Application/User/sysmem.o
+ .debug_info    0x000000000000520f      0xf27 ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
+ .debug_info    0x0000000000006136      0x925 ./Drivers/CMSIS/system_stm32l5xx.o
+ .debug_info    0x0000000000006a5b      0xe38 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
+ .debug_info    0x0000000000007893     0x1313 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
+ .debug_info    0x0000000000008ba6      0x80f ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
+ .debug_info    0x00000000000093b5      0x6cf ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
+ .debug_info    0x0000000000009a84      0xf86 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
+ .debug_info    0x000000000000aa0a     0x114a ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
+ .debug_info    0x000000000000bb54     0x2f38 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
+ .debug_info    0x000000000000ea8c     0x1a5b ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
+ .debug_info    0x00000000000104e7     0x3f7e ./Middlewares/FreeRTOS/cmsis_os2.o
+ .debug_info    0x0000000000014465      0xce4 ./Middlewares/FreeRTOS/heap_4.o
+ .debug_info    0x0000000000015149      0xb82 ./Middlewares/FreeRTOS/list.o
+ .debug_info    0x0000000000015ccb      0x2da ./Middlewares/FreeRTOS/port.o
+ .debug_info    0x0000000000015fa5      0x165 ./Middlewares/FreeRTOS/portasm.o
+ .debug_info    0x000000000001610a     0x1d3e ./Middlewares/FreeRTOS/queue.o
+ .debug_info    0x0000000000017e48     0x23ff ./Middlewares/FreeRTOS/tasks.o
+ .debug_info    0x000000000001a247     0x19c2 ./Middlewares/FreeRTOS/timers.o
 
-.debug_abbrev   0x0000000000000000     0x3760
+.debug_abbrev   0x0000000000000000     0x374e
  .debug_abbrev  0x0000000000000000       0x12 ./Application/Startup/startup_stm32l562qeixq.o
- .debug_abbrev  0x0000000000000012      0x2ae ./Application/User/main.o
- .debug_abbrev  0x00000000000002c0      0x157 ./Application/User/stm32l5xx_hal_msp.o
- .debug_abbrev  0x0000000000000417      0x1df ./Application/User/stm32l5xx_hal_timebase_tim.o
- .debug_abbrev  0x00000000000005f6      0x15c ./Application/User/stm32l5xx_it.o
- .debug_abbrev  0x0000000000000752      0x2a0 ./Application/User/syscalls.o
- .debug_abbrev  0x00000000000009f2      0x1bf ./Application/User/sysmem.o
- .debug_abbrev  0x0000000000000bb1      0x259 ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
- .debug_abbrev  0x0000000000000e0a      0x176 ./Drivers/CMSIS/system_stm32l5xx.o
- .debug_abbrev  0x0000000000000f80      0x29d ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
- .debug_abbrev  0x000000000000121d      0x343 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
- .debug_abbrev  0x0000000000001560      0x1df ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
- .debug_abbrev  0x000000000000173f      0x22f ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
- .debug_abbrev  0x000000000000196e      0x283 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
- .debug_abbrev  0x0000000000001bf1      0x2a6 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
- .debug_abbrev  0x0000000000001e97      0x25e ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
- .debug_abbrev  0x00000000000020f5      0x266 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
- .debug_abbrev  0x000000000000235b      0x46e ./Middlewares/FreeRTOS/cmsis_os2.o
- .debug_abbrev  0x00000000000027c9      0x271 ./Middlewares/FreeRTOS/heap_4.o
- .debug_abbrev  0x0000000000002a3a      0x1f7 ./Middlewares/FreeRTOS/list.o
- .debug_abbrev  0x0000000000002c31      0x154 ./Middlewares/FreeRTOS/port.o
- .debug_abbrev  0x0000000000002d85       0xcc ./Middlewares/FreeRTOS/portasm.o
- .debug_abbrev  0x0000000000002e51      0x2f1 ./Middlewares/FreeRTOS/queue.o
- .debug_abbrev  0x0000000000003142      0x343 ./Middlewares/FreeRTOS/tasks.o
- .debug_abbrev  0x0000000000003485      0x2db ./Middlewares/FreeRTOS/timers.o
+ .debug_abbrev  0x0000000000000012      0x29c ./Application/User/main.o
+ .debug_abbrev  0x00000000000002ae      0x157 ./Application/User/stm32l5xx_hal_msp.o
+ .debug_abbrev  0x0000000000000405      0x1df ./Application/User/stm32l5xx_hal_timebase_tim.o
+ .debug_abbrev  0x00000000000005e4      0x15c ./Application/User/stm32l5xx_it.o
+ .debug_abbrev  0x0000000000000740      0x2a0 ./Application/User/syscalls.o
+ .debug_abbrev  0x00000000000009e0      0x1bf ./Application/User/sysmem.o
+ .debug_abbrev  0x0000000000000b9f      0x259 ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
+ .debug_abbrev  0x0000000000000df8      0x176 ./Drivers/CMSIS/system_stm32l5xx.o
+ .debug_abbrev  0x0000000000000f6e      0x29d ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
+ .debug_abbrev  0x000000000000120b      0x343 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
+ .debug_abbrev  0x000000000000154e      0x1df ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
+ .debug_abbrev  0x000000000000172d      0x22f ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
+ .debug_abbrev  0x000000000000195c      0x283 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
+ .debug_abbrev  0x0000000000001bdf      0x2a6 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
+ .debug_abbrev  0x0000000000001e85      0x25e ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
+ .debug_abbrev  0x00000000000020e3      0x266 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
+ .debug_abbrev  0x0000000000002349      0x46e ./Middlewares/FreeRTOS/cmsis_os2.o
+ .debug_abbrev  0x00000000000027b7      0x271 ./Middlewares/FreeRTOS/heap_4.o
+ .debug_abbrev  0x0000000000002a28      0x1f7 ./Middlewares/FreeRTOS/list.o
+ .debug_abbrev  0x0000000000002c1f      0x154 ./Middlewares/FreeRTOS/port.o
+ .debug_abbrev  0x0000000000002d73       0xcc ./Middlewares/FreeRTOS/portasm.o
+ .debug_abbrev  0x0000000000002e3f      0x2f1 ./Middlewares/FreeRTOS/queue.o
+ .debug_abbrev  0x0000000000003130      0x343 ./Middlewares/FreeRTOS/tasks.o
+ .debug_abbrev  0x0000000000003473      0x2db ./Middlewares/FreeRTOS/timers.o
 
 .debug_aranges  0x0000000000000000     0x1610
  .debug_aranges
@@ -6347,55 +6466,55 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_aranges
                 0x0000000000001520       0xf0 ./Middlewares/FreeRTOS/timers.o
 
-.debug_str      0x0000000000000000   0x115919
+.debug_str      0x0000000000000000   0x1158e2
  .debug_str     0x0000000000000000       0xcf ./Application/Startup/startup_stm32l562qeixq.o
- .debug_str     0x00000000000000cf   0x109996 ./Application/User/main.o
-                                     0x109e87 (size before relaxing)
- .debug_str     0x0000000000109a65      0x845 ./Application/User/stm32l5xx_hal_msp.o
+ .debug_str     0x00000000000000cf   0x10950c ./Application/User/main.o
+                                     0x1099e3 (size before relaxing)
+ .debug_str     0x00000000001095db      0x845 ./Application/User/stm32l5xx_hal_msp.o
                                      0x100e7c (size before relaxing)
- .debug_str     0x000000000010a2aa      0x120 ./Application/User/stm32l5xx_hal_timebase_tim.o
+ .debug_str     0x0000000000109e20      0x120 ./Application/User/stm32l5xx_hal_timebase_tim.o
                                      0x100dab (size before relaxing)
- .debug_str     0x000000000010a3ca       0xb3 ./Application/User/stm32l5xx_it.o
+ .debug_str     0x0000000000109f40       0xb3 ./Application/User/stm32l5xx_it.o
                                      0x100cae (size before relaxing)
- .debug_str     0x000000000010a47d     0x1692 ./Application/User/syscalls.o
+ .debug_str     0x0000000000109ff3     0x1692 ./Application/User/syscalls.o
                                        0x9008 (size before relaxing)
- .debug_str     0x000000000010bb0f       0x73 ./Application/User/sysmem.o
+ .debug_str     0x000000000010b685       0x73 ./Application/User/sysmem.o
                                        0x6320 (size before relaxing)
- .debug_str     0x000000000010bb82      0x33f ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
+ .debug_str     0x000000000010b6f8      0x33f ./Drivers/BSP/STM32L562E-DK/stm32l562e_discovery.o
                                      0x101184 (size before relaxing)
- .debug_str     0x000000000010bec1      0x1be ./Drivers/CMSIS/system_stm32l5xx.o
+ .debug_str     0x000000000010ba37      0x1be ./Drivers/CMSIS/system_stm32l5xx.o
                                      0x1001c9 (size before relaxing)
- .debug_str     0x000000000010c07f      0x50b ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
+ .debug_str     0x000000000010bbf5      0x50b ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o
                                      0x100c63 (size before relaxing)
- .debug_str     0x000000000010c58a      0x421 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
+ .debug_str     0x000000000010c100      0x42a ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.o
                                      0x100b4e (size before relaxing)
- .debug_str     0x000000000010c9ab      0x209 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
+ .debug_str     0x000000000010c52a      0x209 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gpio.o
                                      0x10015e (size before relaxing)
- .debug_str     0x000000000010cbb4      0x6de ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
+ .debug_str     0x000000000010c733      0x6de ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.o
                                      0x1005a5 (size before relaxing)
- .debug_str     0x000000000010d292      0x76b ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
+ .debug_str     0x000000000010ce11      0x76b ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr_ex.o
                                      0x100904 (size before relaxing)
- .debug_str     0x000000000010d9fd      0x451 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
+ .debug_str     0x000000000010d57c      0x45c ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc.o
                                      0x100757 (size before relaxing)
- .debug_str     0x000000000010de4e      0xee0 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
+ .debug_str     0x000000000010d9d8      0xee0 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o
                                      0x10144a (size before relaxing)
- .debug_str     0x000000000010ed2e      0x774 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
+ .debug_str     0x000000000010e8b8      0x774 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o
                                      0x100d95 (size before relaxing)
- .debug_str     0x000000000010f4a2     0x2bfd ./Middlewares/FreeRTOS/cmsis_os2.o
+ .debug_str     0x000000000010f02c     0x303c ./Middlewares/FreeRTOS/cmsis_os2.o
                                      0x10a9b2 (size before relaxing)
- .debug_str     0x000000000011209f      0x3ce ./Middlewares/FreeRTOS/heap_4.o
+ .debug_str     0x0000000000112068      0x3ce ./Middlewares/FreeRTOS/heap_4.o
                                        0xb5ac (size before relaxing)
- .debug_str     0x000000000011246d      0x164 ./Middlewares/FreeRTOS/list.o
+ .debug_str     0x0000000000112436      0x164 ./Middlewares/FreeRTOS/list.o
                                        0xacd8 (size before relaxing)
- .debug_str     0x00000000001125d1      0xf77 ./Middlewares/FreeRTOS/port.o
+ .debug_str     0x000000000011259a      0xf77 ./Middlewares/FreeRTOS/port.o
                                        0x8f2b (size before relaxing)
- .debug_str     0x0000000000113548      0x132 ./Middlewares/FreeRTOS/portasm.o
+ .debug_str     0x0000000000113511      0x132 ./Middlewares/FreeRTOS/portasm.o
                                        0x727e (size before relaxing)
- .debug_str     0x000000000011367a      0x93c ./Middlewares/FreeRTOS/queue.o
+ .debug_str     0x0000000000113643      0x93c ./Middlewares/FreeRTOS/queue.o
                                        0xc5f2 (size before relaxing)
- .debug_str     0x0000000000113fb6     0x12ef ./Middlewares/FreeRTOS/tasks.o
+ .debug_str     0x0000000000113f7f     0x12ef ./Middlewares/FreeRTOS/tasks.o
                                        0xd141 (size before relaxing)
- .debug_str     0x00000000001152a5      0x674 ./Middlewares/FreeRTOS/timers.o
+ .debug_str     0x000000000011526e      0x674 ./Middlewares/FreeRTOS/timers.o
                                        0xcbb3 (size before relaxing)
 
 .debug_ranges   0x0000000000000000     0x1488

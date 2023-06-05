@@ -23,7 +23,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include "stdio.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,22 +45,24 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Definitions for THREAD1 */
-osThreadId_t THREAD1Handle;
+/*osThreadId_t THREAD1Handle;
 const osThreadAttr_t THREAD1_attributes = {
   .name = "THREAD1",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 512 * 4
-};
+};*/
 /* Definitions for THREAD2 */
-osThreadId_t THREAD2Handle;
+/*osThreadId_t THREAD2Handle;
 const osThreadAttr_t THREAD2_attributes = {
   .name = "THREAD2",
   .priority = (osPriority_t) osPriorityLow,
   .stack_size = 512 * 4
-};
+};*/
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
+
 TaskHandle_t task1_handle, task2_handle;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,12 +72,15 @@ void LED_Thread1(void *argument);
 void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
+
 struct student
 {
 int num;
 char name[50];
 int age;
 };
+
+
 
 /* USER CODE END PFP */
 
@@ -86,11 +93,15 @@ int age;
   * @brief  The application entry point.
   * @retval int
   */
+//static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-		BaseType_t status, status1;
+
+	BaseType_t status , status1;
 		static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -114,13 +125,14 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_ICACHE_Init();
   /* USER CODE BEGIN 2 */
- 
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
+  printf("Main func\n");
 
   /* USER CODE END RTOS_MUTEX */
 
@@ -139,13 +151,15 @@ int main(void)
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    status = xTaskCreate(LED_Thread1, "Task1", 512, &s1, 2, &task1_handle);
 
-    status1 = xTaskCreate(LED_Thread2, "Task2", 512, "Task-2 is running", 2, &task2_handle);
+
+    status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
+    status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
     configASSERT(status == pdPASS);
     configASSERT(status1 == pdPASS);
 
     printf("Main Num :%d\n",s1.num);
+
 
   /* creation of THREAD2 */
   //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
@@ -159,6 +173,7 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
+  printf("Main Num :%d\n",s1.num);
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -166,8 +181,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	    printf("Main age :%d\n",s1.age);
-	    osDelay(1000);
+
 
     /* USER CODE BEGIN 3 */
   }
@@ -263,12 +277,14 @@ static void MX_ICACHE_Init(void)
 /* USER CODE BEGIN Header_LED_Thread1 */
 /**
   * @brief  Function implementing the THREAD1 thread.
-  * @param  argument: Not used 
+  * @param  argument: Not used
   * @retval None
   */
 /* USER CODE END Header_LED_Thread1 */
 void LED_Thread1(void *argument)
-{  struct student *t;
+{
+  /* USER CODE BEGIN 5 */
+   struct student *t;
   /* USER CODE BEGIN 5 */
   //uint32_t count = 0;
 	//UBaseType_t uxPriority;
@@ -291,6 +307,7 @@ void LED_Thread1(void *argument)
       osDelay(500);
     }
 
+
   /* USER CODE END 5 */
 }
 
@@ -304,6 +321,8 @@ void LED_Thread1(void *argument)
 void LED_Thread2(void *argument)
 {
   /* USER CODE BEGIN LED_Thread2 */
+
+
   //uint32_t count;
 	//UBaseType_t uxPriority;
   (void) argument;
@@ -323,6 +342,7 @@ void LED_Thread2(void *argument)
      // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
      osDelay(500);
     }
+
 
   /* USER CODE END LED_Thread2 */
 }
@@ -354,12 +374,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  while(1) 
+   //USER CODE BEGIN Error_Handler_Debug
+   //User can add his own implementation to report the HAL error return state
+  while(1)
   {
   }
-  /* USER CODE END Error_Handler_Debug */
+  // USER CODE END Error_Handler_Debug
 }
 
 #ifdef  USE_FULL_ASSERT
