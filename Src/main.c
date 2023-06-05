@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,6 +68,12 @@ void LED_Thread1(void *argument);
 void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
+struct student
+{
+int num;
+char name[50];
+int age;
+};
 
 /* USER CODE END PFP */
 
@@ -83,8 +89,8 @@ void LED_Thread2(void *argument);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
 		BaseType_t status, status1;
+		static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -133,11 +139,13 @@ int main(void)
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    status = xTaskCreate(LED_Thread1, "Task1", 200, "Task-1 is running", 2, &task1_handle);
+    status = xTaskCreate(LED_Thread1, "Task1", 512, &s1, 2, &task1_handle);
 
-    status1 = xTaskCreate(LED_Thread2, "Task2", 200, "Task-2 is running", 2, &task2_handle);
+    status1 = xTaskCreate(LED_Thread2, "Task2", 512, "Task-2 is running", 2, &task2_handle);
     configASSERT(status == pdPASS);
     configASSERT(status1 == pdPASS);
+
+    printf("Main Num :%d\n",s1.num);
 
   /* creation of THREAD2 */
   //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
@@ -158,6 +166,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	    printf("Main age :%d\n",s1.age);
+	    osDelay(1000);
 
     /* USER CODE BEGIN 3 */
   }
@@ -258,11 +268,11 @@ static void MX_ICACHE_Init(void)
   */
 /* USER CODE END Header_LED_Thread1 */
 void LED_Thread1(void *argument)
-{
+{  struct student *t;
   /* USER CODE BEGIN 5 */
   //uint32_t count = 0;
 	//UBaseType_t uxPriority;
-  (void) argument;
+  t= (struct student *) argument;
 
   /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
    //uxPriority = uxTaskPriorityGet( NULL );
@@ -270,12 +280,14 @@ void LED_Thread1(void *argument)
 	  while(1)
     {
       BSP_LED_Toggle(LED9);
-      printf("%s:\n",argument);
+      printf("Num :%d\n",t->num);
+      printf("Name :%s\n",t->name);
+      printf("Age :%d\n",t->age);
 
  /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
     //  printf( "About to raise the Task 2 priority\r\n" );
     //  vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
-    //  osDelay(500);
+      osDelay(500);
     }
 
   /* USER CODE END 5 */
@@ -308,7 +320,7 @@ void LED_Thread2(void *argument)
        Task 1 to immediately start running again – pre-empting this task. */
     //  printf( "About to lower the Task 2 priority\r\n" );
      // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
-     //osDelay(500);
+     osDelay(500);
     }
 
   /* USER CODE END LED_Thread2 */
