@@ -44,43 +44,22 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-/* Definitions for THREAD1 */
-/*osThreadId_t THREAD1Handle;
-const osThreadAttr_t THREAD1_attributes = {
-  .name = "THREAD1",
-  .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 512 * 4
-};*/
-/* Definitions for THREAD2 */
-/*osThreadId_t THREAD2Handle;
-const osThreadAttr_t THREAD2_attributes = {
-  .name = "THREAD2",
-  .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 512 * 4
-};*/
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
 
 TaskHandle_t task1_handle, task2_handle;
+QueueHandle_t xQueue;
+
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-void LED_Thread1(void *argument);
-void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
-
-struct student
-{
-int num;
-char name[50];
-int age;
-};
-
-
+static void vSenderTask( void *pvParameters );
+static void vReceiverTask( void *pvParameters );
 
 /* USER CODE END PFP */
 
@@ -93,14 +72,12 @@ int age;
   * @brief  The application entry point.
   * @retval int
   */
-//static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
 
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	BaseType_t status , status1;
-		static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
+	BaseType_t status , status1 ,status2;
 
   /* USER CODE END 1 */
 
@@ -118,8 +95,8 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-  BSP_LED_Init(LED9);
-  BSP_LED_Init(LED10);
+//  BSP_LED_Init(LED9);
+  //BSP_LED_Init(LED10);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -132,7 +109,6 @@ int main(void)
   osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  printf("Main func\n");
 
   /* USER CODE END RTOS_MUTEX */
 
@@ -147,22 +123,38 @@ int main(void)
   /* USER CODE BEGIN RTOS_QUEUES */
 
   /* USER CODE END RTOS_QUEUES */
+  /* The queue is created to hold a maximum of 5 values, each of which is
+   large enough to hold a variable of type int32_t. */
+   xQueue = xQueueCreate( 5, sizeof( int32_t ) );
+   if( xQueue != NULL )
+   {
+   /* Create two instances of the task that will send to the queue. The task
+   parameter is used to pass the value that the task will write to the queue,
+   so one task will continuously write 100 to the queue while the other task
+   will continuously write 200 to the queue. Both tasks are created at
+   priority 1. */
+	   status = xTaskCreate(vSenderTask, "Task1", 500, ( void * ) 100, 1, &task1_handle);
+	   status1 = xTaskCreate(vSenderTask, "Task2", 500, ( void * ) 200, 1, &task2_handle);
+	   configASSERT(status == pdPASS);
+	   configASSERT(status1 == pdPASS);
 
-  /* Create the thread(s) */
-  /* creation of THREAD1 */
-  //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
+   /* Create the task that will read from the queue. The task is created with
+   priority 2, so above the priority of the sender tasks. */
+   status2 = xTaskCreate( vReceiverTask, "Task3", 500, NULL, 2, NULL );
+   configASSERT(status2 == pdPASS);
+   /* Start the scheduler so the created tasks start executing. */
+   vTaskStartScheduler();
+   }
+   else
+   {
+   /* The queue could not be created. */
+	   printf("Queue not created\n");
+   }
 
 
-    status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
-    status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
-    configASSERT(status == pdPASS);
-    configASSERT(status1 == pdPASS);
-
-    printf("Main Num :%d\n",s1.num);
 
 
-  /* creation of THREAD2 */
-  //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
+
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* USER CODE END RTOS_THREADS */
@@ -172,8 +164,7 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  osKernelStart();
-  printf("Main Num :%d\n",s1.num);
+ // osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -274,76 +265,82 @@ static void MX_ICACHE_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_LED_Thread1 */
-/**
-  * @brief  Function implementing the THREAD1 thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_LED_Thread1 */
-void LED_Thread1(void *argument)
+/*SenderTask_Handler   */
+static void vSenderTask( void *pvParameters )
 {
-  /* USER CODE BEGIN 5 */
-   struct student *t;
-  /* USER CODE BEGIN 5 */
-  //uint32_t count = 0;
-	//UBaseType_t uxPriority;
-  t= (struct student *) argument;
-
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-   //uxPriority = uxTaskPriorityGet( NULL );
-
-	  while(1)
-    {
-      BSP_LED_Toggle(LED9);
-      printf("Num :%d\n",t->num);
-      printf("Name :%s\n",t->name);
-      printf("Age :%d\n",t->age);
-
- /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
-    //  printf( "About to raise the Task 2 priority\r\n" );
-    //  vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
-      osDelay(500);
-    }
-
-
-  /* USER CODE END 5 */
+int32_t lValueToSend;
+BaseType_t xStatus;
+ /* Two instances of this task are created so the value that is sent to the
+ queue is passed in via the task parameter - this way each instance can use
+ a different value. The queue was created to hold values of type int32_t,
+ so cast the parameter to the required type. */
+ lValueToSend = ( int32_t ) pvParameters;
+ /* As per most tasks, this task is implemented within an infinite loop. */
+ for( ;; )
+ {
+ /* Send the value to the queue.
+ The first parameter is the queue to which data is being sent. The
+ queue was created before the scheduler was started, so before this task
+ started to execute.
+ The second parameter is the address of the data to be sent, in this case
+ the address of lValueToSend.
+ The third parameter is the Block time – the time the task should be kept
+ in the Blocked state to wait for space to become available on the queue
+ should the queue already be full. In this case a block time is not
+ specified because the queue should never contain more than one item, and
+ therefore never be full. */
+ xStatus = xQueueSendToBack( xQueue, &lValueToSend, 0 );
+ if( xStatus != pdPASS )
+ {
+ /* The send operation could not complete because the queue was full -
+ this must be an error as the queue should never contain more than
+ one item! */
+ printf( "Could not send to the queue.\r\n" );
+ }
+ }
 }
 
-/* USER CODE BEGIN Header_LED_Thread2 */
-/**
-* @brief Function implementing the THREAD2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LED_Thread2 */
-void LED_Thread2(void *argument)
+/* ReceiverTask_Handler*/
+static void vReceiverTask( void *pvParameters )
 {
-  /* USER CODE BEGIN LED_Thread2 */
-
-
-  //uint32_t count;
-	//UBaseType_t uxPriority;
-  (void) argument;
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-  //uxPriority = uxTaskPriorityGet( NULL );
-
-	  while(1)
-    {
-      BSP_LED_Toggle(LED10);
-      printf("%s:\n",argument);
-
-      /* Set the priority of this task back down to its original value.
-       Passing in NULL as the task handle means "change the priority of the
-       calling task". Setting the priority below that of Task 1 will cause
-       Task 1 to immediately start running again – pre-empting this task. */
-    //  printf( "About to lower the Task 2 priority\r\n" );
-     // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
-     osDelay(500);
-    }
-
-
-  /* USER CODE END LED_Thread2 */
+/* Declare the variable that will hold the values received from the queue. */
+int32_t lReceivedValue;
+BaseType_t xStatus;
+const TickType_t xTicksToWait = pdMS_TO_TICKS( 100 );
+ /* This task is also defined within an infinite loop. */
+ for( ;; )
+ {
+ /* This call should always find the queue empty because this task will
+ immediately remove any data that is written to the queue. */
+ if( uxQueueMessagesWaiting( xQueue ) != 0 )
+ {
+ printf( "Queue should have been empty!\r\n" );
+ }
+ /* Receive data from the queue.
+ The first parameter is the queue from which data is to be received. The
+ queue is created before the scheduler is started, and therefore before this
+ task runs for the first time.
+ The second parameter is the buffer into which the received data will be
+ placed. In this case the buffer is simply the address of a variable that
+ has the required size to hold the received data.
+ The last parameter is the block time – the maximum amount of time that the
+ task will remain in the Blocked state to wait for data to be available
+ should the queue already be empty. */
+ xStatus = xQueueReceive( xQueue, &lReceivedValue, xTicksToWait );
+ if( xStatus == pdPASS )
+ {
+ /* Data was successfully received from the queue, print out the received
+ value. */
+ printf( "Received = %d\n", lReceivedValue );
+ }
+ else
+ {
+ /* Data was not received from the queue even after waiting for 100ms.
+ This must be an error as the sending tasks are free running and will be
+ continuously writing to the queue. */
+printf( "Could not receive from the queue.\r\n" );
+ }
+ }
 }
 
 /**
