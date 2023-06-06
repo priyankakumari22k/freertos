@@ -44,7 +44,9 @@ Application/User/main.o: \
  ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+ ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
+ ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 
 ../../Inc/main.h:
 
@@ -135,3 +137,7 @@ Application/User/main.o: \
 ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
 ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+
+../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
+
+../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
