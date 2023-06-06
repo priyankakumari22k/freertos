@@ -133,14 +133,14 @@ int main(void)
    so one task will continuously write 100 to the queue while the other task
    will continuously write 200 to the queue. Both tasks are created at
    priority 1. */
-	   status = xTaskCreate(vSenderTask, "Task1", 500, ( void * ) 100, 1, &task1_handle);
+	   status = xTaskCreate(vSenderTask, "Task1", 500, ( void * ) 100, 2, &task1_handle);
 	   status1 = xTaskCreate(vSenderTask, "Task2", 500, ( void * ) 200, 1, &task2_handle);
 	   configASSERT(status == pdPASS);
 	   configASSERT(status1 == pdPASS);
 
    /* Create the task that will read from the queue. The task is created with
    priority 2, so above the priority of the sender tasks. */
-   status2 = xTaskCreate( vReceiverTask, "Task3", 500, NULL, 2, NULL );
+   status2 = xTaskCreate( vReceiverTask, "Task3", 500, NULL, 3, NULL );
    configASSERT(status2 == pdPASS);
    /* Start the scheduler so the created tasks start executing. */
    vTaskStartScheduler();
@@ -150,10 +150,6 @@ int main(void)
    /* The queue could not be created. */
 	   printf("Queue not created\n");
    }
-
-
-
-
 
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -289,13 +285,17 @@ BaseType_t xStatus;
  should the queue already be full. In this case a block time is not
  specified because the queue should never contain more than one item, and
  therefore never be full. */
- xStatus = xQueueSendToBack( xQueue, &lValueToSend, 0 );
+ xStatus = xQueueSendToBack( xQueue, &lValueToSend, 5 );
  if( xStatus != pdPASS )
  {
  /* The send operation could not complete because the queue was full -
  this must be an error as the queue should never contain more than
  one item! */
  printf( "Could not send to the queue.\r\n" );
+ }
+ else
+ {
+	 printf( "Send pass\r\n" );
  }
  }
 }
