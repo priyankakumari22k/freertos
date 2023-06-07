@@ -46,10 +46,9 @@
 
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
-
 TaskHandle_t task1_handle, task2_handle;
-QueueHandle_t xQueue;
-
+//QueueHandle_t xQueue;
+QueueHandle_t xPointerQueue;
 
 /* USER CODE END PV */
 
@@ -61,23 +60,25 @@ static void MX_ICACHE_Init(void);
 static void vSenderTask( void *pvParameters );
 static void vReceiverTask( void *pvParameters );
 
-/* Define an enumerated type used to identify the source of the data. */
+/*
+ Define an enumerated type used to identify the source of the data.
 typedef enum
 {
  eSender1,
  eSender2
 } DataSource_t;
 
-/* Define the structure type that will be passed on the queue. */
+ Define the structure type that will be passed on the queue.
 typedef struct
 {
  uint8_t ucValue;
  DataSource_t eDataSource;
 } Data_t;
 
-/* Declare two variables of type Data_t that will be passed on the queue. */
-static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 }, /* Used by Sender1. */
- { 200, eSender2 } /* Used by Sender2. */};
+ Declare two variables of type Data_t that will be passed on the queue.
+static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 },  Used by Sender1.
+ { 200, eSender2 }  Used by Sender2. };
+*/
 
 /* USER CODE END PFP */
 
@@ -85,11 +86,6 @@ static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 }, /* Used by Sender1.
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 
 int main(void)
 {
@@ -127,19 +123,21 @@ int main(void)
   osKernelInitialize();
 
 
-  /* The queue is created to hold a maximum of 3 values, each of which is
+  /* The queue is created to hold a maximum of 5 values, each of which is
    large enough to hold a variable of type Data_t ). */
-   xQueue = xQueueCreate( 3, sizeof( Data_t )) ;
-   if( xQueue != NULL )
+   //xQueue = xQueueCreate( 3, sizeof( Data_t )) ;
+   xPointerQueue = xQueueCreate( 5, sizeof( char * ) );
+
+   if( xPointerQueue != NULL )
    {
    /* Create two instances of the task that will send to the queue. The
  parameter is used to pass the structure that the task will write to the
  queue, so one task will continuously send xStructsToSend[ 0 ] to the queue
  while the other task will continuously send xStructsToSend[ 1 ]. */
-	   status = xTaskCreate(vSenderTask, "Task1", 500, &( xStructsToSend[ 0 ] ), 2, &task1_handle);
-	   status1 = xTaskCreate(vSenderTask, "Task2", 500, &( xStructsToSend[ 1 ] ), 2, &task2_handle);
+	   status = xTaskCreate(vSenderTask, "Task1", 500, NULL, 2, &task1_handle);
+	 //  status1 = xTaskCreate(vSenderTask, "Task2", 500, &( xStructsToSend[ 1 ] ), 2, &task2_handle);
 	   configASSERT(status == pdPASS);
-	   configASSERT(status1 == pdPASS);
+	 // configASSERT(status1 == pdPASS);
 
    /* Create the task that will read from the queue. The task is created with
    priority 2, so above the priority of the sender tasks. */
@@ -256,86 +254,68 @@ static void MX_ICACHE_Init(void)
 /* USER CODE END 4 */
 
 /*SenderTask_Handler   */
-static void vSenderTask( void *pvParameters )
+ void vSenderTask( void *pvParameters )
 {
-//int32_t lValueToSend;
-BaseType_t xStatus;
-const TickType_t xTicksToWait = pdMS_TO_TICKS( 100 );
+	 char *pcStringToSend;
+	 const size_t xMaxStringLength = 50;
+	 char buffer[50];
+	 BaseType_t xStatus, xStringNumber = 0;
+	  for( ;; )
+	  {
 
-// lValueToSend = ( int32_t ) pvParameters;
- /* As per most tasks, this task is implemented within an infinite loop. */
- for( ;; )
- {
- /* Send the value to the queue.
- The second parameter is the address of the structure being sent. The address is passed in as the task parameter so pvParameters is used
- directly.
- The third parameter is the Block time - the time the task should be kept in the Blocked state to wait for space to become available on the queue if the queue is already full.The receiving task will remove items from
- the queue when both sending tasks are in the Blocked state. */
- xStatus = xQueueSendToBack( xQueue, pvParameters, xTicksToWait );
- if( xStatus != pdPASS )
- {
- /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
- one item! */
- printf( "Could not send to the queue.\r\n" );
+	 // pcStringToSend = ( char * ) pvPortMalloc( xMaxStringLength );
+	  pcStringToSend = ( char * ) buffer;
+
+	  snprintf( pcStringToSend, xMaxStringLength, " Hello\r\n");//, xStringNumber );
+	  printf("String in sendertask:  %s\n",pcStringToSend);
+	  printf("String number: %d \n",xStringNumber);
+	  /* Increment the counter so the string is different on each iteration of this task. */
+	  xStringNumber++;
+
+	  xStatus= xQueueSend( xPointerQueue,&pcStringToSend, portMAX_DELAY );
+
+	  if( xStatus != pdPASS )
+	   {
+	   /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
+	   one item! */
+	   printf( "Could not send to the queue.\r\n" );
+	   }
+	   else
+	   {
+	  	 printf( "Send pass\r\n" );
+	  	 vTaskDelay(pdMS_TO_TICKS(100));
+	   }
+	  }
  }
- else
- {
-	 printf( "Send pass\r\n" );
-	 vTaskDelay(pdMS_TO_TICKS(1000));
- }
- }
-}
+
 
 
 
 /* ReceiverTask_Handler*/
 static void vReceiverTask( void *pvParameters )
 {
-/* Declare the variable that will hold the values received from the queue. */
-//int32_t lReceivedValue;
-Data_t xReceivedStructure;
-BaseType_t xStatus;
-const TickType_t xTicksToWait = pdMS_TO_TICKS( 1000 );
- /* This task is also defined within an infinite loop. */
- for( ;; )
- {
- /* This call should find the queue full or not  */
- if( uxQueueMessagesWaiting( xQueue ) == 3 )
- {
- printf( "Queue is full!\r\n" );
- }
- if( uxQueueMessagesWaiting( xQueue ) == 0 )
-  {
-  printf( "Queue is empty!\r\n" );
-  }
- /* Receive data from the queue.
- The second parameter is the buffer into which the received data will be
- placed.
- The last parameter is the block time - the maximum amount of time that the
- task will remain in the Blocked state to wait for data to be available
- if the queue is already empty. */
- xStatus = xQueueReceive( xQueue, &xReceivedStructure, xTicksToWait);
- if( xStatus == pdPASS )
-  {
-  /* Data was successfully received from the queue, print out the received
-  value and the source of the value. */
-	 if( xReceivedStructure.eDataSource == eSender1 )
-     {
-      printf( "From Sender 1 = %d \n", xReceivedStructure.ucValue );
-     }
-    else
-    {
-      printf( "From Sender 2 = %d \n", xReceivedStructure.ucValue );
-    }
+	char *pcReceivedString;
+	//BaseType_t xStatus;
+	 for( ;; )
+	 {
 
-  }
-  else
-  {
-  /* Nothing was received from the queue. This must be an error as this
-  task should only run when the queue is full. */
-       printf( "Could not receive from the queue.\r\n" );
-  }
- }
+		 if( uxQueueMessagesWaiting( xPointerQueue ) == 5 )
+		 {
+		 printf( "Queue is full!\r\n" );
+		 }
+		 if( uxQueueMessagesWaiting( xPointerQueue ) == 0 )
+		 {
+		  printf( "Queue is empty!\r\n" );
+	     }
+
+	 /* Receive the address of a buffer. */
+	 xQueueReceive( xPointerQueue,&pcReceivedString, portMAX_DELAY );
+	 /* The buffer holds a string, print it out. */
+	 printf( "String in receiver task: %s \n",pcReceivedString );
+	 vTaskDelay(pdMS_TO_TICKS(100));
+	 /* The buffer is not required any more - release it so it can be freed, or re-used. */
+	 //vPortFree( pcReceivedString );
+	 }
 }
 
 /**
