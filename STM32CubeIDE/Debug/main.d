@@ -1,4 +1,4 @@
-Application/User/main.o: \
+main.o: \
  C:/Users/158180/STM32CubeIDE/workspace_1.7.0/STM32CubeL5/Projects/STM32L562E-DK/Applications/FreeRTOS/FreeRTOS_ThreadCreation/Src/main.c \
  ../../Inc/main.h \
  ../../../../../../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h \
@@ -44,7 +44,9 @@ Application/User/main.o: \
  ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
  ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+ ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
+ ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 
 ../../Inc/main.h:
 
@@ -135,3 +137,7 @@ Application/User/main.o: \
 ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
 ../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+
+../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
+
+../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:

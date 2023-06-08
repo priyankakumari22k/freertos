@@ -27,4 +27,5 @@ Drivers/BSP/STM32L562E-DK \
 Drivers/CMSIS \
 Drivers/STM32L5xx_HAL_Driver \
 Middlewares/FreeRTOS \
+. \
 
