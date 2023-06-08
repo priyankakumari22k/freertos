@@ -47,6 +47,8 @@
 
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
+
+TimerHandle_t xAutoReloadTimer, xOneShotTimer;
 //int ulCallCount =0;
 /* USER CODE END PV */
 
@@ -57,8 +59,8 @@ static void MX_ICACHE_Init(void);
 //void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
-static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
-static void prvOneShotTimerCallback( TimerHandle_t xTimer );
+static void prvTimerCallback( TimerHandle_t xTimer );
+//static void prvOneShotTimerCallback( TimerHandle_t xTimer );
 
 /* USER CODE END PFP */
 
@@ -72,9 +74,8 @@ static void prvOneShotTimerCallback( TimerHandle_t xTimer );
   * @retval int
   */
 
-
 #define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
-#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 500 )
+#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
 
 int main(void)
 {
@@ -126,11 +127,11 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
 
-  TimerHandle_t xAutoReloadTimer, xOneShotTimer;
+
   BaseType_t xTimer1Started, xTimer2Started;
 
-  xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvOneShotTimerCallback );
-  xAutoReloadTimer = xTimerCreate("AutoReload",mainAUTO_RELOAD_TIMER_PERIOD,pdTRUE,0,prvAutoReloadTimerCallback );
+  xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
+  xAutoReloadTimer = xTimerCreate("AutoReload",mainAUTO_RELOAD_TIMER_PERIOD,pdTRUE,0,prvTimerCallback);
 
   if( ( xOneShotTimer != NULL ) && ( xAutoReloadTimer != NULL ) )
    {
@@ -258,15 +259,55 @@ static void MX_ICACHE_Init(void)
   * @param  argument: Not used
   * @retval None
   */
-static void prvOneShotTimerCallback( TimerHandle_t xTimer )
+
+static void prvTimerCallback( TimerHandle_t xTimer )
 {
 TickType_t xTimeNow;
+uint32_t ulExecutionCount;
+ /* A count of the number of times this software timer has expired is stored in the timer's
+ ID. Obtain the ID, increment it, then save it as the new ID value. The ID is a void
+ pointer, so is cast to a uint32_t. */
+ ulExecutionCount = ( uint32_t ) pvTimerGetTimerID( xTimer );
+ ulExecutionCount++;
+ vTimerSetTimerID( xTimer, ( void * ) ulExecutionCount );
  /* Obtain the current tick count. */
  xTimeNow = xTaskGetTickCount();
- /* Output a string to show the time at which the callback was executed. */
+ /* The handle of the one-shot timer was stored in xOneShotTimer when the timer was created.
+ Compare the handle passed into this function with xOneShotTimer to determine if it was the
+ one-shot or auto-reload timer that expired, then output a string to show the time at which
+ the callback was executed. */
+ if( xTimer == xOneShotTimer )
+ {
+ printf( "One-shot timer callback executing %d\n", xTimeNow );
+ }
+ else
+ {
+ /* xTimer did not equal xOneShotTimer, so it must have been the auto-reload timer that
+ expired. */
+printf( "Auto-reload timer callback executing %d \n", xTimeNow );
+ if( ulExecutionCount == 5 )
+ {
+ /* Stop the auto-reload timer after it has executed 5 times. This callback function
+ executes in the context of the RTOS daemon task so must not call any functions that
+ might place the daemon task into the Blocked state. Therefore a block time of 0 is
+ used. */
+ xTimerStop( xTimer, 0 );
+ }
+ }
+}
+
+
+
+
+/*static void prvOneShotTimerCallback( TimerHandle_t xTimer )
+{
+TickType_t xTimeNow;
+  Obtain the current tick count.
+ xTimeNow = xTaskGetTickCount();
+  Output a string to show the time at which the callback was executed.
  printf( "One-shot timer callback executing %d \n", xTimeNow );
 
-}
+}*/
 
 /* USER CODE BEGIN Header_LED_Thread2 */
 /**
@@ -275,15 +316,15 @@ TickType_t xTimeNow;
 * @retval None
 */
 /* USER CODE END Header_LED_Thread2 */
-static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
+/*static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
 {
 TickType_t xTimeNow;
- /* Obtain the current tick count. */
+  Obtain the current tick count.
  xTimeNow = xTaskGetTickCount();
- /* Output a string to show the time at which the callback was executed. */
+  Output a string to show the time at which the callback was executed.
  printf( "Auto-reload timer callback executing %d \n", xTimeNow );
 
-}
+}*/
 
 
 /**
