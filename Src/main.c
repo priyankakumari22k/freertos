@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "stdlib.h"
 #include "timers.h"
 
 /* USER CODE END Includes */
@@ -47,7 +48,7 @@
 
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
-
+TaskHandle_t task1_handle;
 TimerHandle_t xAutoReloadTimer, xOneShotTimer;
 //int ulCallCount =0;
 /* USER CODE END PV */
@@ -55,11 +56,12 @@ TimerHandle_t xAutoReloadTimer, xOneShotTimer;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-//void LED_Thread1(void *argument);
+void LED_Thread1(void *argument);
 //void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
 static void prvTimerCallback( TimerHandle_t xTimer );
+
 //static void prvOneShotTimerCallback( TimerHandle_t xTimer );
 
 /* USER CODE END PFP */
@@ -74,14 +76,15 @@ static void prvTimerCallback( TimerHandle_t xTimer );
   * @retval int
   */
 
-#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
-#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
+const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 3000 );
+const TickType_t xErrorTimerPeriod = pdMS_TO_TICKS( 200 );
+
+
+//#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
+//#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
 
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -97,7 +100,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-  //BSP_LED_Init(LED9);
+   BSP_LED_Init(LED9);
   //BSP_LED_Init(LED10);
   /* USER CODE END SysInit */
 
@@ -110,36 +113,21 @@ int main(void)
   /* Init scheduler */
   osKernelInitialize();
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-
-  /* USER CODE END RTOS_TIMERS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-
-  /* USER CODE END RTOS_QUEUES */
-
-
 
   BaseType_t xTimer1Started, xTimer2Started;
 
-  xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
-  xAutoReloadTimer = xTimerCreate("AutoReload",mainAUTO_RELOAD_TIMER_PERIOD,pdTRUE,0,prvTimerCallback);
+  xTaskCreate(LED_Thread1, "LED Task", 1024, NULL, 1, &task1_handle);
 
-  if( ( xOneShotTimer != NULL ) && ( xAutoReloadTimer != NULL ) )
+ // xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
+  xAutoReloadTimer = xTimerCreate("AutoReload",xHealthyTimerPeriod,pdTRUE,0,prvTimerCallback);
+
+  if(  xAutoReloadTimer != NULL  )
    {
-    printf("both timers created\n");
-   xTimer1Started = xTimerStart( xOneShotTimer, 0 );
+    printf("timers created\n");
+   //xTimer1Started = xTimerStart( xOneShotTimer, 0 );
    xTimer2Started = xTimerStart( xAutoReloadTimer, 0 );
 
-     if( ( xTimer1Started == pdPASS ) && ( xTimer2Started == pdPASS ) )
+     if( xTimer2Started == pdPASS  )
       {
     	 /* Start the scheduler. */
     	 vTaskStartScheduler();
@@ -260,71 +248,40 @@ static void MX_ICACHE_Init(void)
   * @retval None
   */
 
-static void prvTimerCallback( TimerHandle_t xTimer )
+void LED_Thread1(void *argument)
 {
-TickType_t xTimeNow;
-uint32_t ulExecutionCount;
- /* A count of the number of times this software timer has expired is stored in the timer's
- ID. Obtain the ID, increment it, then save it as the new ID value. The ID is a void
- pointer, so is cast to a uint32_t. */
- ulExecutionCount = ( uint32_t ) pvTimerGetTimerID( xTimer );
- ulExecutionCount++;
- vTimerSetTimerID( xTimer, ( void * ) ulExecutionCount );
- /* Obtain the current tick count. */
- xTimeNow = xTaskGetTickCount();
- /* The handle of the one-shot timer was stored in xOneShotTimer when the timer was created.
- Compare the handle passed into this function with xOneShotTimer to determine if it was the
- one-shot or auto-reload timer that expired, then output a string to show the time at which
- the callback was executed. */
- if( xTimer == xOneShotTimer )
- {
- printf( "One-shot timer callback executing %d\n", xTimeNow );
- }
- else
- {
- /* xTimer did not equal xOneShotTimer, so it must have been the auto-reload timer that
- expired. */
-printf( "Auto-reload timer callback executing %d \n", xTimeNow );
- if( ulExecutionCount == 5 )
- {
- /* Stop the auto-reload timer after it has executed 5 times. This callback function
- executes in the context of the RTOS daemon task so must not call any functions that
- might place the daemon task into the Blocked state. Therefore a block time of 0 is
- used. */
- xTimerStop( xTimer, 0 );
- }
- }
+  /* USER CODE BEGIN 5 */
+	printf("Task1 is running\n");
+	  while(1)
+    {
+      BSP_LED_Toggle(LED9);
+      HAL_Delay(200);
+
+    }
+	  osDelay(1000);
+  /* USER CODE END 5 */
 }
 
-
-
-
-/*static void prvOneShotTimerCallback( TimerHandle_t xTimer )
+static void prvTimerCallback( TimerHandle_t xTimer )
 {
-TickType_t xTimeNow;
-  Obtain the current tick count.
- xTimeNow = xTaskGetTickCount();
-  Output a string to show the time at which the callback was executed.
- printf( "One-shot timer callback executing %d \n", xTimeNow );
 
-}*/
+static BaseType_t xErrorDetected = pdFALSE;
 
-/* USER CODE BEGIN Header_LED_Thread2 */
-/**
-* @brief Function implementing the THREAD2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LED_Thread2 */
-/*static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
-{
-TickType_t xTimeNow;
-  Obtain the current tick count.
- xTimeNow = xTaskGetTickCount();
-  Output a string to show the time at which the callback was executed.
- printf( "Auto-reload timer callback executing %d \n", xTimeNow );
+if( xErrorDetected == pdFALSE )
+	{
 
-}*/
+	//if( CheckTasksAreRunningWithoutError() == pdFAIL )
+		if(eTaskGetState(task1_handle) != eRunning )
+		{
+
+			xTimerChangePeriod( xTimer, xErrorTimerPeriod, 0 ); /* Do not block when sending this command. */
+		}
+		/* Latch that an error has already been detected. */
+		xErrorDetected = pdTRUE;
+	}
+BSP_LED_Toggle(LED9);
+}
+
 
 
 /**
