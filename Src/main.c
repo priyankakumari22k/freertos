@@ -56,7 +56,7 @@ TimerHandle_t xAutoReloadTimer, xOneShotTimer;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-void LED_Thread1(void *argument);
+//void LED_Thread1(void *argument);
 //void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -76,8 +76,8 @@ static void prvTimerCallback( TimerHandle_t xTimer );
   * @retval int
   */
 
-const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 3000 );
-const TickType_t xErrorTimerPeriod = pdMS_TO_TICKS( 200 );
+const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 1000 );
+//const TickType_t xErrorTimerPeriod = pdMS_TO_TICKS( 200 );
 
 
 //#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
@@ -100,7 +100,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-   BSP_LED_Init(LED9);
+  // BSP_LED_Init(LED9);
   //BSP_LED_Init(LED10);
   /* USER CODE END SysInit */
 
@@ -116,7 +116,7 @@ int main(void)
 
   BaseType_t xTimer1Started, xTimer2Started;
 
-  xTaskCreate(LED_Thread1, "LED Task", 1024, NULL, 1, &task1_handle);
+ // xTaskCreate(LED_Thread1, "LED Task", 1024, NULL, 1, &task1_handle);
 
  // xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
   xAutoReloadTimer = xTimerCreate("AutoReload",xHealthyTimerPeriod,pdTRUE,0,prvTimerCallback);
@@ -133,8 +133,6 @@ int main(void)
     	 vTaskStartScheduler();
       }
    }
-
-
 
   /* Start scheduler */
  // osKernelStart();
@@ -248,9 +246,9 @@ static void MX_ICACHE_Init(void)
   * @retval None
   */
 
-void LED_Thread1(void *argument)
+/*void LED_Thread1(void *argument)
 {
-  /* USER CODE BEGIN 5 */
+   USER CODE BEGIN 5
 	printf("Task1 is running\n");
 	  while(1)
     {
@@ -259,27 +257,36 @@ void LED_Thread1(void *argument)
 
     }
 	  osDelay(1000);
-  /* USER CODE END 5 */
-}
+   USER CODE END 5
+}*/
 
 static void prvTimerCallback( TimerHandle_t xTimer )
 {
 
-static BaseType_t xErrorDetected = pdFALSE;
+//static BaseType_t xErrorDetected = pdFALSE;
+printf("timer expired \n");
 
-if( xErrorDetected == pdFALSE )
+TickType_t TimeNow;
+ /* Obtain the current tick count. */
+ TimeNow = xTaskGetTickCount();
+ /* Output a string to show the time at which the callback was executed. */
+ printf( "One-shot timer callback executing %d \n", TimeNow );
+vTaskDelay(5000);
+xTimerReset(xTimer, 0);
+
+/*if( xErrorDetected == pdFALSE )
 	{
 
 	//if( CheckTasksAreRunningWithoutError() == pdFAIL )
 		if(eTaskGetState(task1_handle) != eRunning )
 		{
 
-			xTimerChangePeriod( xTimer, xErrorTimerPeriod, 0 ); /* Do not block when sending this command. */
+			xTimerChangePeriod( xTimer, xErrorTimerPeriod, 0 );  Do not block when sending this command.
 		}
-		/* Latch that an error has already been detected. */
+		 Latch that an error has already been detected.
 		xErrorDetected = pdTRUE;
 	}
-BSP_LED_Toggle(LED9);
+BSP_LED_Toggle(LED9);*/
 }
 
 
