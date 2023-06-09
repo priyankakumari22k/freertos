@@ -6249,7 +6249,7 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_line    0x0000000000014110      0xcb6 ./Middlewares/FreeRTOS/timers.o
  .debug_line    0x0000000000014dc6      0xcdb ./main.o
 
-.debug_info     0x0000000000000000    0x1a47f
+.debug_info     0x0000000000000000    0x1a473
  .debug_info    0x0000000000000000       0x22 ./Application/Startup/startup_stm32l562qeixq.o
  .debug_info    0x0000000000000022      0x86d ./Application/User/stm32l5xx_hal_msp.o
  .debug_info    0x000000000000088f     0x1068 ./Application/User/stm32l5xx_hal_timebase_tim.o
@@ -6272,9 +6272,9 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_info    0x0000000000013443     0x1d3e ./Middlewares/FreeRTOS/queue.o
  .debug_info    0x0000000000015181     0x23ff ./Middlewares/FreeRTOS/tasks.o
  .debug_info    0x0000000000017580     0x19c2 ./Middlewares/FreeRTOS/timers.o
- .debug_info    0x0000000000018f42     0x153d ./main.o
+ .debug_info    0x0000000000018f42     0x1531 ./main.o
 
-.debug_abbrev   0x0000000000000000     0x332e
+.debug_abbrev   0x0000000000000000     0x331f
  .debug_abbrev  0x0000000000000000       0x12 ./Application/Startup/startup_stm32l562qeixq.o
  .debug_abbrev  0x0000000000000012      0x157 ./Application/User/stm32l5xx_hal_msp.o
  .debug_abbrev  0x0000000000000169      0x1df ./Application/User/stm32l5xx_hal_timebase_tim.o
@@ -6297,7 +6297,7 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_abbrev  0x000000000000276b      0x2f1 ./Middlewares/FreeRTOS/queue.o
  .debug_abbrev  0x0000000000002a5c      0x343 ./Middlewares/FreeRTOS/tasks.o
  .debug_abbrev  0x0000000000002d9f      0x2db ./Middlewares/FreeRTOS/timers.o
- .debug_abbrev  0x000000000000307a      0x2b4 ./main.o
+ .debug_abbrev  0x000000000000307a      0x2a5 ./main.o
 
 .debug_aranges  0x0000000000000000     0x1518
  .debug_aranges
@@ -6347,7 +6347,7 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_aranges
                 0x00000000000014d0       0x48 ./main.o
 
-.debug_str      0x0000000000000000   0x115497
+.debug_str      0x0000000000000000   0x115488
  .debug_str     0x0000000000000000       0xcf ./Application/Startup/startup_stm32l562qeixq.o
  .debug_str     0x00000000000000cf   0x100ae3 ./Application/User/stm32l5xx_hal_msp.o
                                      0x100e7c (size before relaxing)
@@ -6391,8 +6391,8 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                                        0xd141 (size before relaxing)
  .debug_str     0x000000000011430e      0x674 ./Middlewares/FreeRTOS/timers.o
                                        0xcbb3 (size before relaxing)
- .debug_str     0x0000000000114982      0xb15 ./main.o
-                                     0x10a2af (size before relaxing)
+ .debug_str     0x0000000000114982      0xb06 ./main.o
+                                     0x10a2a0 (size before relaxing)
 
 .debug_ranges   0x0000000000000000     0x13b0
  .debug_ranges  0x0000000000000000       0x20 ./Application/Startup/startup_stm32l562qeixq.o
