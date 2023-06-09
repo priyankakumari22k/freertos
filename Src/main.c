@@ -253,6 +253,11 @@ static void MX_ICACHE_Init(void)
 
 /* USER CODE END 4 */
 
+/*
+@brief sending data to queue function
+@param none
+@RetVal none
+*/
 /*SenderTask_Handler   */
  void vSenderTask( void *pvParameters )
 {
@@ -276,21 +281,26 @@ static void MX_ICACHE_Init(void)
 
 	  if( xStatus != pdPASS )
 	   {
-	   /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
-	   one item! */
-	   printf( "Could not send to the queue.\r\n" );
+		  /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
+	   	   one item! */
+		  printf( "Could not send to the queue.\r\n" );
 	   }
 	   else
 	   {
-	  	 printf( "Send pass\r\n" );
-	  	 vTaskDelay(pdMS_TO_TICKS(100));
+		   printf( "Send pass\r\n" );
+		   vTaskDelay(pdMS_TO_TICKS(100));
 	   }
 	  }
  }
 
 
 
+ /*
 
+ @brief receiving data from queue function
+ @param none
+ @RetVal none
+ */
 /* ReceiverTask_Handler*/
 static void vReceiverTask( void *pvParameters )
 {
@@ -298,11 +308,14 @@ static void vReceiverTask( void *pvParameters )
 	//BaseType_t xStatus;
 	 for( ;; )
 	 {
-
+         //for checking queue is full or not
 		 if( uxQueueMessagesWaiting( xPointerQueue ) == 5 )
-		 {
-		 printf( "Queue is full!\r\n" );
-		 }
+		 	 {
+			 printf( "Queue is full!\r\n" );
+		 	 }
+
+
+		 //for checking queue is empty or not
 		 if( uxQueueMessagesWaiting( xPointerQueue ) == 0 )
 		 {
 		  printf( "Queue is empty!\r\n" );
@@ -311,6 +324,7 @@ static void vReceiverTask( void *pvParameters )
 	 /* Receive the address of a buffer. */
 	 xQueueReceive( xPointerQueue,&pcReceivedString, portMAX_DELAY );
 	 /* The buffer holds a string, print it out. */
+
 	 printf( "String in receiver task: %s \n",pcReceivedString );
 	 vTaskDelay(pdMS_TO_TICKS(100));
 	 /* The buffer is not required any more - release it so it can be freed, or re-used. */
