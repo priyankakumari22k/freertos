@@ -90,5 +90,8 @@ void TIM6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+void EXTI13_IRQHandler(void)
+{
+  HAL_GPIO_EXTI_IRQHandler(BUTTON_USER_PIN);
+}
 /* USER CODE END 1 */

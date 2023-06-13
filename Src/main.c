@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+ #include "FreeRTOS.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -44,41 +45,22 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-/* Definitions for THREAD1 */
-/*osThreadId_t THREAD1Handle;
-const osThreadAttr_t THREAD1_attributes = {
-  .name = "THREAD1",
-  .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 512 * 4
-};*/
-/* Definitions for THREAD2 */
-/*osThreadId_t THREAD2Handle;
-const osThreadAttr_t THREAD2_attributes = {
-  .name = "THREAD2",
-  .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 512 * 4
-};*/
+
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
 
-TaskHandle_t task1_handle, task2_handle;
+//TaskHandle_t task1_handle, task2_handle;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-void LED_Thread1(void *argument);
-void LED_Thread2(void *argument);
+//void LED_Thread1(void *argument);
+//void LED_Thread2(void *argument);
+static void EXTI13_IRQHandler_Config(void);
 
 /* USER CODE BEGIN PFP */
-
-struct student
-{
-int num;
-char name[50];
-int age;
-};
 
 
 
@@ -93,14 +75,12 @@ int age;
   * @brief  The application entry point.
   * @retval int
   */
-//static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
 
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	BaseType_t status , status1;
-		static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
+	//BaseType_t status , status1;
 
   /* USER CODE END 1 */
 
@@ -127,53 +107,34 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
+  EXTI13_IRQHandler_Config();
 
   /* Init scheduler */
-  osKernelInitialize();
+  //osKernelInitialize();
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-  printf("Main func\n");
 
-  /* USER CODE END RTOS_MUTEX */
 
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-
-  /* USER CODE END RTOS_TIMERS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-
-  /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
 
 
-    status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
+    /*status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
     status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
     configASSERT(status == pdPASS);
-    configASSERT(status1 == pdPASS);
-
-    printf("Main Num :%d\n",s1.num);
+    configASSERT(status1 == pdPASS);*/
 
 
-  /* creation of THREAD2 */
-  //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
 
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* USER CODE END RTOS_THREADS */
+
 
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  osKernelStart();
-  printf("Main Num :%d\n",s1.num);
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -273,79 +234,59 @@ static void MX_ICACHE_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+static void EXTI13_IRQHandler_Config(void)
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
 
-/* USER CODE BEGIN Header_LED_Thread1 */
+
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /* Configure PC.13 pin as input floating */
+  GPIO_InitStructure.Mode = GPIO_MODE_IT_RISING_FALLING;
+
+
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = BUTTON_USER_PIN;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+
+  /* Enable and set line 13 Interrupt to the lowest priority */
+ // HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
+  HAL_NVIC_EnableIRQ(EXTI13_IRQn);
+}
+
+
 /**
-  * @brief  Function implementing the THREAD1 thread.
-  * @param  argument: Not used
+  * @brief EXTI line detection callbacks
+  * @param GPIO_Pin: Specifies the pins connected EXTI line
   * @retval None
   */
-/* USER CODE END Header_LED_Thread1 */
-void LED_Thread1(void *argument)
+
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 {
-  /* USER CODE BEGIN 5 */
-   struct student *t;
-  /* USER CODE BEGIN 5 */
-  //uint32_t count = 0;
-	//UBaseType_t uxPriority;
-  t= (struct student *) argument;
+  if (GPIO_Pin == BUTTON_USER_PIN)
+  {
+     //Toggle LED10
+	  BSP_LED_Off(LED10);
+   // BSP_LED_Toggle(LED10);
 
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-   //uxPriority = uxTaskPriorityGet( NULL );
-
-	  while(1)
-    {
-      BSP_LED_Toggle(LED9);
-      printf("Task1 is running\n");
-      printf("Num :%d\n",t->num);
-      printf("Name :%s\n",t->name);
-      printf("Age :%d\n\n",t->age);
-
- /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
-    //  printf( "About to raise the Task 2 priority\r\n" );
-    //  vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
-      osDelay(500);
-    }
-
-
-  /* USER CODE END 5 */
+  }
 }
 
-/* USER CODE BEGIN Header_LED_Thread2 */
-/**
-* @brief Function implementing the THREAD2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LED_Thread2 */
-void LED_Thread2(void *argument)
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 {
-  /* USER CODE BEGIN LED_Thread2 */
+  if (GPIO_Pin == BUTTON_USER_PIN)
+  {
+    /* Toggle LED10 */
+	BSP_LED_On(LED10);
+   // BSP_LED_Toggle(LED9);
 
-
-  //uint32_t count;
-	//UBaseType_t uxPriority;
-  (void) argument;
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-  //uxPriority = uxTaskPriorityGet( NULL );
-
-	  while(1)
-    {
-      BSP_LED_Toggle(LED10);
-      printf("%s:\n",argument);
-
-      /* Set the priority of this task back down to its original value.
-       Passing in NULL as the task handle means "change the priority of the
-       calling task". Setting the priority below that of Task 1 will cause
-       Task 1 to immediately start running again – pre-empting this task. */
-    //  printf( "About to lower the Task 2 priority\r\n" );
-     // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
-     osDelay(500);
-    }
-
-
-  /* USER CODE END LED_Thread2 */
+  }
 }
+
+/*
+
 
 /**
   * @brief  Period elapsed callback in non blocking mode
@@ -355,18 +296,18 @@ void LED_Thread2(void *argument)
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+/*void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* USER CODE BEGIN Callback 0 */
+   //USER CODE BEGIN Callback 0
 
-  /* USER CODE END Callback 0 */
+ //  USER CODE END Callback 0
   if (htim->Instance == TIM6) {
     HAL_IncTick();
   }
-  /* USER CODE BEGIN Callback 1 */
+ //  USER CODE BEGIN Callback 1
 
-  /* USER CODE END Callback 1 */
-}
+  // USER CODE END Callback 1
+}*/
 
 /**
   * @brief  This function is executed in case of error occurrence.
