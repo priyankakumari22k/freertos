@@ -315,13 +315,11 @@ static void vReceiverTask( void *pvParameters )
 		 	 {
 			 printf( "Queue is full!\r\n" );
 		 	 }
-
-
-		 //for checking queue is empty or not
-		 if( num == 0 )
+		 else if(num == 0)
 		 {
-		  printf( "Queue is empty!\r\n" );
-	     }
+			 printf( "Queue is empty!\r\n" );
+		 }
+
 
 	 /* Receive the address of a buffer. */
 	 xQueueReceive( xPointerQueue,&pcReceivedString, portMAX_DELAY );
