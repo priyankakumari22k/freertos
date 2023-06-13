@@ -304,19 +304,21 @@ static void MX_ICACHE_Init(void)
 /* ReceiverTask_Handler*/
 static void vReceiverTask( void *pvParameters )
 {
+	int num;
 	char *pcReceivedString;
 	//BaseType_t xStatus;
 	 for( ;; )
 	 {
+		 num=uxQueueMessagesWaiting( xPointerQueue );
          //for checking queue is full or not
-		 if( uxQueueMessagesWaiting( xPointerQueue ) == 5 )
+		 if( num == 5 )
 		 	 {
 			 printf( "Queue is full!\r\n" );
 		 	 }
 
 
 		 //for checking queue is empty or not
-		 if( uxQueueMessagesWaiting( xPointerQueue ) == 0 )
+		 if( num == 0 )
 		 {
 		  printf( "Queue is empty!\r\n" );
 	     }
