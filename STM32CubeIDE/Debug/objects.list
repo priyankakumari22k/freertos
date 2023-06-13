@@ -1,5 +1,6 @@
 "./Application/Startup/startup_stm32l562qeixq.o"
 "./Application/User/app_freertos.o"
+"./Application/User/main.o"
 "./Application/User/stm32l5xx_hal_msp.o"
 "./Application/User/stm32l5xx_hal_timebase_tim.o"
 "./Application/User/stm32l5xx_it.o"
@@ -37,4 +38,3 @@
 "./Middlewares/FreeRTOS/stream_buffer.o"
 "./Middlewares/FreeRTOS/tasks.o"
 "./Middlewares/FreeRTOS/timers.o"
-"./main.o"
