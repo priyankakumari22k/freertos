@@ -20,8 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
- #include "FreeRTOS.h"
-
+#include "FreeRTOS.h"
+#include "timers.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -56,12 +56,13 @@ __IO uint32_t OsStatus = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-//void LED_Thread1(void *argument);
+
+void  vPeriodicTask(void *argument);
 //void LED_Thread2(void *argument);
 static void EXTI13_IRQHandler_Config(void);
+static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
 
 /* USER CODE BEGIN PFP */
-
 
 
 /* USER CODE END PFP */
@@ -76,6 +77,7 @@ static void EXTI13_IRQHandler_Config(void);
   * @retval int
   */
 
+#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -87,7 +89,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -110,22 +113,20 @@ int main(void)
   EXTI13_IRQHandler_Config();
 
   /* Init scheduler */
-  //osKernelInitialize();
-
-
+  osKernelInitialize();
 
 
   /* Create the thread(s) */
   /* creation of THREAD1 */
   //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
+    BaseType_t status;
 
+    const UBaseType_t ulPeriodicTaskPriority = configTIMER_TASK_PRIORITY - 1;
 
-    /*status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
-    status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
+    status = xTaskCreate( vPeriodicTask, "Task1", 500, NULL, ulPeriodicTaskPriority, NULL);
+    //status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
     configASSERT(status == pdPASS);
-    configASSERT(status1 == pdPASS);*/
-
-
+   // configASSERT(status1 == pdPASS);
 
 
 
@@ -134,7 +135,7 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  //osKernelStart();
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -234,6 +235,11 @@ static void MX_ICACHE_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+/**
+  * @brief EXTI line detection callbacks
+  * @param GPIO_Pin: Specifies the pins connected EXTI line
+  * @retval None
+  */
 static void EXTI13_IRQHandler_Config(void)
 {
   GPIO_InitTypeDef   GPIO_InitStructure;
@@ -252,18 +258,77 @@ static void EXTI13_IRQHandler_Config(void)
 
 
   /* Enable and set line 13 Interrupt to the lowest priority */
- // HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
+  HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
   HAL_NVIC_EnableIRQ(EXTI13_IRQn);
 }
 
 
 /**
-  * @brief EXTI line detection callbacks
-  * @param GPIO_Pin: Specifies the pins connected EXTI line
+  * @brief Task1 handler and creating a autoreload timer
+  * @param None
   * @retval None
   */
 
-void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+void  vPeriodicTask(void *argument)
+{
+	TimerHandle_t xAutoReloadTimer;
+	//BaseType_t xTimer1Started;
+	printf("Task1\n");
+	xAutoReloadTimer = xTimerCreate( "AutoReload", mainAUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
+	 /* Check the software timers were created. */
+	 if(  xAutoReloadTimer != NULL  )
+	 {
+	 /* Start the software timers, using a block time of 0 (no block time). The scheduler has
+	 not been started yet so any block time specified here would be ignored anyway. */
+	xTimerStartFromISR( xAutoReloadTimer, 0 );
+	 }
+	 while(1)
+	 {
+
+	 }
+
+}
+
+/**
+  * @brief Autoreload timer handler,here led toggles only on long press of 1s
+  * @param None
+  * @retval None
+  */
+static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
+{
+TickType_t xTimeNow;
+TickType_t buttonPressTime = 0;
+static int count=0;
+    /* Obtain the current tick count. */
+    xTimeNow = xTaskGetTickCount();
+    /* Output a string to show the time at which the callback was executed. */
+ printf( "Auto-reload timer callback executing %d\n", xTimeNow );
+
+  if(HAL_GPIO_ReadPin(BUTTON_USER_GPIO_PORT, BUTTON_USER_PIN)==1)
+  {
+	 count++;
+	 if(count==10)
+	 {
+            if ((xTimeNow - buttonPressTime) >= pdMS_TO_TICKS(1000))
+             {
+                 HAL_GPIO_TogglePin(LED10_GPIO_PORT, LED10_PIN);
+                 buttonPressTime = xTaskGetTickCount();
+             }
+	 }
+  }
+  else
+  {
+	  count=0;
+  }
+
+printf("count %d \n",count);
+ }
+
+
+
+
+
+/*void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == BUTTON_USER_PIN)
   {
@@ -278,16 +343,14 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == BUTTON_USER_PIN)
   {
-    /* Toggle LED10 */
-	BSP_LED_On(LED10);
-   // BSP_LED_Toggle(LED9);
-
+	BSP_LED_Toggle(LED10);
   }
-}
+}*/
+
+
+
 
 /*
-
-
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
