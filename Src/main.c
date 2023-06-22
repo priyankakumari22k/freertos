@@ -22,6 +22,7 @@
 #include "cmsis_os.h"
 #include "FreeRTOS.h"
 #include "timers.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -36,6 +37,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -48,6 +51,7 @@
 
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
+//TimerHandle_t xAutoReloadTimer;
 
 //TaskHandle_t task1_handle, task2_handle;
 
@@ -57,7 +61,7 @@ __IO uint32_t OsStatus = 0;
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
 
-void  vPeriodicTask(void *argument);
+//void  vPeriodicTask(void *argument);
 //void LED_Thread2(void *argument);
 static void EXTI13_IRQHandler_Config(void);
 static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
@@ -77,12 +81,11 @@ static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
   * @retval int
   */
 
-#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	//BaseType_t status , status1;
 
   /* USER CODE END 1 */
 
@@ -115,27 +118,25 @@ int main(void)
   /* Init scheduler */
   osKernelInitialize();
 
+    //BaseType_t status;
 
-  /* Create the thread(s) */
-  /* creation of THREAD1 */
-  //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-    BaseType_t status;
+    //const UBaseType_t ulPeriodicTaskPriority = configTIMER_TASK_PRIORITY - 1;
 
-    const UBaseType_t ulPeriodicTaskPriority = configTIMER_TASK_PRIORITY - 1;
+    //status = xTaskCreate( vPeriodicTask, "Task1", 500, NULL, ulPeriodicTaskPriority, NULL);
+    //configASSERT(status == pdPASS);
 
-    status = xTaskCreate( vPeriodicTask, "Task1", 500, NULL, ulPeriodicTaskPriority, NULL);
-    //status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
-    configASSERT(status == pdPASS);
-   // configASSERT(status1 == pdPASS);
-
-
-
-  /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
-  /* USER CODE END RTOS_EVENTS */
+  TimerHandle_t xAutoReloadTimer = xTimerCreate( "AutoReload", mainAUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
+    	 /* Check the software timers were created. */
+    	 if(  xAutoReloadTimer != NULL  )
+    	 {
+    	 /* Start the software timers, using a block time of 0 (no block time). The scheduler has
+    	 not been started yet so any block time specified here would be ignored anyway. */
+    	xTimerStartFromISR( xAutoReloadTimer, 0 );
+    	 }
 
   /* Start scheduler */
-  osKernelStart();
+  vTaskStartScheduler();
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -143,7 +144,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
 
     /* USER CODE BEGIN 3 */
   }
@@ -200,6 +200,7 @@ void SystemClock_Config(void)
   }
 }
 
+
 /**
   * @brief ICACHE Initialization Function
   * @param None
@@ -235,9 +236,11 @@ static void MX_ICACHE_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+
 /**
-  * @brief EXTI line detection callbacks
-  * @param GPIO_Pin: Specifies the pins connected EXTI line
+  * @brief Interrupt and GPIO Intialisation
+  * @param None
   * @retval None
   */
 static void EXTI13_IRQHandler_Config(void)
@@ -263,23 +266,24 @@ static void EXTI13_IRQHandler_Config(void)
 }
 
 
+
 /**
   * @brief Task1 handler and creating a autoreload timer
   * @param None
   * @retval None
   */
 
-void  vPeriodicTask(void *argument)
+/*void  vPeriodicTask(void *argument)
 {
 	TimerHandle_t xAutoReloadTimer;
 	//BaseType_t xTimer1Started;
 	printf("Task1\n");
 	xAutoReloadTimer = xTimerCreate( "AutoReload", mainAUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
-	 /* Check the software timers were created. */
+	  Check the software timers were created.
 	 if(  xAutoReloadTimer != NULL  )
 	 {
-	 /* Start the software timers, using a block time of 0 (no block time). The scheduler has
-	 not been started yet so any block time specified here would be ignored anyway. */
+	  Start the software timers, using a block time of 0 (no block time). The scheduler has
+	 not been started yet so any block time specified here would be ignored anyway.
 	xTimerStartFromISR( xAutoReloadTimer, 0 );
 	 }
 	 while(1)
@@ -287,11 +291,11 @@ void  vPeriodicTask(void *argument)
 
 	 }
 
-}
+}*/
 
 /**
-  * @brief Autoreload timer handler,here led toggles only on long press of 1s
-  * @param None
+  * @brief Autoreload timer callback function, here led toggles only on long press of 1s
+  * @param xTimer: Timer handle
   * @retval None
   */
 static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
