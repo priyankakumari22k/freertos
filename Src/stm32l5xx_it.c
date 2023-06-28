@@ -88,7 +88,10 @@ void TIM6_IRQHandler(void)
 
   /* USER CODE END TIM6_IRQn 1 */
 }
-
+UART_HandleTypeDef huart1;
 /* USER CODE BEGIN 1 */
-
+void USART1_IRQHandler(void) // Change IRQ handler name as per your UART peripheral
+{
+    HAL_UART_IRQHandler(&huart1);
+}
 /* USER CODE END 1 */

@@ -31,7 +31,7 @@
 
 #include "stdio.h"
 #include "string.h"
-#define RX_BUFFER_SIZE 128
+#define RX_BUFFER_SIZE 1000
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,8 +56,8 @@ UART_HandleTypeDef huart1;
 uint8_t msg[] = "Hi, Welcome to UART demo!!\r\n";
 uint8_t rxBuffer[RX_BUFFER_SIZE]={0};
 uint8_t rxBuffer1[RX_BUFFER_SIZE]={0};
-
-
+uint8_t *ptr;
+int i=0;
 
 volatile uint32_t rxIndex = 0;
 volatile uint8_t rxComplete = 0;
@@ -70,7 +70,8 @@ void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
 static void MX_USART1_UART_Init(void);
 static void EXTI13_IRQHandler_Config(void);
-
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 
 /* USER CODE BEGIN PFP */
 
@@ -101,7 +102,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+   HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -136,25 +137,23 @@ int main(void)
 
     MX_USART1_UART_Init();
     HAL_UART_Transmit(&huart1, msg, sizeof(msg), 1000);
-    HAL_UART_Receive(&huart1, &rxBuffer[rxIndex],10, HAL_MAX_DELAY);
-    printf("Character %s \n",rxBuffer);
+
   /* Start scheduler */
   //osKernelStart();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-    HAL_UART_Transmit(&huart1, &rxBuffer, sizeof(rxBuffer), HAL_MAX_DELAY);
+    HAL_UART_Receive_IT(&huart1, &rxBuffer1[rxIndex], 5);
 
   while (1)
   {
     /* USER CODE END WHILE */
 
-	         HAL_UART_Receive(&huart1, &rxBuffer1[rxIndex],1, HAL_MAX_DELAY);
-	         printf("Charater %s \n",rxBuffer1);
-	         HAL_UART_Transmit(&huart1, &rxBuffer1,1, HAL_MAX_DELAY);
-
-
+	     while(rxComplete==1)
+	     {
+	      HAL_UART_Transmit_IT(&huart1,ptr,5);
+          rxComplete=0;
+	     }
 
     /* USER CODE BEGIN 3 */
   }
@@ -291,8 +290,10 @@ static void EXTI13_IRQHandler_Config(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
 
   /* Enable and set line 13 Interrupt to the lowest priority */
-  HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
-  HAL_NVIC_EnableIRQ(EXTI13_IRQn);
+  //HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
+  //HAL_NVIC_EnableIRQ(EXTI13_IRQn);
+  HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
 
 }
 
@@ -323,6 +324,16 @@ static void MX_USART1_UART_Init(void)
 
 
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    ptr = &rxBuffer1[0];
+    rxComplete=1;
+}
 
 /*void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 {

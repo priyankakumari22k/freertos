@@ -1,1 +1,2 @@
 stm32l5xx_it.c:81:6:TIM6_IRQHandler	8	static
+stm32l5xx_it.c:93:6:USART1_IRQHandler	8	static
