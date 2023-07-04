@@ -37,8 +37,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
-
+#define AUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
+#define count 10
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -125,7 +125,7 @@ int main(void)
     //status = xTaskCreate( vPeriodicTask, "Task1", 500, NULL, ulPeriodicTaskPriority, NULL);
     //configASSERT(status == pdPASS);
 
-  TimerHandle_t xAutoReloadTimer = xTimerCreate( "AutoReload", mainAUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
+  TimerHandle_t xAutoReloadTimer = xTimerCreate( "AutoReload", AUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
     	 /* Check the software timers were created. */
     	 if(  xAutoReloadTimer != NULL  )
     	 {
@@ -268,32 +268,6 @@ static void EXTI13_IRQHandler_Config(void)
 
 
 /**
-  * @brief Task1 handler and creating a autoreload timer
-  * @param None
-  * @retval None
-  */
-
-/*void  vPeriodicTask(void *argument)
-{
-	TimerHandle_t xAutoReloadTimer;
-	//BaseType_t xTimer1Started;
-	printf("Task1\n");
-	xAutoReloadTimer = xTimerCreate( "AutoReload", mainAUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
-	  Check the software timers were created.
-	 if(  xAutoReloadTimer != NULL  )
-	 {
-	  Start the software timers, using a block time of 0 (no block time). The scheduler has
-	 not been started yet so any block time specified here would be ignored anyway.
-	xTimerStartFromISR( xAutoReloadTimer, 0 );
-	 }
-	 while(1)
-	 {
-
-	 }
-
-}*/
-
-/**
   * @brief Autoreload timer callback function, here led toggles only on long press of 1s
   * @param xTimer: Timer handle
   * @retval None
@@ -301,8 +275,8 @@ static void EXTI13_IRQHandler_Config(void)
 static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
 {
 TickType_t xTimeNow;
-TickType_t buttonPressTime = 0;
-static int count=0;
+//TickType_t buttonPressTime = 0;
+static int count1=0;
     /* Obtain the current tick count. */
     xTimeNow = xTaskGetTickCount();
     /* Output a string to show the time at which the callback was executed. */
@@ -310,46 +284,21 @@ static int count=0;
 
   if(HAL_GPIO_ReadPin(BUTTON_USER_GPIO_PORT, BUTTON_USER_PIN)==1)
   {
-	 count++;
-	 if(count==10)
-	 {
-            if ((xTimeNow - buttonPressTime) >= pdMS_TO_TICKS(1000))
-             {
-                 HAL_GPIO_TogglePin(LED10_GPIO_PORT, LED10_PIN);
-                 buttonPressTime = xTaskGetTickCount();
-             }
-	 }
+	 count1++;
+	 if(count1==count)
+         HAL_GPIO_TogglePin(LED10_GPIO_PORT, LED10_PIN);
   }
   else
-  {
-	  count=0;
-  }
+	 count1=0;
 
-printf("count %d \n",count);
+printf("count %d \n",count1);
  }
 
 
 
 
 
-/*void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
-{
-  if (GPIO_Pin == BUTTON_USER_PIN)
-  {
-     //Toggle LED10
-	  BSP_LED_Off(LED10);
-   // BSP_LED_Toggle(LED10);
 
-  }
-}
-
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
-{
-  if (GPIO_Pin == BUTTON_USER_PIN)
-  {
-	BSP_LED_Toggle(LED10);
-  }
-}*/
 
 
 
