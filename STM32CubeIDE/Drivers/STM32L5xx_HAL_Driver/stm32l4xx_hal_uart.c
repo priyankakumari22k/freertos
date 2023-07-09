@@ -173,6 +173,7 @@
   * @brief HAL UART module driver
   * @{
   */
+#define HAL_UART_MODULE_ENABLED
 
 #ifdef HAL_UART_MODULE_ENABLED
 
@@ -1331,7 +1332,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t 
       return HAL_ERROR;
     }
 
-    __HAL_LOCK(huart);
+    //__HAL_LOCK(huart);
 
     huart->pTxBuffPtr  = pData;
     huart->TxXferSize  = Size;
@@ -1355,7 +1356,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t 
         huart->TxISR = UART_TxISR_8BIT_FIFOEN;
       }
 
-      __HAL_UNLOCK(huart);
+      //__HAL_UNLOCK(huart);
 
       /* Enable the TX FIFO threshold interrupt */
       ATOMIC_SET_BIT(huart->Instance->CR3, USART_CR3_TXFTIE);
@@ -1372,7 +1373,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t 
         huart->TxISR = UART_TxISR_8BIT;
       }
 
-      __HAL_UNLOCK(huart);
+      //__HAL_UNLOCK(huart);
 
       /* Enable the Transmit Data Register Empty interrupt */
       ATOMIC_SET_BIT(huart->Instance->CR1, USART_CR1_TXEIE_TXFNFIE);
@@ -1388,7 +1389,7 @@ HAL_StatusTypeDef HAL_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t 
       huart->TxISR = UART_TxISR_8BIT;
     }
 
-    __HAL_UNLOCK(huart);
+    //__HAL_UNLOCK(huart);
 
     /* Enable the Transmit Data Register Empty interrupt */
     ATOMIC_SET_BIT(huart->Instance->CR1, USART_CR1_TXEIE);
@@ -1422,7 +1423,7 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
       return HAL_ERROR;
     }
 
-    __HAL_LOCK(huart);
+    //__HAL_LOCK(huart);
 
     /* Set Reception type to Standard reception */
     huart->ReceptionType = HAL_UART_RECEPTION_STANDARD;
@@ -3626,7 +3627,7 @@ HAL_StatusTypeDef UART_Start_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pDat
       huart->RxISR = UART_RxISR_8BIT_FIFOEN;
     }
 
-    __HAL_UNLOCK(huart);
+    //__HAL_UNLOCK(huart);
 
     /* Enable the UART Parity Error interrupt and RX FIFO Threshold interrupt */
     if (huart->Init.Parity != UART_PARITY_NONE)
@@ -3647,7 +3648,7 @@ HAL_StatusTypeDef UART_Start_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pDat
       huart->RxISR = UART_RxISR_8BIT;
     }
 
-    __HAL_UNLOCK(huart);
+    //__HAL_UNLOCK(huart);
 
     /* Enable the UART Parity Error interrupt and Data Register Not Empty interrupt */
     if (huart->Init.Parity != UART_PARITY_NONE)
@@ -3670,7 +3671,7 @@ HAL_StatusTypeDef UART_Start_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pDat
     huart->RxISR = UART_RxISR_8BIT;
   }
 
-  __HAL_UNLOCK(huart);
+  //__HAL_UNLOCK(huart);
 
   /* Enable the UART Parity Error interrupt and Data Register Not Empty interrupt */
   if (huart->Init.Parity != UART_PARITY_NONE)
