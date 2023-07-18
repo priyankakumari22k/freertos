@@ -172,7 +172,7 @@ int main(void)
 		  while(!(USART1->ISR & USART_ISR_TXE));
 		     {
 		  	   USART1->TDR=rxBuffer[front];
-		  	   front=front+1;
+		  	   front++;
 		     }
 
 	    }
@@ -416,7 +416,8 @@ void USART1_IRQHandler(void) // Change IRQ handler name as per your UART periphe
 		front=0;
 	}
     if(USART1->ISR & USART_ISR_RXNE)
-    {   rear=rear+1;
+    {
+    	rear++;
     	rxBuffer[rear]=USART1->RDR;
     }
 
