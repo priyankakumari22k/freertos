@@ -23,8 +23,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 #include "stdio.h"
+#include "stdlib.h"
+#include "timers.h"
 
 /* USER CODE END Includes */
 
@@ -44,43 +45,24 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-/* Definitions for THREAD1 */
-/*osThreadId_t THREAD1Handle;
-const osThreadAttr_t THREAD1_attributes = {
-  .name = "THREAD1",
-  .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 512 * 4
-};*/
-/* Definitions for THREAD2 */
-/*osThreadId_t THREAD2Handle;
-const osThreadAttr_t THREAD2_attributes = {
-  .name = "THREAD2",
-  .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 512 * 4
-};*/
+
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
-
-TaskHandle_t task1_handle, task2_handle;
-
+TaskHandle_t task1_handle;
+TimerHandle_t xAutoReloadTimer, xOneShotTimer;
+//int ulCallCount =0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-void LED_Thread1(void *argument);
-void LED_Thread2(void *argument);
+//void LED_Thread1(void *argument);
+//void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
+static void prvTimerCallback( TimerHandle_t xTimer );
 
-struct student
-{
-int num;
-char name[50];
-int age;
-};
-
-
+//static void prvOneShotTimerCallback( TimerHandle_t xTimer );
 
 /* USER CODE END PFP */
 
@@ -93,16 +75,16 @@ int age;
   * @brief  The application entry point.
   * @retval int
   */
-//static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
+
+const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 1000 );
+//const TickType_t xErrorTimerPeriod = pdMS_TO_TICKS( 200 );
+
+
+//#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
+//#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
 
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-
-	BaseType_t status , status1;
-		static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
-
-  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -118,8 +100,8 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-  BSP_LED_Init(LED9);
-  BSP_LED_Init(LED10);
+  // BSP_LED_Init(LED9);
+  //BSP_LED_Init(LED10);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -131,49 +113,30 @@ int main(void)
   /* Init scheduler */
   osKernelInitialize();
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-  printf("Main func\n");
 
-  /* USER CODE END RTOS_MUTEX */
+  BaseType_t xTimer1Started, xTimer2Started;
 
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
+ // xTaskCreate(LED_Thread1, "LED Task", 1024, NULL, 1, &task1_handle);
 
-  /* USER CODE END RTOS_SEMAPHORES */
+ // xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
+  xAutoReloadTimer = xTimerCreate("AutoReload",xHealthyTimerPeriod,pdTRUE,0,prvTimerCallback);
 
-  /* USER CODE BEGIN RTOS_TIMERS */
+  if(  xAutoReloadTimer != NULL  )
+   {
+    printf("timers created\n");
+   //xTimer1Started = xTimerStart( xOneShotTimer, 0 );
+   xTimer2Started = xTimerStart( xAutoReloadTimer, 0 );
 
-  /* USER CODE END RTOS_TIMERS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-
-  /* USER CODE END RTOS_QUEUES */
-
-  /* Create the thread(s) */
-  /* creation of THREAD1 */
-  //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
-
-
-    status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
-    status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
-    configASSERT(status == pdPASS);
-    configASSERT(status1 == pdPASS);
-
-    printf("Main Num :%d\n",s1.num);
-
-
-  /* creation of THREAD2 */
-  //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
-  /* USER CODE END RTOS_EVENTS */
+     if( xTimer2Started == pdPASS  )
+      {
+    	 /* Start the scheduler. */
+    	 vTaskStartScheduler();
+      }
+   }
 
   /* Start scheduler */
-  osKernelStart();
-  printf("Main Num :%d\n",s1.num);
+ // osKernelStart();
+
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -187,6 +150,8 @@ int main(void)
   }
   /* USER CODE END 3 */
 }
+
+
 
 /**
   * @brief System Clock Configuration
@@ -280,72 +245,51 @@ static void MX_ICACHE_Init(void)
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_LED_Thread1 */
-void LED_Thread1(void *argument)
+
+/*void LED_Thread1(void *argument)
 {
-  /* USER CODE BEGIN 5 */
-   struct student *t;
-  /* USER CODE BEGIN 5 */
-  //uint32_t count = 0;
-	//UBaseType_t uxPriority;
-  t= (struct student *) argument;
-
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-   //uxPriority = uxTaskPriorityGet( NULL );
-
+   USER CODE BEGIN 5
+	printf("Task1 is running\n");
 	  while(1)
     {
       BSP_LED_Toggle(LED9);
-      printf("Task1 is running\n");
-      printf("Num :%d\n",t->num);
-      printf("Name :%s\n",t->name);
-      printf("Age :%d\n\n",t->age);
+      HAL_Delay(200);
 
- /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
-    //  printf( "About to raise the Task 2 priority\r\n" );
-    //  vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
-      osDelay(500);
     }
+	  osDelay(1000);
+   USER CODE END 5
+}*/
 
-
-  /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_LED_Thread2 */
-/**
-* @brief Function implementing the THREAD2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LED_Thread2 */
-void LED_Thread2(void *argument)
+static void prvTimerCallback( TimerHandle_t xTimer )
 {
-  /* USER CODE BEGIN LED_Thread2 */
 
+//static BaseType_t xErrorDetected = pdFALSE;
+printf("timer expired \n");
 
-  //uint32_t count;
-	//UBaseType_t uxPriority;
-  (void) argument;
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-  //uxPriority = uxTaskPriorityGet( NULL );
+TickType_t TimeNow;
+ /* Obtain the current tick count. */
+ TimeNow = xTaskGetTickCount();
+ /* Output a string to show the time at which the callback was executed. */
+ printf( "One-shot timer callback executing %d \n", TimeNow );
+vTaskDelay(5000);
+xTimerReset(xTimer, 0);
 
-	  while(1)
-    {
-      BSP_LED_Toggle(LED10);
-      printf("%s:\n",argument);
+/*if( xErrorDetected == pdFALSE )
+	{
 
-      /* Set the priority of this task back down to its original value.
-       Passing in NULL as the task handle means "change the priority of the
-       calling task". Setting the priority below that of Task 1 will cause
-       Task 1 to immediately start running again – pre-empting this task. */
-    //  printf( "About to lower the Task 2 priority\r\n" );
-     // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
-     osDelay(500);
-    }
+	//if( CheckTasksAreRunningWithoutError() == pdFAIL )
+		if(eTaskGetState(task1_handle) != eRunning )
+		{
 
-
-  /* USER CODE END LED_Thread2 */
+			xTimerChangePeriod( xTimer, xErrorTimerPeriod, 0 );  Do not block when sending this command.
+		}
+		 Latch that an error has already been detected.
+		xErrorDetected = pdTRUE;
+	}
+BSP_LED_Toggle(LED9);*/
 }
+
+
 
 /**
   * @brief  Period elapsed callback in non blocking mode
