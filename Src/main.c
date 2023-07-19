@@ -24,9 +24,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+
 #include "stdlib.h"
 #include "timers.h"
 
+#include "queue.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,15 +49,19 @@
 
 
 /* USER CODE BEGIN PV */
-__IO uint32_t OsStatus = 0;
-TaskHandle_t task1_handle;
+
 TimerHandle_t xAutoReloadTimer, xOneShotTimer;
-//int ulCallCount =0;
+__IO uint32_t OsStatus = 0;
+TaskHandle_t task1_handle, task2_handle;
+//QueueHandle_t xQueue;
+QueueHandle_t xPointerQueue;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
+
 //void LED_Thread1(void *argument);
 //void LED_Thread2(void *argument);
 
@@ -64,12 +70,39 @@ static void prvTimerCallback( TimerHandle_t xTimer );
 
 //static void prvOneShotTimerCallback( TimerHandle_t xTimer );
 
+
+/* USER CODE BEGIN PFP */
+static void vSenderTask( void *pvParameters );
+static void vReceiverTask( void *pvParameters );
+
+/*
+ Define an enumerated type used to identify the source of the data.
+typedef enum
+{
+ eSender1,
+ eSender2
+} DataSource_t;
+
+ Define the structure type that will be passed on the queue.
+typedef struct
+{
+ uint8_t ucValue;
+ DataSource_t eDataSource;
+} Data_t;
+
+ Declare two variables of type Data_t that will be passed on the queue.
+static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 },  Used by Sender1.
+ { 200, eSender2 }  Used by Sender2. };
+*/
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
+
 
 /**
   * @brief  The application entry point.
@@ -85,6 +118,11 @@ const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 1000 );
 
 int main(void)
 {
+  /* USER CODE BEGIN 1 */
+
+	BaseType_t status , status1 ,status2;
+
+  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -100,7 +138,8 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-  // BSP_LED_Init(LED9);
+
+//  BSP_LED_Init(LED9);
   //BSP_LED_Init(LED10);
   /* USER CODE END SysInit */
 
@@ -132,13 +171,40 @@ int main(void)
     	 /* Start the scheduler. */
     	 vTaskStartScheduler();
       }
+
+  /* The queue is created to hold a maximum of 5 values, each of which is
+   large enough to hold a variable of type Data_t ). */
+   //xQueue = xQueueCreate( 3, sizeof( Data_t )) ;
+   xPointerQueue = xQueueCreate( 5, sizeof( char * ) );
+
+   if( xPointerQueue != NULL )
+   {
+   /* Create two instances of the task that will send to the queue. The
+ parameter is used to pass the structure that the task will write to the
+ queue, so one task will continuously send xStructsToSend[ 0 ] to the queue
+ while the other task will continuously send xStructsToSend[ 1 ]. */
+	   status = xTaskCreate(vSenderTask, "Task1", 500, NULL, 2, &task1_handle);
+	 //  status1 = xTaskCreate(vSenderTask, "Task2", 500, &( xStructsToSend[ 1 ] ), 2, &task2_handle);
+	   configASSERT(status == pdPASS);
+	 // configASSERT(status1 == pdPASS);
+
+   /* Create the task that will read from the queue. The task is created with
+   priority 2, so above the priority of the sender tasks. */
+   status2 = xTaskCreate( vReceiverTask, "Task3", 500, NULL, 1, NULL );
+   configASSERT(status2 == pdPASS);
+   /* Start the scheduler so the created tasks start executing. */
+   vTaskStartScheduler();
+   }
+   else
+   {
+   /* The queue could not be created. */
+	   printf("Queue not created\n");
    }
 
   /* Start scheduler */
  // osKernelStart();
 
 
-  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -239,6 +305,7 @@ static void MX_ICACHE_Init(void)
 
 /* USER CODE END 4 */
 
+
 /* USER CODE BEGIN Header_LED_Thread1 */
 /**
   * @brief  Function implementing the THREAD1 thread.
@@ -263,8 +330,50 @@ static void MX_ICACHE_Init(void)
 static void prvTimerCallback( TimerHandle_t xTimer )
 {
 
+/*
+@brief sending data to queue function
+@param none
+@RetVal none
+*/
+/*SenderTask_Handler   */
+ void vSenderTask( void *pvParameters )
+{
+	 char *pcStringToSend;
+	 const size_t xMaxStringLength = 50;
+	 char buffer[50];
+	 BaseType_t xStatus, xStringNumber = 0;
+	  for( ;; )
+	  {
+
+	 // pcStringToSend = ( char * ) pvPortMalloc( xMaxStringLength );
+	  pcStringToSend = ( char * ) buffer;
+
+	  snprintf( pcStringToSend, xMaxStringLength, " Hello\r\n");//, xStringNumber );
+	  printf("String in sendertask:  %s\n",pcStringToSend);
+	  printf("String number: %d \n",xStringNumber);
+	  /* Increment the counter so the string is different on each iteration of this task. */
+	  xStringNumber++;
+
+	  xStatus= xQueueSend( xPointerQueue,&pcStringToSend, portMAX_DELAY );
+
+	  if( xStatus != pdPASS )
+	   {
+		  /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
+	   	   one item! */
+		  printf( "Could not send to the queue.\r\n" );
+	   }
+	   else
+	   {
+		   printf( "Send pass\r\n" );
+		   vTaskDelay(pdMS_TO_TICKS(100));
+	   }
+	  }
+ }
+
+
 //static BaseType_t xErrorDetected = pdFALSE;
 printf("timer expired \n");
+
 
 TickType_t TimeNow;
  /* Obtain the current tick count. */
@@ -287,6 +396,43 @@ xTimerReset(xTimer, 0);
 		xErrorDetected = pdTRUE;
 	}
 BSP_LED_Toggle(LED9);*/
+
+
+ /*
+
+ @brief receiving data from queue function
+ @param none
+ @RetVal none
+ */
+/* ReceiverTask_Handler*/
+static void vReceiverTask( void *pvParameters )
+{
+	int num;
+	char *pcReceivedString;
+	//BaseType_t xStatus;
+	 for( ;; )
+	 {
+		 num=uxQueueMessagesWaiting( xPointerQueue );
+         //for checking queue is full or not
+		 if( num == 5 )
+		 	 {
+			 printf( "Queue is full!\r\n" );
+		 	 }
+		 else if(num == 0)
+		 {
+			 printf( "Queue is empty!\r\n" );
+		 }
+
+
+	 /* Receive the address of a buffer. */
+	 xQueueReceive( xPointerQueue,&pcReceivedString, portMAX_DELAY );
+	 /* The buffer holds a string, print it out. */
+
+	 printf( "String in receiver task: %s \n",pcReceivedString );
+	 vTaskDelay(pdMS_TO_TICKS(100));
+	 /* The buffer is not required any more - release it so it can be freed, or re-used. */
+	 //vPortFree( pcReceivedString );
+	 }
 }
 
 
