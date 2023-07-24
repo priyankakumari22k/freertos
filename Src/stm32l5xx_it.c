@@ -59,6 +59,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim6;
 
 /* USER CODE BEGIN EV */
@@ -74,6 +75,20 @@ extern TIM_HandleTypeDef htim6;
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32l5xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles RTC non-secure interrupts through EXTI line 17.
+  */
+void RTC_IRQHandler(void)
+{
+  /* USER CODE BEGIN RTC_IRQn 0 */
+
+  /* USER CODE END RTC_IRQn 0 */
+  HAL_RTC_AlarmIRQHandler(&hrtc);
+  /* USER CODE BEGIN RTC_IRQn 1 */
+
+  /* USER CODE END RTC_IRQn 1 */
+}
 
 /**
   * @brief This function handles TIM6 global interrupt.

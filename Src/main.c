@@ -38,6 +38,9 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define AUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
+#define CURRENT_TIME_DATE
+#define RTC_ALARM
+//#define COUNT_SEC
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -69,6 +72,7 @@ I2C_HandleTypeDef hi2c1;
 TimerHandle_t xAutoReloadTimer;
 char time[10];
 char date[10];
+char alarm[10];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -175,8 +179,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  	   ssd1306_rtc();
-	  	   HAL_Delay(500);
+	  	  ssd1306_rtc();
+	  	  HAL_Delay(500);
 
   }
   /* USER CODE END 3 */
@@ -281,6 +285,7 @@ static void MX_RTC_Init(void)
   RTC_PrivilegeStateTypeDef privilegeState = {0};
   RTC_TimeTypeDef sTime = {0};
   RTC_DateTypeDef sDate = {0};
+  RTC_AlarmTypeDef sAlarm = {0};
 
   /* USER CODE BEGIN RTC_Init 1 */
 
@@ -329,8 +334,23 @@ static void MX_RTC_Init(void)
   sDate.Month = RTC_MONTH_JULY;
   sDate.Date = 0x24;
   sDate.Year = 0x23;
-
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Enable the Alarm A
+  */
+  sAlarm.AlarmTime.Hours = 0x0;
+  sAlarm.AlarmTime.Minutes = 0x0;
+  sAlarm.AlarmTime.Seconds = 0x0;
+  sAlarm.AlarmTime.SubSeconds = 0x0;
+  sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+  sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+  sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+  sAlarm.AlarmDateWeekDay = 0x25;
+  sAlarm.Alarm = RTC_ALARM_A;
+  if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
   }
@@ -406,14 +426,29 @@ static void MX_GPIO_Init(void)
  * @param xTimer The handle to the timer that triggered the callback.
  * @retval None
  */
-/*static void prvTimerCallback( TimerHandle_t xTimer )
+#ifdef COUNT_SEC
+static void prvTimerCallback( TimerHandle_t xTimer )
 {
     static int count=0;
     ssd1306_Name();
     count++;
     ssd1306_Count(count);
- }*/
+ }
+#endif
 
+
+/**
+ * @brief Update and display the current time and date on the SSD1306 OLED display.
+ *
+ * This function retrieves the current time and date from the RTC peripheral and
+ * formats them as strings to be displayed on the SSD1306 OLED display. The time
+ * is displayed in the format "HH:MM:SS" (hours, minutes, seconds), and the date
+ * is displayed in the format "DD-MM-YY" (day, month, year).
+ * @param None
+ * @retval None
+ */
+
+#ifdef 	CURRENT_TIME_DATE
 
 void ssd1306_rtc(void)
 {
@@ -431,6 +466,33 @@ void ssd1306_rtc(void)
     ssd1306_WriteString(date, Font_11x18, Black);
 	ssd1306_UpdateScreen();
 }
+#endif
+
+/**
+ * @brief RTC Alarm A Event Callback function.
+ *
+ * This function is called when the RTC Alarm A event occurs. It retrieves the
+ * alarm configuration and formats the alarm time as a string. The formatted alarm
+ * time is then displayed on an SSD1306 OLED display.
+ *
+ * @param[in] hrtc A pointer to the RTC handle, which contains the configuration
+ *                and state information of the RTC peripheral.
+ */
+#ifdef RTC_ALARM
+
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	  RTC_AlarmTypeDef Alarm={0};
+	  HAL_RTC_GetAlarm(hrtc,&Alarm,RTC_ALARM_A,RTC_FORMAT_BIN);
+	  snprintf((char*)alarm, sizeof(alarm), "%02d:%02d:%02d", Alarm.AlarmTime.Hours, Alarm.AlarmTime.Minutes,Alarm.AlarmTime.Seconds);
+
+	  //ssd1306_Fill(White);
+	  ssd1306_SetCursor(2, 36);
+	  ssd1306_WriteString("Alarm", Font_11x18, Black);
+	  ssd1306_SetCursor(77, 36);
+	  ssd1306_WriteString(alarm, Font_11x18, Black);
+}
+#endif
 
 
 /* USER CODE END 4 */
