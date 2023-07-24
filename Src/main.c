@@ -47,21 +47,41 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+RTC_HandleTypeDef hrtc;
 
+/* Definitions for THREAD1 */
+osThreadId_t THREAD1Handle;
+const osThreadAttr_t THREAD1_attributes = {
+  .name = "THREAD1",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 512 * 4
+};
+/* Definitions for THREAD2 */
+osThreadId_t THREAD2Handle;
+const osThreadAttr_t THREAD2_attributes = {
+  .name = "THREAD2",
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 512 * 4
+};
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
 I2C_HandleTypeDef hi2c1;
 TimerHandle_t xAutoReloadTimer;
+char time[10];
+char date[10];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
+static void MX_RTC_Init(void);
+void LED_Thread1(void *argument);
+void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
-static void prvTimerCallback( TimerHandle_t xTimer );
+//static void prvTimerCallback( TimerHandle_t xTimer );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -73,7 +93,6 @@ static void prvTimerCallback( TimerHandle_t xTimer );
   * @brief  The application entry point.
   * @retval int
   */
-
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -100,15 +119,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_ICACHE_Init();
-  MX_GPIO_Init();
-  MX_I2C1_Init();
-  ssd1306_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
+  MX_GPIO_Init();
+   MX_I2C1_Init();
+   ssd1306_Init();
 
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  osKernelInitialize();
+  //osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
 
@@ -119,19 +139,24 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  xAutoReloadTimer = xTimerCreate("AutoReload",AUTO_RELOAD_TIMER_PERIOD,pdTRUE,0,prvTimerCallback);
+  /*xAutoReloadTimer = xTimerCreate("AutoReload",AUTO_RELOAD_TIMER_PERIOD,pdTRUE,0,prvTimerCallback);
 
      if(  xAutoReloadTimer != NULL  )
       {
         xTimerStart( xAutoReloadTimer, 0 );
-      }
+      }*/
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
 
   /* USER CODE END RTOS_QUEUES */
 
+  /* Create the thread(s) */
+  /* creation of THREAD1 */
+  //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
 
+  /* creation of THREAD2 */
+  //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* USER CODE END RTOS_THREADS */
@@ -141,8 +166,7 @@ int main(void)
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
-  osKernelStart();
-
+  //osKernelStart();
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -150,8 +174,10 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-
     /* USER CODE BEGIN 3 */
+	  	   ssd1306_rtc();
+	  	   HAL_Delay(500);
+
   }
   /* USER CODE END 3 */
 }
@@ -175,7 +201,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
+  RCC_OscInitStruct.LSIDiv = RCC_LSI_DIV1;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
@@ -235,6 +263,80 @@ static void MX_ICACHE_Init(void)
   /* USER CODE BEGIN ICACHE_Init 2 */
 
   /* USER CODE END ICACHE_Init 2 */
+
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_PrivilegeStateTypeDef privilegeState = {0};
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  hrtc.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  privilegeState.rtcPrivilegeFull = RTC_PRIVILEGE_FULL_NO;
+  privilegeState.backupRegisterPrivZone = RTC_PRIVILEGE_BKUP_ZONE_NONE;
+  privilegeState.backupRegisterStartZone2 = RTC_BKP_DR0;
+  privilegeState.backupRegisterStartZone3 = RTC_BKP_DR0;
+  if (HAL_RTCEx_PrivilegeModeSet(&hrtc, &privilegeState) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 0x23;
+  sTime.Minutes = 0x59;
+  sTime.Seconds = 0x50;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.Month = RTC_MONTH_JULY;
+  sDate.Date = 0x24;
+  sDate.Year = 0x23;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
 
 }
 
@@ -304,16 +406,70 @@ static void MX_GPIO_Init(void)
  * @param xTimer The handle to the timer that triggered the callback.
  * @retval None
  */
-static void prvTimerCallback( TimerHandle_t xTimer )
+/*static void prvTimerCallback( TimerHandle_t xTimer )
 {
     static int count=0;
     ssd1306_Name();
     count++;
     ssd1306_Count(count);
- }
+ }*/
+
+
+void ssd1306_rtc(void)
+{
+	RTC_TimeTypeDef Time={0};
+	RTC_DateTypeDef Date={0};
+	HAL_RTC_GetTime(&hrtc,&Time,RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc,&Date,RTC_FORMAT_BIN);
+	snprintf((char*)time, sizeof(time), "%02d:%02d:%02d", Time.Hours, Time.Minutes,Time.Seconds);
+	snprintf((char*)date, sizeof(date), "%02d-%02d-%02d", Date.Date, Date.Month,Date.Year);
+
+	ssd1306_Fill(White);
+	ssd1306_SetCursor(2, 0);
+	ssd1306_WriteString(time, Font_11x18, Black);
+	ssd1306_SetCursor(2, 18);
+    ssd1306_WriteString(date, Font_11x18, Black);
+	ssd1306_UpdateScreen();
+}
+
+
 /* USER CODE END 4 */
 
+/* USER CODE BEGIN Header_LED_Thread1 */
+/**
+  * @brief  Function implementing the THREAD1 thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_LED_Thread1 */
+void LED_Thread1(void *argument)
+{
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END 5 */
+}
 
+/* USER CODE BEGIN Header_LED_Thread2 */
+/**
+* @brief Function implementing the THREAD2 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_LED_Thread2 */
+void LED_Thread2(void *argument)
+{
+  /* USER CODE BEGIN LED_Thread2 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END LED_Thread2 */
+}
 
 /**
   * @brief  Period elapsed callback in non blocking mode
@@ -342,12 +498,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   */
 void Error_Handler(void)
 {
-   //USER CODE BEGIN Error_Handler_Debug
-   //User can add his own implementation to report the HAL error return state
-  while(1)
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
   {
   }
-  // USER CODE END Error_Handler_Debug
+  /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT

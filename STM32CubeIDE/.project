@@ -30,6 +30,7 @@
 		<nature>com.st.stm32cube.ide.mcu.MCURootProjectNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>com.st.stm32cube.ide.mcu.MCUCubeIdeServicesRevAev2ProjectNature</nature>
 	</natures>
 	<linkedResources>
 		<link>
@@ -156,6 +157,16 @@
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rcc_ex.c</name>
 			<type>1</type>
 			<locationURI>$%7BPARENT-6-PROJECT_LOC%7D/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_rcc_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rtc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-9-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_L5_V1.5.0/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_rtc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rtc_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-9-PROJECT_LOC/STM32Cube/Repository/STM32Cube_FW_L5_V1.5.0/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_rtc_ex.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.c</name>
