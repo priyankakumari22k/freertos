@@ -23,7 +23,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "timers.h"
+#include "ssd1306.h"
+#include "ssd1306_tests.h"
 #include "stdio.h"
 
 /* USER CODE END Includes */
@@ -35,6 +37,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define AUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,44 +47,21 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-/* Definitions for THREAD1 */
-/*osThreadId_t THREAD1Handle;
-const osThreadAttr_t THREAD1_attributes = {
-  .name = "THREAD1",
-  .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 512 * 4
-};*/
-/* Definitions for THREAD2 */
-/*osThreadId_t THREAD2Handle;
-const osThreadAttr_t THREAD2_attributes = {
-  .name = "THREAD2",
-  .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 512 * 4
-};*/
+
 /* USER CODE BEGIN PV */
 __IO uint32_t OsStatus = 0;
-
-TaskHandle_t task1_handle, task2_handle;
-
+I2C_HandleTypeDef hi2c1;
+TimerHandle_t xAutoReloadTimer;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-void LED_Thread1(void *argument);
-void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
-
-struct student
-{
-int num;
-char name[50];
-int age;
-};
-
-
-
+static void MX_GPIO_Init(void);
+static void MX_I2C1_Init(void);
+static void prvTimerCallback( TimerHandle_t xTimer );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -93,14 +73,11 @@ int age;
   * @brief  The application entry point.
   * @retval int
   */
-//static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
 
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	BaseType_t status , status1;
-		static struct student s1 = {1, "Krishna",20};  // globally and statically s1 passed to handler are working properly but as locally s1 is passed the handler is printing garbage value
 
   /* USER CODE END 1 */
 
@@ -118,12 +95,14 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-  BSP_LED_Init(LED9);
-  BSP_LED_Init(LED10);
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_ICACHE_Init();
+  MX_GPIO_Init();
+  MX_I2C1_Init();
+  ssd1306_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -132,7 +111,6 @@ int main(void)
   osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  printf("Main func\n");
 
   /* USER CODE END RTOS_MUTEX */
 
@@ -141,28 +119,19 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
+  xAutoReloadTimer = xTimerCreate("AutoReload",AUTO_RELOAD_TIMER_PERIOD,pdTRUE,0,prvTimerCallback);
 
+     if(  xAutoReloadTimer != NULL  )
+      {
+        xTimerStart( xAutoReloadTimer, 0 );
+      }
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
 
   /* USER CODE END RTOS_QUEUES */
 
-  /* Create the thread(s) */
-  /* creation of THREAD1 */
-  //THREAD1Handle = osThreadNew(LED_Thread1, NULL, &THREAD1_attributes);
 
-
-    status = xTaskCreate(LED_Thread1, "Task1", 500, &s1, 2, &task1_handle);
-    status1 = xTaskCreate(LED_Thread2, "Task2", 500, "Task-2 is running", 2, &task2_handle);
-    configASSERT(status == pdPASS);
-    configASSERT(status1 == pdPASS);
-
-    printf("Main Num :%d\n",s1.num);
-
-
-  /* creation of THREAD2 */
-  //THREAD2Handle = osThreadNew(LED_Thread2, NULL, &THREAD2_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* USER CODE END RTOS_THREADS */
@@ -173,7 +142,6 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
-  printf("Main Num :%d\n",s1.num);
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -272,80 +240,80 @@ static void MX_ICACHE_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-/* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_LED_Thread1 */
 /**
-  * @brief  Function implementing the THREAD1 thread.
-  * @param  argument: Not used
+  * @brief I2C1 Initialization Function
+  * @param None
   * @retval None
   */
-/* USER CODE END Header_LED_Thread1 */
-void LED_Thread1(void *argument)
+static void MX_I2C1_Init(void)
 {
-  /* USER CODE BEGIN 5 */
-   struct student *t;
-  /* USER CODE BEGIN 5 */
-  //uint32_t count = 0;
-	//UBaseType_t uxPriority;
-  t= (struct student *) argument;
+  /* USER CODE BEGIN I2C1_Init 1 */
 
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-   //uxPriority = uxTaskPriorityGet( NULL );
+  /* USER CODE END I2C1_Init 1 */
+    	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+	  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+	    PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+	    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+	    {
+	      Error_Handler();
+	    }
 
-	  while(1)
-    {
-      BSP_LED_Toggle(LED9);
-      printf("Task1 is running\n");
-      printf("Num :%d\n",t->num);
-      printf("Name :%s\n",t->name);
-      printf("Age :%d\n\n",t->age);
-
- /* Setting the Task 2 priority above the Task 1 priority will cause Task 2 to immediately start running */
-    //  printf( "About to raise the Task 2 priority\r\n" );
-    //  vTaskPrioritySet(task2_handle, ( uxPriority + 1 ) );
-      osDelay(500);
-    }
-
-
-  /* USER CODE END 5 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.Timing = 0x40505681;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 
-/* USER CODE BEGIN Header_LED_Thread2 */
+
 /**
-* @brief Function implementing the THREAD2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LED_Thread2 */
-void LED_Thread2(void *argument)
+  * @brief GPIO Initialization Function for I2C1
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
 {
-  /* USER CODE BEGIN LED_Thread2 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_I2C1_CLK_ENABLE();
+      GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+      GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+      GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+      HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  //uint32_t count;
-	//UBaseType_t uxPriority;
-  (void) argument;
-  /*Query the priority at which this task is running - passing in NULL means "return the calling task’s priority". */
-  //uxPriority = uxTaskPriorityGet( NULL );
-
-	  while(1)
-    {
-      BSP_LED_Toggle(LED10);
-      printf("%s:\n",argument);
-
-      /* Set the priority of this task back down to its original value.
-       Passing in NULL as the task handle means "change the priority of the
-       calling task". Setting the priority below that of Task 1 will cause
-       Task 1 to immediately start running again – pre-empting this task. */
-    //  printf( "About to lower the Task 2 priority\r\n" );
-     // vTaskPrioritySet( NULL, ( uxPriority - 2 ) );
-     osDelay(500);
-    }
-
-
-  /* USER CODE END LED_Thread2 */
 }
+
+/**
+ * @brief Timer callback function for handling SSD1306 display operations.
+ *
+ * This function is a callback for a FreeRTOS timer. It updates the SSD1306 display
+ * with the current count and calls the 'ssd1306_Count()' function.
+ *
+ * @param xTimer The handle to the timer that triggered the callback.
+ * @retval None
+ */
+static void prvTimerCallback( TimerHandle_t xTimer )
+{
+    static int count=0;
+    ssd1306_Name();
+    count++;
+    ssd1306_Count(count);
+ }
+/* USER CODE END 4 */
+
+
 
 /**
   * @brief  Period elapsed callback in non blocking mode
