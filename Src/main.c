@@ -24,11 +24,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
-
-#include "stdlib.h"
-#include "timers.h"
-
-#include "queue.h"
+#include "ssd1306.h"
+#include "ssd1306_tests.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,6 +36,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define FLASH_DOUBLEWORD_TYPEPROGRAM
+
+
+I2C_HandleTypeDef hi2c1;
+#define FLASH_USER_START_ADDR   ADDR_FLASH_PAGE_126   /* Start @ of user Flash area */
+#define FLASH_USER_END_ADDR     (ADDR_FLASH_PAGE_126 + FLASH_PAGE_SIZE - 1)   /* End @ of user Flash area */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,12 +53,33 @@
 
 
 /* USER CODE BEGIN PV */
-
-TimerHandle_t xAutoReloadTimer, xOneShotTimer;
 __IO uint32_t OsStatus = 0;
-TaskHandle_t task1_handle, task2_handle;
-//QueueHandle_t xQueue;
-QueueHandle_t xPointerQueue;
+
+//FLASH_OBProgramInitTypeDef OptionsBytesStruct, OptionsBytesStruct2;
+
+//uint32_t Address=0x08000000;
+uint8_t i;
+uint64_t data = (uint64_t)0x1111111111111111;
+uint64_t data1=(uint64_t)0x1234567812345678 ;
+uint64_t rdata;
+uint32_t FirstPage = 0, NbOfPages = 0, BankNumber = 0;
+uint32_t Address = ADDR_FLASH_PAGE_126;
+uint32_t PageError = 0;
+
+__IO uint32_t MemoryProgramStatus = 0;
+__IO uint32_t data32 = 0;
+uint8_t str[16];
+uint64_t buf[250];
+
+
+uint32_t Address1=FLASH_USER_END_ADDR-8;   //(ADDR_FLASH_PAGE_6/2);
+//uint32_t Address2=FLASH_USER_END_ADDR;
+FLASH_EraseInitTypeDef EraseInitStruct;
+
+static uint32_t GetPage(uint32_t );
+static uint32_t GetBank(uint32_t );
+
+
 
 /* USER CODE END PV */
 
@@ -66,36 +91,8 @@ static void MX_ICACHE_Init(void);
 //void LED_Thread2(void *argument);
 
 /* USER CODE BEGIN PFP */
-static void prvTimerCallback( TimerHandle_t xTimer );
-
-//static void prvOneShotTimerCallback( TimerHandle_t xTimer );
-
-
-/* USER CODE BEGIN PFP */
-static void vSenderTask( void *pvParameters );
-static void vReceiverTask( void *pvParameters );
-
-/*
- Define an enumerated type used to identify the source of the data.
-typedef enum
-{
- eSender1,
- eSender2
-} DataSource_t;
-
- Define the structure type that will be passed on the queue.
-typedef struct
-{
- uint8_t ucValue;
- DataSource_t eDataSource;
-} Data_t;
-
- Declare two variables of type Data_t that will be passed on the queue.
-static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 },  Used by Sender1.
- { 200, eSender2 }  Used by Sender2. };
-*/
-
-
+static void MX_GPIO_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -109,18 +106,11 @@ static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 },  Used by Sender1.
   * @retval int
   */
 
-const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 1000 );
-//const TickType_t xErrorTimerPeriod = pdMS_TO_TICKS( 200 );
-
-
-//#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
-//#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
 
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	BaseType_t status , status1 ,status2;
 
   /* USER CODE END 1 */
 
@@ -146,60 +136,105 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_ICACHE_Init();
   /* USER CODE BEGIN 2 */
+  MX_GPIO_Init();
+  MX_I2C1_Init();
+  ssd1306_Init();
+
+  //memset(str, data ,16);
+
+  /* Initialize test status */
+  //MemoryProgramStatus = PASSED;
+
+  HAL_FLASH_Unlock();
+ // HAL_FLASH_OB_Unlock();
+  FirstPage = GetPage(FLASH_USER_START_ADDR);
+  NbOfPages = GetPage(FLASH_USER_END_ADDR) - FirstPage + 1;
+  BankNumber = GetBank(FLASH_USER_START_ADDR);
+
+/*
+   OptionsBytesStruct.WRPArea  = OB_WRPAREA_BANK1_AREAA;
+   OptionsBytesStruct2.WRPArea = OB_WRPAREA_BANK1_AREAB;*/
+
+#ifdef FLASH_DOUBLEWORD_TYPEPROGRAM
+  /* Fill EraseInit structure*/
+    EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
+    EraseInitStruct.Banks       = BankNumber;
+    EraseInitStruct.Page        = FirstPage;
+    EraseInitStruct.NbPages     = NbOfPages;
+
+
+    /*  Erasing a page  */
+    HAL_FLASH_Unlock();
+     if(HAL_FLASHEx_Erase(&EraseInitStruct, &PageError)!=HAL_OK)
+     {
+    	printf("error");
+     }
+    HAL_FLASH_Lock();
+
+
+    /*  Writing some data on the page  */
+    HAL_FLASH_Unlock();
+     for(i=0;i<250;i++)
+      {
+        HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD ,Address, data1);     //FLASH_TYPEPROGRAM_DOUBLEWORD
+         Address=Address+8;
+       }
+    HAL_FLASH_Lock();
+
+
+    /*  Reading data from the page  */
+    Address1=FLASH_USER_START_ADDR ;
+    HAL_FLASH_Unlock();
+    for(i=0;i<250;i++)
+    {
+      rdata=*( uint64_t *)Address1;
+      buf[i]=rdata;
+      Address1=Address1+8;
+    }
+    HAL_FLASH_Lock();
+
+
+    /*  Again erasing the whole page  */
+     HAL_FLASH_Unlock();
+     if(HAL_FLASHEx_Erase(&EraseInitStruct, &PageError)!=HAL_OK)
+       {
+    	printf("error");
+       }
+     HAL_FLASH_Lock();
+
+
+     /*  Modifying data in buffer at particular index   */
+     buf[16]=data;
+
+
+     /*  Writing buffer data at the page with modified data  */
+     Address=FLASH_USER_START_ADDR ;
+     HAL_FLASH_Unlock();
+     for(i=0;i<250;i++)
+     {
+      HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD ,Address, buf[i]);     //FLASH_TYPEPROGRAM_DOUBLEWORD
+      Address=Address+8;
+     }
+     HAL_FLASH_Lock();
+
+
+  /*Address1=FLASH_USER_START_ADDR ;
+  HAL_FLASH_Unlock();
+  //for(i=0;i<1;i++)
+    //{
+    rdata=(__IO uint8_t *)Address1;
+    ssd1306_Data(data);
+    Address1=Address1+8;
+    HAL_Delay(500);
+    //}
+  HAL_FLASH_Lock();*/
+#endif
 
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  osKernelInitialize();
+  //osKernelInitialize();
 
-
-  BaseType_t xTimer1Started, xTimer2Started;
-
- // xTaskCreate(LED_Thread1, "LED Task", 1024, NULL, 1, &task1_handle);
-
- // xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
-  xAutoReloadTimer = xTimerCreate("AutoReload",xHealthyTimerPeriod,pdTRUE,0,prvTimerCallback);
-
-  if(  xAutoReloadTimer != NULL  )
-   {
-    printf("timers created\n");
-   //xTimer1Started = xTimerStart( xOneShotTimer, 0 );
-   xTimer2Started = xTimerStart( xAutoReloadTimer, 0 );
-
-     if( xTimer2Started == pdPASS  )
-      {
-    	 /* Start the scheduler. */
-    	 vTaskStartScheduler();
-      }
-
-  /* The queue is created to hold a maximum of 5 values, each of which is
-   large enough to hold a variable of type Data_t ). */
-   //xQueue = xQueueCreate( 3, sizeof( Data_t )) ;
-   xPointerQueue = xQueueCreate( 5, sizeof( char * ) );
-
-   if( xPointerQueue != NULL )
-   {
-   /* Create two instances of the task that will send to the queue. The
- parameter is used to pass the structure that the task will write to the
- queue, so one task will continuously send xStructsToSend[ 0 ] to the queue
- while the other task will continuously send xStructsToSend[ 1 ]. */
-	   status = xTaskCreate(vSenderTask, "Task1", 500, NULL, 2, &task1_handle);
-	 //  status1 = xTaskCreate(vSenderTask, "Task2", 500, &( xStructsToSend[ 1 ] ), 2, &task2_handle);
-	   configASSERT(status == pdPASS);
-	 // configASSERT(status1 == pdPASS);
-
-   /* Create the task that will read from the queue. The task is created with
-   priority 2, so above the priority of the sender tasks. */
-   status2 = xTaskCreate( vReceiverTask, "Task3", 500, NULL, 1, NULL );
-   configASSERT(status2 == pdPASS);
-   /* Start the scheduler so the created tasks start executing. */
-   vTaskStartScheduler();
-   }
-   else
-   {
-   /* The queue could not be created. */
-	   printf("Queue not created\n");
-   }
 
   /* Start scheduler */
  // osKernelStart();
@@ -303,137 +338,100 @@ static void MX_ICACHE_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+/**
+  * @brief GPIO Initialization Function for I2C1
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_I2C1_CLK_ENABLE();
+      GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+      GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+      GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+      HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+}
+
+
+/**
+* @brief I2C1 Initialization Function
+* @param None
+* @retval None
+*/
+static void MX_I2C1_Init(void)
+{
+/* USER CODE BEGIN I2C1_Init 1 */
+
+/* USER CODE END I2C1_Init 1 */
+  	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+	  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
+	    PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
+	    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+	    {
+	      Error_Handler();
+	    }
+
+hi2c1.Instance = I2C1;
+hi2c1.Init.Timing = 0x40505681;
+hi2c1.Init.OwnAddress1 = 0;
+hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+hi2c1.Init.OwnAddress2 = 0;
+hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+{
+  Error_Handler();
+}
+}
+
+
+
+
+/**
+  * @brief  Gets the page of a given address
+  * @param  Addr: Address of the FLASH Memory
+  * @retval The page of a given address
+  */
+static uint32_t GetPage(uint32_t Addr)
+{
+  uint32_t page = 0;
+
+  if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
+  {
+    /* Bank 1 */
+    page = (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
+  }
+  else
+  {
+    /* Bank 2 */
+    page = (Addr - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
+  }
+
+  return page;
+}
+
+/**
+  * @brief  Gets the bank of a given address
+  * @param  Addr: Address of the FLASH Memory
+  * @retval The bank of a given address
+  */
+static uint32_t GetBank(uint32_t Addr)
+{
+  return FLASH_BANK_1;
+}
+
 /* USER CODE END 4 */
 
 
-/* USER CODE BEGIN Header_LED_Thread1 */
-/**
-  * @brief  Function implementing the THREAD1 thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-
-/*void LED_Thread1(void *argument)
-{
-   USER CODE BEGIN 5
-	printf("Task1 is running\n");
-	  while(1)
-    {
-      BSP_LED_Toggle(LED9);
-      HAL_Delay(200);
-
-    }
-	  osDelay(1000);
-   USER CODE END 5
-}*/
-
-static void prvTimerCallback( TimerHandle_t xTimer )
-{
-
-/*
-@brief sending data to queue function
-@param none
-@RetVal none
-*/
-/*SenderTask_Handler   */
- void vSenderTask( void *pvParameters )
-{
-	 char *pcStringToSend;
-	 const size_t xMaxStringLength = 50;
-	 char buffer[50];
-	 BaseType_t xStatus, xStringNumber = 0;
-	  for( ;; )
-	  {
-
-	 // pcStringToSend = ( char * ) pvPortMalloc( xMaxStringLength );
-	  pcStringToSend = ( char * ) buffer;
-
-	  snprintf( pcStringToSend, xMaxStringLength, " Hello\r\n");//, xStringNumber );
-	  printf("String in sendertask:  %s\n",pcStringToSend);
-	  printf("String number: %d \n",xStringNumber);
-	  /* Increment the counter so the string is different on each iteration of this task. */
-	  xStringNumber++;
-
-	  xStatus= xQueueSend( xPointerQueue,&pcStringToSend, portMAX_DELAY );
-
-	  if( xStatus != pdPASS )
-	   {
-		  /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
-	   	   one item! */
-		  printf( "Could not send to the queue.\r\n" );
-	   }
-	   else
-	   {
-		   printf( "Send pass\r\n" );
-		   vTaskDelay(pdMS_TO_TICKS(100));
-	   }
-	  }
- }
-
-
-//static BaseType_t xErrorDetected = pdFALSE;
-printf("timer expired \n");
-
-
-TickType_t TimeNow;
- /* Obtain the current tick count. */
- TimeNow = xTaskGetTickCount();
- /* Output a string to show the time at which the callback was executed. */
- printf( "One-shot timer callback executing %d \n", TimeNow );
-vTaskDelay(5000);
-xTimerReset(xTimer, 0);
-
-/*if( xErrorDetected == pdFALSE )
-	{
-
-	//if( CheckTasksAreRunningWithoutError() == pdFAIL )
-		if(eTaskGetState(task1_handle) != eRunning )
-		{
-
-			xTimerChangePeriod( xTimer, xErrorTimerPeriod, 0 );  Do not block when sending this command.
-		}
-		 Latch that an error has already been detected.
-		xErrorDetected = pdTRUE;
-	}
-BSP_LED_Toggle(LED9);*/
-
-
- /*
-
- @brief receiving data from queue function
- @param none
- @RetVal none
- */
-/* ReceiverTask_Handler*/
-static void vReceiverTask( void *pvParameters )
-{
-	int num;
-	char *pcReceivedString;
-	//BaseType_t xStatus;
-	 for( ;; )
-	 {
-		 num=uxQueueMessagesWaiting( xPointerQueue );
-         //for checking queue is full or not
-		 if( num == 5 )
-		 	 {
-			 printf( "Queue is full!\r\n" );
-		 	 }
-		 else if(num == 0)
-		 {
-			 printf( "Queue is empty!\r\n" );
-		 }
-
-
-	 /* Receive the address of a buffer. */
-	 xQueueReceive( xPointerQueue,&pcReceivedString, portMAX_DELAY );
-	 /* The buffer holds a string, print it out. */
-
-	 printf( "String in receiver task: %s \n",pcReceivedString );
-	 vTaskDelay(pdMS_TO_TICKS(100));
-	 /* The buffer is not required any more - release it so it can be freed, or re-used. */
-	 //vPortFree( pcReceivedString );
-	 }
-}
 
 
 
