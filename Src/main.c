@@ -38,6 +38,7 @@
 
 //#define RX_BUFFER_SIZE 100
 #define QUEUE_LENGTH 100
+#define Queue_Using_API
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -175,14 +176,15 @@ int main(void)
   {
     /* USER CODE END WHILE */
 	  /* USER CODE BEGIN 3 */
-/*if(flag==1)
+#ifdef Single_Character_Transfer
+if(flag==1)
 {
    while(!(USART1->ISR & USART_ISR_TXE));
    {
 	   USART1->TDR=data;
 	              flag=0;
    }
-}*/
+}
 
 
 	   /* if(rear>-1 && front<=rear)
@@ -195,6 +197,7 @@ int main(void)
 		     }
 
 	    }*/
+#endif
 
   }
   /* USER CODE END 3 */
@@ -365,60 +368,6 @@ static void MX_USART1_UART_Init(void)
 
 
 
-/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    insert(data);
-    HAL_UART_Receive_IT(&huart1,&data,1);
-}*/
-
-
-
-/*void insert(char data)
-{
-	printf("f=%d\n",f);
-	printf("r=%d\n",r);
-   if(f==0 && r==RX_BUFFER_SIZE-1)
-   {
-    printf("Overflow\n");
-
-   }
-   else
-  {
-   if(f==-1)
-     f=0;
-   if(r==RX_BUFFER_SIZE-1)
-     r=0;
-   else
-     r=r+1;
-rxBuffer[r]=data;
-printf("%c is inserted\n",rxBuffer[r]);
-  }
-}*/
-
-
-/*void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
-{
-  if (GPIO_Pin == BUTTON_USER_PIN)
-  {
-     //Toggle LED10
-	  BSP_LED_Off(LED10);
-   // BSP_LED_Toggle(LED10);
-
-  }
-}
-
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
-{
-  if (GPIO_Pin == BUTTON_USER_PIN)
-  {
-	BSP_LED_Toggle(LED10);
-  }
-}*/
-
-
-
-
-
 /**
   * @brief  USART1 IRQ Handler.
   * This function serves as the interrupt handler for USART1. It is responsible
@@ -431,8 +380,9 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 void USART1_IRQHandler(void) // Change IRQ handler name as per your UART peripheral
 {
+#ifdef Queue_Using_Register
 //    HAL_UART_IRQHandler(&huart1);
-	/*if(front==-1)
+	if(front==-1)
 	{
 		front=0;
 	}
@@ -440,8 +390,11 @@ void USART1_IRQHandler(void) // Change IRQ handler name as per your UART periphe
     {
     	rear++;
     	rxBuffer[rear]=USART1->RDR;
-    }*/
+    }
+#endif
 
+
+#ifdef Queue_Using_API
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 		if (USART1->ISR & USART_ISR_RXNE)
@@ -456,7 +409,7 @@ void USART1_IRQHandler(void) // Change IRQ handler name as per your UART periphe
 				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 			}
 }
-
+#endif
 
 
 /**
