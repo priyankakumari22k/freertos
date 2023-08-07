@@ -94,4 +94,11 @@ void EXTI13_IRQHandler(void)
 {
   HAL_GPIO_EXTI_IRQHandler(BUTTON_USER_PIN);
 }
+
+/*UART_HandleTypeDef huart1;
+void USART1_IRQHandler(void) // Change IRQ handler name as per your UART peripheral
+{
+    HAL_UART_IRQHandler(&huart1);
+
+}*/
 /* USER CODE END 1 */

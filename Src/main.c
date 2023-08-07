@@ -23,15 +23,23 @@
 #include "FreeRTOS.h"
 #include "timers.h"
 
+#include "FreeRTOS.h"
+#include "stm32l5xx_hal_uart.h"
+#include "stm32l5xx_hal_uart_ex.h"
+#include "timers.h"
+#include "queue.h"
+
+
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "string.h"
 
-#include "stdlib.h"
-#include "timers.h"
 
-#include "queue.h"
-/* USER CODE END Includes */
+//#define RX_BUFFER_SIZE 100
+#define QUEUE_LENGTH 100
+#define Queue_Using_API
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
@@ -60,6 +68,23 @@ TaskHandle_t task1_handle, task2_handle;
 //QueueHandle_t xQueue;
 QueueHandle_t xPointerQueue;
 
+UART_HandleTypeDef huart1;
+HAL_StatusTypeDef error;
+QueueHandle_t xPointerQueue;
+
+
+//volatile int front=-1;
+//volatile int rear=-1;
+
+uint8_t msg[] = "Hi, Welcome to UART demo!!\r\n";
+//uint8_t rxBuffer[RX_BUFFER_SIZE]={0};
+//uint8_t data;
+//volatile uint8_t flag=0;
+
+/*volatile uint32_t rxIndex = 0;
+volatile uint8_t rxComplete = 0;*/
+TaskHandle_t task1_handle;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,9 +93,13 @@ static void MX_ICACHE_Init(void);
 
 //void LED_Thread1(void *argument);
 //void LED_Thread2(void *argument);
-static void EXTI13_IRQHandler_Config(void);
 static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
 
+static void MX_USART1_UART_Init(void);
+static void EXTI13_IRQHandler_Config(void);
+//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+//void insert(char data);
 /* USER CODE BEGIN PFP */
 static void prvTimerCallback( TimerHandle_t xTimer );
 
@@ -122,6 +151,8 @@ const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 1000 );
 //#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
 //#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
 
+//#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -134,7 +165,7 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 
-	HAL_Init();
+   HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -145,13 +176,14 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Initialize LEDs */
-
-//  BSP_LED_Init(LED9);
+  //BSP_LED_Init(LED9);
   //BSP_LED_Init(LED10);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+
   MX_ICACHE_Init();
+
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -230,15 +262,63 @@ int main(void)
 
   /* Start scheduler */
   vTaskStartScheduler();
+    EXTI13_IRQHandler_Config();
+
+    MX_USART1_UART_Init();
+    USART1->CR1 |= USART_CR1_RXNEIE;
+    HAL_UART_Transmit(&huart1, msg, sizeof(msg), 1000);
+    while(!(USART1->ISR & USART_ISR_TXE));
+    USART1->TDR='A';
+
+    BaseType_t status;
+    xPointerQueue = xQueueCreate( QUEUE_LENGTH, sizeof( char * ) );
+    if( xPointerQueue != NULL )
+       {
+
+    	   status = xTaskCreate(vSenderTask, "Task1", 500, NULL, 0, &task1_handle);
+    	   configASSERT(status == pdPASS);
+       vTaskStartScheduler();
+       }
+       else
+       {
+       /* The queue could not be created. */
+    	   printf("Queue not created\n");
+       }
+
+  /* Start scheduler */
   //osKernelStart();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+   //HAL_UART_Receive_IT(&huart1, &data, 1);
+
   while (1)
   {
     /* USER CODE END WHILE */
+	  /* USER CODE BEGIN 3 */
+#ifdef Single_Character_Transfer
+if(flag==1)
+{
+   while(!(USART1->ISR & USART_ISR_TXE));
+   {
+	   USART1->TDR=data;
+	              flag=0;
+   }
+}
 
-    /* USER CODE BEGIN 3 */
+
+	   /* if(rear>-1 && front<=rear)
+	    {
+	      //HAL_UART_Transmit(&huart1, &rxBuffer[f],1, 1000);
+		  while(!(USART1->ISR & USART_ISR_TXE));
+		     {
+		  	   USART1->TDR=rxBuffer[front];
+		  	   front++;
+		     }
+
+	    }*/
+#endif
+
   }
   /* USER CODE END 3 */
 }
@@ -455,6 +535,145 @@ static void vReceiverTask( void *pvParameters )
 	 /* The buffer is not required any more - release it so it can be freed, or re-used. */
 	 //vPortFree( pcReceivedString );
 	 }
+/**
+  * @brief interrupt and uart GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void EXTI13_IRQHandler_Config(void)
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+      PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+      if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+      {
+        Error_Handler();
+      }
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_USART1_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /* Configure PC.13 pin as input floating */
+  GPIO_InitStructure.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = BUTTON_USER_PIN;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+  /* Configure PA.9 pin as UART TX */
+  GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = GPIO_PIN_9;
+  GPIO_InitStructure.Alternate =GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  /* Configure PA.10 pin as UART RX */
+  GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = GPIO_PIN_10;
+  GPIO_InitStructure.Alternate =GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  /* Enable and set line 13 Interrupt to the lowest priority */
+  //HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
+  //HAL_NVIC_EnableIRQ(EXTI13_IRQn);
+  HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
+
+}
+
+/**
+  * @brief UART Initialization Function
+  * @param None
+  * @retval None
+  */
+
+static void MX_USART1_UART_Init(void)
+{
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+
+
+
+/**
+  * @brief  USART1 IRQ Handler.
+  * This function serves as the interrupt handler for USART1. It is responsible
+  * for handling incoming data in the USART1 receive buffer and sending it to
+  * a FreeRTOS queue for processing in other task.
+  * @note   This function handles the interrupts generated by USART1 peripheral.
+  *         It reads the received data from the USART1 receive data register (RDR)
+  * @retval None
+  */
+
+void USART1_IRQHandler(void) // Change IRQ handler name as per your UART peripheral
+{
+#ifdef Queue_Using_Register
+//    HAL_UART_IRQHandler(&huart1);
+	if(front==-1)
+	{
+		front=0;
+	}
+    if(USART1->ISR & USART_ISR_RXNE)
+    {
+    	rear++;
+    	rxBuffer[rear]=USART1->RDR;
+    }
+#endif
+
+
+#ifdef Queue_Using_API
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+		if (USART1->ISR & USART_ISR_RXNE)
+		{
+			xQueueSendFromISR(xPointerQueue, (uint8_t*)&USART1->RDR, &xHigherPriorityTaskWoken);
+
+		}
+
+		if (xHigherPriorityTaskWoken)
+			{
+				// Actual macro used here is port specific.
+				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+			}
+}
+#endif
+
+
+/**
+  * @brief  Sender Task.
+  * This task is responsible for sending data from a queue to the USART1 interface.
+  * It continuously checks for available data in the 'xPointerQueue' and transmits it
+  * via USART1 if there is data available.
+  * @para pvParameters A pointer to task parameters (not used in this task).
+  * @retval None
+  */
+void vSenderTask( void *pvParameters )
+{
+	while (1)
+		{
+			char data = 0;
+			if (xQueueReceive(xPointerQueue, &data, 0) == pdTRUE)
+			{
+				while (!(USART1->ISR & USART_ISR_TXE));
+				USART1->TDR = data;
+			}
+		}
 }
 
 

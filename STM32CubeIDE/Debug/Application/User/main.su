@@ -3,4 +3,9 @@ main.c:157:6:SystemClock_Config	104	static
 main.c:209:13:MX_ICACHE_Init	8	static
 main.c:246:13:EXTI13_IRQHandler_Config	32	static
 main.c:275:13:prvAutoReloadTimerCallback	24	static
-main.c:332:6:Error_Handler	4	static
+main.c:297:13:EXTI13_IRQHandler_Config	192	static
+main.c:346:13:MX_USART1_UART_Init	8	static
+main.c:432:6:USART1_IRQHandler	16	static
+main.c:470:6:vSenderTask	24	static
+main.c:491:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:508:6:Error_Handler	4	static
