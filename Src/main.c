@@ -20,6 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "FreeRTOS.h"
+#include "timers.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -38,6 +40,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define AUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
+#define count 10
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -64,6 +68,8 @@ static void MX_ICACHE_Init(void);
 
 //void LED_Thread1(void *argument);
 //void LED_Thread2(void *argument);
+static void EXTI13_IRQHandler_Config(void);
+static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
 
 /* USER CODE BEGIN PFP */
 static void prvTimerCallback( TimerHandle_t xTimer );
@@ -127,7 +133,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -148,6 +155,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
+  EXTI13_IRQHandler_Config();
 
   /* Init scheduler */
   osKernelInitialize();
@@ -204,13 +212,31 @@ int main(void)
   /* Start scheduler */
  // osKernelStart();
 
+    //BaseType_t status;
+
+    //const UBaseType_t ulPeriodicTaskPriority = configTIMER_TASK_PRIORITY - 1;
+
+    //status = xTaskCreate( vPeriodicTask, "Task1", 500, NULL, ulPeriodicTaskPriority, NULL);
+    //configASSERT(status == pdPASS);
+
+  TimerHandle_t xAutoReloadTimer = xTimerCreate( "AutoReload", AUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
+    	 /* Check the software timers were created. */
+    	 if(  xAutoReloadTimer != NULL  )
+    	 {
+    	 /* Start the software timers, using a block time of 0 (no block time). The scheduler has
+    	 not been started yet so any block time specified here would be ignored anyway. */
+    	xTimerStartFromISR( xAutoReloadTimer, 0 );
+    	 }
+
+  /* Start scheduler */
+  vTaskStartScheduler();
+  //osKernelStart();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
 
     /* USER CODE BEGIN 3 */
   }
@@ -269,6 +295,7 @@ void SystemClock_Config(void)
   }
 }
 
+
 /**
   * @brief ICACHE Initialization Function
   * @param None
@@ -307,11 +334,6 @@ static void MX_ICACHE_Init(void)
 
 
 /* USER CODE BEGIN Header_LED_Thread1 */
-/**
-  * @brief  Function implementing the THREAD1 thread.
-  * @param  argument: Not used
-  * @retval None
-  */
 
 /*void LED_Thread1(void *argument)
 {
@@ -437,6 +459,67 @@ static void vReceiverTask( void *pvParameters )
 
 
 
+static void EXTI13_IRQHandler_Config(void)
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
+
+
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /* Configure PC.13 pin as input floating */
+  GPIO_InitStructure.Mode = GPIO_MODE_IT_RISING_FALLING;
+
+
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Pin = BUTTON_USER_PIN;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+
+  /* Enable and set line 13 Interrupt to the lowest priority */
+  HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
+  HAL_NVIC_EnableIRQ(EXTI13_IRQn);
+}
+
+
+
+/**
+  * @brief Autoreload timer callback function, here led toggles only on long press of 1s
+  * @param xTimer: Timer handle
+  * @retval None
+  */
+static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
+{
+TickType_t xTimeNow;
+//TickType_t buttonPressTime = 0;
+static int count1=0;
+    /* Obtain the current tick count. */
+    xTimeNow = xTaskGetTickCount();
+    /* Output a string to show the time at which the callback was executed. */
+ printf( "Auto-reload timer callback executing %d\n", xTimeNow );
+
+  if(HAL_GPIO_ReadPin(BUTTON_USER_GPIO_PORT, BUTTON_USER_PIN)==1)
+  {
+	 count1++;
+	 if(count1==count)
+         HAL_GPIO_TogglePin(LED10_GPIO_PORT, LED10_PIN);
+  }
+  else
+	 count1=0;
+
+printf("count %d \n",count1);
+ }
+
+
+
+
+
+
+
+
+
+
+/*
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
@@ -445,18 +528,18 @@ static void vReceiverTask( void *pvParameters )
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+/*void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* USER CODE BEGIN Callback 0 */
+   //USER CODE BEGIN Callback 0
 
-  /* USER CODE END Callback 0 */
+ //  USER CODE END Callback 0
   if (htim->Instance == TIM6) {
     HAL_IncTick();
   }
-  /* USER CODE BEGIN Callback 1 */
+ //  USER CODE BEGIN Callback 1
 
-  /* USER CODE END Callback 1 */
-}
+  // USER CODE END Callback 1
+}*/
 
 /**
   * @brief  This function is executed in case of error occurrence.
