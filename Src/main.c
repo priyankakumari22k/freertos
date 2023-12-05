@@ -26,7 +26,7 @@
 #include "FreeRTOS.h"
 #include "stm32l5xx_hal_uart.h"
 #include "stm32l5xx_hal_uart_ex.h"
-#include "timers.h"
+//#include "timers.h"
 #include "queue.h"
 
 
@@ -48,8 +48,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define AUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
-#define count 10
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,27 +60,34 @@
 
 /* USER CODE BEGIN PV */
 
-TimerHandle_t xAutoReloadTimer, xOneShotTimer;
 __IO uint32_t OsStatus = 0;
-TaskHandle_t task1_handle, task2_handle;
-//QueueHandle_t xQueue;
-QueueHandle_t xPointerQueue;
-
 UART_HandleTypeDef huart1;
 HAL_StatusTypeDef error;
-QueueHandle_t xPointerQueue;
+extern QueueHandle_t xPointerQueue;
+struct node *head = NULL;
+
+static uint8_t help_msg[] =
+        "\r\n\n=========================================================\r\n"
+        "#  CLI Console:\r\n"
+        "=========================================================\r\n"
+        "A - Add data\r\n"
+        "D - Delete data\r\n"
+        "S - Search particular data\r\n"
+        "P - Print all the data\r\n"
+        "F - Store data\r\n"
+		"E - Exit\r\n"
+        "NOTE: Configure UART Terminal Transmit NewLine as <CR+LF>\r\n"
+        "=========================================================\r\n"
+        "User INPUT > ";
 
 
-//volatile int front=-1;
-//volatile int rear=-1;
+int length;
+int i=0;
 
 uint8_t msg[] = "Hi, Welcome to UART demo!!\r\n";
-//uint8_t rxBuffer[RX_BUFFER_SIZE]={0};
-//uint8_t data;
-//volatile uint8_t flag=0;
+uint8_t invalid[]="\nWrong input!!!!\r\n";
+uint8_t m[]="\nExited\n";
 
-/*volatile uint32_t rxIndex = 0;
-volatile uint8_t rxComplete = 0;*/
 TaskHandle_t task1_handle;
 
 /* USER CODE END PV */
@@ -90,46 +95,12 @@ TaskHandle_t task1_handle;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_ICACHE_Init(void);
-
-//void LED_Thread1(void *argument);
-//void LED_Thread2(void *argument);
-static void prvAutoReloadTimerCallback( TimerHandle_t xTimer );
-
 static void MX_USART1_UART_Init(void);
 static void EXTI13_IRQHandler_Config(void);
-//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
-//void insert(char data);
 /* USER CODE BEGIN PFP */
-static void prvTimerCallback( TimerHandle_t xTimer );
-
-//static void prvOneShotTimerCallback( TimerHandle_t xTimer );
-
 
 /* USER CODE BEGIN PFP */
 static void vSenderTask( void *pvParameters );
-static void vReceiverTask( void *pvParameters );
-
-/*
- Define an enumerated type used to identify the source of the data.
-typedef enum
-{
- eSender1,
- eSender2
-} DataSource_t;
-
- Define the structure type that will be passed on the queue.
-typedef struct
-{
- uint8_t ucValue;
- DataSource_t eDataSource;
-} Data_t;
-
- Declare two variables of type Data_t that will be passed on the queue.
-static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 },  Used by Sender1.
- { 200, eSender2 }  Used by Sender2. };
-*/
-
 
 /* USER CODE END PFP */
 
@@ -144,20 +115,11 @@ static const Data_t xStructsToSend[ 2 ] ={{ 100, eSender1 },  Used by Sender1.
   * @retval int
   */
 
-const TickType_t xHealthyTimerPeriod = pdMS_TO_TICKS( 1000 );
-//const TickType_t xErrorTimerPeriod = pdMS_TO_TICKS( 200 );
-
-
-//#define mainONE_SHOT_TIMER_PERIOD pdMS_TO_TICKS( 3333 )
-//#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 1000 )
-
-//#define mainAUTO_RELOAD_TIMER_PERIOD pdMS_TO_TICKS( 100 )
 
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	BaseType_t status , status1 ,status2;
 
   /* USER CODE END 1 */
 
@@ -175,9 +137,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  /* Initialize LEDs */
-  //BSP_LED_Init(LED9);
-  //BSP_LED_Init(LED10);
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -187,138 +147,36 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
+  osKernelInitialize();
   EXTI13_IRQHandler_Config();
 
-  /* Init scheduler */
-  osKernelInitialize();
-
-
-  BaseType_t xTimer1Started, xTimer2Started;
-
- // xTaskCreate(LED_Thread1, "LED Task", 1024, NULL, 1, &task1_handle);
-
- // xOneShotTimer = xTimerCreate("OneShot",mainONE_SHOT_TIMER_PERIOD,pdFALSE,0,prvTimerCallback );
-  xAutoReloadTimer = xTimerCreate("AutoReload",xHealthyTimerPeriod,pdTRUE,0,prvTimerCallback);
-
-  if(  xAutoReloadTimer != NULL  )
+  MX_USART1_UART_Init();
+  USART1->CR1 |= USART_CR1_RXNEIE;
+  flash_intialization();
+  backup(&head);
+  HAL_UART_Transmit(&huart1, msg, sizeof(msg), 1000);
+  BaseType_t status;
+  xPointerQueue = xQueueCreate( QUEUE_LENGTH, sizeof( char * ) );
+  if( xPointerQueue != NULL )
    {
-    printf("timers created\n");
-   //xTimer1Started = xTimerStart( xOneShotTimer, 0 );
-   xTimer2Started = xTimerStart( xAutoReloadTimer, 0 );
-
-     if( xTimer2Started == pdPASS  )
-      {
-    	 /* Start the scheduler. */
-    	 vTaskStartScheduler();
-      }
-
-  /* The queue is created to hold a maximum of 5 values, each of which is
-   large enough to hold a variable of type Data_t ). */
-   //xQueue = xQueueCreate( 3, sizeof( Data_t )) ;
-   xPointerQueue = xQueueCreate( 5, sizeof( char * ) );
-
-   if( xPointerQueue != NULL )
-   {
-   /* Create two instances of the task that will send to the queue. The
- parameter is used to pass the structure that the task will write to the
- queue, so one task will continuously send xStructsToSend[ 0 ] to the queue
- while the other task will continuously send xStructsToSend[ 1 ]. */
-	   status = xTaskCreate(vSenderTask, "Task1", 500, NULL, 2, &task1_handle);
-	 //  status1 = xTaskCreate(vSenderTask, "Task2", 500, &( xStructsToSend[ 1 ] ), 2, &task2_handle);
-	   configASSERT(status == pdPASS);
-	 // configASSERT(status1 == pdPASS);
-
-   /* Create the task that will read from the queue. The task is created with
-   priority 2, so above the priority of the sender tasks. */
-   status2 = xTaskCreate( vReceiverTask, "Task3", 500, NULL, 1, NULL );
-   configASSERT(status2 == pdPASS);
-   /* Start the scheduler so the created tasks start executing. */
-   vTaskStartScheduler();
+     status = xTaskCreate(vSenderTask, "Task1", 1500, NULL, 0, &task1_handle);
+     configASSERT(status == pdPASS);
+     uart_transmit(help_msg, sizeof(help_msg));
+     /* Start scheduler */
+     vTaskStartScheduler();
    }
    else
    {
    /* The queue could not be created. */
-	   printf("Queue not created\n");
+     printf("Queue not created\n");
    }
-
-  /* Start scheduler */
- // osKernelStart();
-
-    //BaseType_t status;
-
-    //const UBaseType_t ulPeriodicTaskPriority = configTIMER_TASK_PRIORITY - 1;
-
-    //status = xTaskCreate( vPeriodicTask, "Task1", 500, NULL, ulPeriodicTaskPriority, NULL);
-    //configASSERT(status == pdPASS);
-
-  TimerHandle_t xAutoReloadTimer = xTimerCreate( "AutoReload", AUTO_RELOAD_TIMER_PERIOD, pdTRUE,0,  prvAutoReloadTimerCallback );
-    	 /* Check the software timers were created. */
-    	 if(  xAutoReloadTimer != NULL  )
-    	 {
-    	 /* Start the software timers, using a block time of 0 (no block time). The scheduler has
-    	 not been started yet so any block time specified here would be ignored anyway. */
-    	xTimerStartFromISR( xAutoReloadTimer, 0 );
-    	 }
-
-  /* Start scheduler */
-  vTaskStartScheduler();
-    EXTI13_IRQHandler_Config();
-
-    MX_USART1_UART_Init();
-    USART1->CR1 |= USART_CR1_RXNEIE;
-    HAL_UART_Transmit(&huart1, msg, sizeof(msg), 1000);
-    while(!(USART1->ISR & USART_ISR_TXE));
-    USART1->TDR='A';
-
-    BaseType_t status;
-    xPointerQueue = xQueueCreate( QUEUE_LENGTH, sizeof( char * ) );
-    if( xPointerQueue != NULL )
-       {
-
-    	   status = xTaskCreate(vSenderTask, "Task1", 500, NULL, 0, &task1_handle);
-    	   configASSERT(status == pdPASS);
-       vTaskStartScheduler();
-       }
-       else
-       {
-       /* The queue could not be created. */
-    	   printf("Queue not created\n");
-       }
-
-  /* Start scheduler */
-  //osKernelStart();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-   //HAL_UART_Receive_IT(&huart1, &data, 1);
-
   while (1)
   {
     /* USER CODE END WHILE */
 	  /* USER CODE BEGIN 3 */
-#ifdef Single_Character_Transfer
-if(flag==1)
-{
-   while(!(USART1->ISR & USART_ISR_TXE));
-   {
-	   USART1->TDR=data;
-	              flag=0;
-   }
-}
-
-
-	   /* if(rear>-1 && front<=rear)
-	    {
-	      //HAL_UART_Transmit(&huart1, &rxBuffer[f],1, 1000);
-		  while(!(USART1->ISR & USART_ISR_TXE));
-		     {
-		  	   USART1->TDR=rxBuffer[front];
-		  	   front++;
-		     }
-
-	    }*/
-#endif
-
   }
   /* USER CODE END 3 */
 }
@@ -413,128 +271,6 @@ static void MX_ICACHE_Init(void)
 /* USER CODE END 4 */
 
 
-/* USER CODE BEGIN Header_LED_Thread1 */
-
-/*void LED_Thread1(void *argument)
-{
-   USER CODE BEGIN 5
-	printf("Task1 is running\n");
-	  while(1)
-    {
-      BSP_LED_Toggle(LED9);
-      HAL_Delay(200);
-
-    }
-	  osDelay(1000);
-   USER CODE END 5
-}*/
-
-static void prvTimerCallback( TimerHandle_t xTimer )
-{
-
-/*
-@brief sending data to queue function
-@param none
-@RetVal none
-*/
-/*SenderTask_Handler   */
- void vSenderTask( void *pvParameters )
-{
-	 char *pcStringToSend;
-	 const size_t xMaxStringLength = 50;
-	 char buffer[50];
-	 BaseType_t xStatus, xStringNumber = 0;
-	  for( ;; )
-	  {
-
-	 // pcStringToSend = ( char * ) pvPortMalloc( xMaxStringLength );
-	  pcStringToSend = ( char * ) buffer;
-
-	  snprintf( pcStringToSend, xMaxStringLength, " Hello\r\n");//, xStringNumber );
-	  printf("String in sendertask:  %s\n",pcStringToSend);
-	  printf("String number: %d \n",xStringNumber);
-	  /* Increment the counter so the string is different on each iteration of this task. */
-	  xStringNumber++;
-
-	  xStatus= xQueueSend( xPointerQueue,&pcStringToSend, portMAX_DELAY );
-
-	  if( xStatus != pdPASS )
-	   {
-		  /* The send operation could not complete because the queue was full -this must be an error as the queue should never contain more than
-	   	   one item! */
-		  printf( "Could not send to the queue.\r\n" );
-	   }
-	   else
-	   {
-		   printf( "Send pass\r\n" );
-		   vTaskDelay(pdMS_TO_TICKS(100));
-	   }
-	  }
- }
-
-
-//static BaseType_t xErrorDetected = pdFALSE;
-printf("timer expired \n");
-
-
-TickType_t TimeNow;
- /* Obtain the current tick count. */
- TimeNow = xTaskGetTickCount();
- /* Output a string to show the time at which the callback was executed. */
- printf( "One-shot timer callback executing %d \n", TimeNow );
-vTaskDelay(5000);
-xTimerReset(xTimer, 0);
-
-/*if( xErrorDetected == pdFALSE )
-	{
-
-	//if( CheckTasksAreRunningWithoutError() == pdFAIL )
-		if(eTaskGetState(task1_handle) != eRunning )
-		{
-
-			xTimerChangePeriod( xTimer, xErrorTimerPeriod, 0 );  Do not block when sending this command.
-		}
-		 Latch that an error has already been detected.
-		xErrorDetected = pdTRUE;
-	}
-BSP_LED_Toggle(LED9);*/
-
-
- /*
-
- @brief receiving data from queue function
- @param none
- @RetVal none
- */
-/* ReceiverTask_Handler*/
-static void vReceiverTask( void *pvParameters )
-{
-	int num;
-	char *pcReceivedString;
-	//BaseType_t xStatus;
-	 for( ;; )
-	 {
-		 num=uxQueueMessagesWaiting( xPointerQueue );
-         //for checking queue is full or not
-		 if( num == 5 )
-		 	 {
-			 printf( "Queue is full!\r\n" );
-		 	 }
-		 else if(num == 0)
-		 {
-			 printf( "Queue is empty!\r\n" );
-		 }
-
-
-	 /* Receive the address of a buffer. */
-	 xQueueReceive( xPointerQueue,&pcReceivedString, portMAX_DELAY );
-	 /* The buffer holds a string, print it out. */
-
-	 printf( "String in receiver task: %s \n",pcReceivedString );
-	 vTaskDelay(pdMS_TO_TICKS(100));
-	 /* The buffer is not required any more - release it so it can be freed, or re-used. */
-	 //vPortFree( pcReceivedString );
-	 }
 /**
   * @brief interrupt and uart GPIO Initialization Function
   * @param None
@@ -623,19 +359,6 @@ static void MX_USART1_UART_Init(void)
 
 void USART1_IRQHandler(void) // Change IRQ handler name as per your UART peripheral
 {
-#ifdef Queue_Using_Register
-//    HAL_UART_IRQHandler(&huart1);
-	if(front==-1)
-	{
-		front=0;
-	}
-    if(USART1->ISR & USART_ISR_RXNE)
-    {
-    	rear++;
-    	rxBuffer[rear]=USART1->RDR;
-    }
-#endif
-
 
 #ifdef Queue_Using_API
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -643,7 +366,6 @@ void USART1_IRQHandler(void) // Change IRQ handler name as per your UART periphe
 		if (USART1->ISR & USART_ISR_RXNE)
 		{
 			xQueueSendFromISR(xPointerQueue, (uint8_t*)&USART1->RDR, &xHigherPriorityTaskWoken);
-
 		}
 
 		if (xHigherPriorityTaskWoken)
@@ -663,78 +385,58 @@ void USART1_IRQHandler(void) // Change IRQ handler name as per your UART periphe
   * @para pvParameters A pointer to task parameters (not used in this task).
   * @retval None
   */
-void vSenderTask( void *pvParameters )
+void vSenderTask( void *pvParamter )
 {
-	while (1)
+
+if( uxQueueMessagesWaiting( xPointerQueue ) == 100 )
+	{
+	uart_transmit("Queue is full!\r\n",18);
+	}
+//else if( uxQueueMessagesWaiting( xPointerQueue ) == 0 )
+//	{
+//	uart_transmit("Queue is empty!\r\n",19);
+//	}
+//else
+//	uart_transmit("Some data\n",11);
+
+while (1)
+{
+uint8_t data = 0;
+if (xQueueReceive(xPointerQueue, &data, 0) == pdTRUE)
+	{
+		switch(data)
 		{
-			char data = 0;
-			if (xQueueReceive(xPointerQueue, &data, 0) == pdTRUE)
-			{
-				while (!(USART1->ISR & USART_ISR_TXE));
-				USART1->TDR = data;
-			}
+		case 'A':
+		case 'A'+32:  add_data(&head);
+					  break;
+
+		case 'D':
+		case 'D'+32:  delete_data(&head);
+					  break;
+
+		case 'S':
+		case 'S'+32:  search_data(&head);
+					  break;
+
+		case 'P':
+		case 'P'+32:  print_data(head);
+					  break;
+
+		case 'F':
+		case 'F'+32:  store_data(&head);
+					  break;
+
+		case 'E':
+		case 'E'+32:  uart_transmit(m, sizeof(m));
+					  goto exit;
+
+		default:   uart_transmit(invalid, sizeof(invalid));
 		}
+	uart_transmit(help_msg, sizeof(help_msg));
+	}
 }
-
-
-
-static void EXTI13_IRQHandler_Config(void)
-{
-  GPIO_InitTypeDef   GPIO_InitStructure;
-
-
-  /* Enable GPIOC clock */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-
-  /* Configure PC.13 pin as input floating */
-  GPIO_InitStructure.Mode = GPIO_MODE_IT_RISING_FALLING;
-
-
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-  GPIO_InitStructure.Pin = BUTTON_USER_PIN;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-
-  /* Enable and set line 13 Interrupt to the lowest priority */
-  HAL_NVIC_SetPriority(EXTI13_IRQn, 2, 0);
-  HAL_NVIC_EnableIRQ(EXTI13_IRQn);
+exit: ;
 }
-
-
-
-/**
-  * @brief Autoreload timer callback function, here led toggles only on long press of 1s
-  * @param xTimer: Timer handle
-  * @retval None
-  */
-static void prvAutoReloadTimerCallback( TimerHandle_t xTimer )
-{
-TickType_t xTimeNow;
-//TickType_t buttonPressTime = 0;
-static int count1=0;
-    /* Obtain the current tick count. */
-    xTimeNow = xTaskGetTickCount();
-    /* Output a string to show the time at which the callback was executed. */
- printf( "Auto-reload timer callback executing %d\n", xTimeNow );
-
-  if(HAL_GPIO_ReadPin(BUTTON_USER_GPIO_PORT, BUTTON_USER_PIN)==1)
-  {
-	 count1++;
-	 if(count1==count)
-         HAL_GPIO_TogglePin(LED10_GPIO_PORT, LED10_PIN);
-  }
-  else
-	 count1=0;
-
-printf("count %d \n",count1);
- }
-
-
-
-
-
-
-
 
 
 
@@ -747,7 +449,7 @@ printf("count %d \n",count1);
   * @param  htim : TIM handle
   * @retval None
   */
-/*void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
    //USER CODE BEGIN Callback 0
 
@@ -758,7 +460,7 @@ printf("count %d \n",count1);
  //  USER CODE BEGIN Callback 1
 
   // USER CODE END Callback 1
-}*/
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.
