@@ -5,22 +5,24 @@
 
 
 #define UART_CLI_STR_TERM_CR_LF "\n"
-
+#define SIZE       16
+#define NAME_SIZE  14
+#define ROLL_NO_SIZE   2
 
 struct node
 {
-char name[14];
+char name[NAME_SIZE];
 int roll_no;
 struct node *next;
-};
+}__attribute__((packed));
 
 void uart_transmit(uint8_t * ,int );
 uint8_t uart_receive();
 void add_data(struct node **);
 void create_node(struct node **);
-void delete_data();
+void delete_data(struct node **);
 void search_data(struct node **);
-void print_data(struct node *);
+void print_data(struct node **);
 void store_data(struct node **);
 void inorder(struct node**, uint8_t);
 struct node* swap(struct node* , struct node* );
