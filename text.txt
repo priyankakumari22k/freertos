@@ -1,0 +1,7 @@
+At creation, the thread executes start, with arg as its sole argument. The calling function must ensure that arg remains valid for the new thread throughout its lifetime. If start returns, the effect as if there was an implicit call to pthread_exit() using the return value of start as the exit status. Note that the thread in which main() was originally invoked differs from this. When it returns from main(), the effect as if there was an implicit call to exit() using the return value of main() aggnal pending for the new thread is empty.
+If pthread_create() fails, no new thread is created and the contents of the location referenced by thread are undefined.The signal state of the new thread is initialized as follows
+The signal mask is inherited from the creating thread.
+The set of signal pending for the new thread is empty.
+If pthread_create() fails, no new thread is created aind the contents of the location referenced by thread are undefined.
+
+I'm trying to implement a UDP network between a client and a server but in many implementations, they use either send() or sendTo() I tried looking in the man pages but I didn't really understand the difference other than that the sendTo() takes in more arguments which makes it look rather useless compared to send(). If you could bring any clarity on this matter I would be happy to hear :)
